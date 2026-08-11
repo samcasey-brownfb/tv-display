@@ -17,60 +17,45 @@ html,
 body {
   margin: 0;
   padding: 0;
-
   width: 100%;
   height: 100%;
-
   background: black;
-
   overflow: hidden;
 }
 
 #player {
   width: 100vw;
   height: 100vh;
-
   background: black;
-
   overflow: hidden;
 }
 
 .visual {
   width: 100%;
   height: 100%;
-
   object-fit: contain;
-
   background: black;
 }
 
 iframe {
   width: 100vw;
   height: 100vh;
-
   border: 0;
 }
 
 #message {
   color: white;
-
-  font-family:
-    Arial,
-    sans-serif;
-
+  font-family: Arial, sans-serif;
   font-size: 3vw;
-
   text-align: center;
-
   padding-top: 40vh;
 }
 
 
-/* AUDIO START */
+/* AUDIO START SCREEN */
 
 #audioStart {
   position: fixed;
-
   inset: 0;
 
   display: none;
@@ -78,42 +63,40 @@ iframe {
   align-items: center;
   justify-content: center;
 
-  background:
-    rgba(0,0,0,.82);
+  background: rgba(0,0,0,.88);
 
   z-index: 9999;
 }
 
+#audioStartContent {
+  text-align: center;
+  color: white;
+  font-family: Arial, sans-serif;
+}
+
 #audioStart button {
-  padding:
-    28px 42px;
-
-  font-size:
-    26px;
-
-  font-weight:
-    bold;
-
+  padding: 28px 42px;
+  font-size: 26px;
+  font-weight: bold;
   border: 0;
+  border-radius: 10px;
+  cursor: pointer;
+}
 
-  border-radius:
-    10px;
-
-  cursor:
-    pointer;
+#audioStart p {
+  margin-top: 18px;
+  color: #ccc;
 }
 
 
 /* FADE */
 
 .enter-fade {
-  animation:
-    fadeIn .8s ease;
+  animation: fadeIn .8s ease;
 }
 
 .exit-fade {
-  animation:
-    fadeOut .8s ease forwards;
+  animation: fadeOut .8s ease forwards;
 }
 
 @keyframes fadeIn {
@@ -130,28 +113,22 @@ iframe {
 /* SLIDE LEFT */
 
 .enter-slideLeft {
-  animation:
-    slideLeftIn .8s ease;
+  animation: slideLeftIn .8s ease;
 }
 
 .exit-slideLeft {
-  animation:
-    slideLeftOut .8s ease forwards;
+  animation: slideLeftOut .8s ease forwards;
 }
 
 @keyframes slideLeftIn {
 
   from {
-    transform:
-      translateX(100%);
-
+    transform: translateX(100%);
     opacity: 0;
   }
 
   to {
-    transform:
-      translateX(0);
-
+    transform: translateX(0);
     opacity: 1;
   }
 
@@ -160,16 +137,12 @@ iframe {
 @keyframes slideLeftOut {
 
   from {
-    transform:
-      translateX(0);
-
+    transform: translateX(0);
     opacity: 1;
   }
 
   to {
-    transform:
-      translateX(-100%);
-
+    transform: translateX(-100%);
     opacity: 0;
   }
 
@@ -179,28 +152,22 @@ iframe {
 /* SLIDE RIGHT */
 
 .enter-slideRight {
-  animation:
-    slideRightIn .8s ease;
+  animation: slideRightIn .8s ease;
 }
 
 .exit-slideRight {
-  animation:
-    slideRightOut .8s ease forwards;
+  animation: slideRightOut .8s ease forwards;
 }
 
 @keyframes slideRightIn {
 
   from {
-    transform:
-      translateX(-100%);
-
+    transform: translateX(-100%);
     opacity: 0;
   }
 
   to {
-    transform:
-      translateX(0);
-
+    transform: translateX(0);
     opacity: 1;
   }
 
@@ -209,16 +176,12 @@ iframe {
 @keyframes slideRightOut {
 
   from {
-    transform:
-      translateX(0);
-
+    transform: translateX(0);
     opacity: 1;
   }
 
   to {
-    transform:
-      translateX(100%);
-
+    transform: translateX(100%);
     opacity: 0;
   }
 
@@ -228,34 +191,27 @@ iframe {
 /* ZOOM */
 
 .enter-zoomIn {
-  animation:
-    zoomIn .8s ease;
+  animation: zoomIn .8s ease;
 }
 
 .enter-zoomOut {
-  animation:
-    zoomOut .8s ease;
+  animation: zoomOut .8s ease;
 }
 
 .exit-zoomIn,
 .exit-zoomOut {
-  animation:
-    fadeOut .8s ease forwards;
+  animation: fadeOut .8s ease forwards;
 }
 
 @keyframes zoomIn {
 
   from {
-    transform:
-      scale(.85);
-
+    transform: scale(.85);
     opacity: 0;
   }
 
   to {
-    transform:
-      scale(1);
-
+    transform: scale(1);
     opacity: 1;
   }
 
@@ -264,16 +220,12 @@ iframe {
 @keyframes zoomOut {
 
   from {
-    transform:
-      scale(1.15);
-
+    transform: scale(1.15);
     opacity: 0;
   }
 
   to {
-    transform:
-      scale(1);
-
+    transform: scale(1);
     opacity: 1;
   }
 
@@ -283,28 +235,22 @@ iframe {
 /* BLUR */
 
 .enter-blur {
-  animation:
-    blurIn .8s ease;
+  animation: blurIn .8s ease;
 }
 
 .exit-blur {
-  animation:
-    blurOut .8s ease forwards;
+  animation: blurOut .8s ease forwards;
 }
 
 @keyframes blurIn {
 
   from {
-    filter:
-      blur(18px);
-
+    filter: blur(18px);
     opacity: 0;
   }
 
   to {
-    filter:
-      blur(0);
-
+    filter: blur(0);
     opacity: 1;
   }
 
@@ -313,22 +259,19 @@ iframe {
 @keyframes blurOut {
 
   from {
-    filter:
-      blur(0);
-
+    filter: blur(0);
     opacity: 1;
   }
 
   to {
-    filter:
-      blur(18px);
-
+    filter: blur(18px);
     opacity: 0;
   }
 
 }
 
 </style>
+
 </head>
 
 <body>
@@ -343,98 +286,73 @@ iframe {
 </div>
 
 
-<audio
-  id="backgroundAudio">
-</audio>
+<audio id="backgroundAudio"></audio>
 
 
 <div id="audioStart">
 
-  <button id="audioStartButton">
-    START DISPLAY WITH AUDIO
-  </button>
+  <div id="audioStartContent">
+
+    <button id="audioStartButton">
+      START DISPLAY WITH AUDIO
+    </button>
+
+    <p>
+      Press once to allow music and/or video sound.
+    </p>
+
+  </div>
 
 </div>
 
 
 <script>
 
-const MEDIA_FOLDER =
-  "media";
+const MEDIA_FOLDER = "media";
 
 
-// ---------------------------------------------
-// UPDATE SPEEDS
-// ---------------------------------------------
+// =================================================
+// UPDATE INTERVALS
+// =================================================
 
-// Fast background check.
-// Does NOT reload the page.
-
-const QUICK_CHECK_SECONDS =
-  30;
+const QUICK_CHECK_SECONDS = 30;
 
 
-// ---------------------------------------------
+// =================================================
 // STATE
-// ---------------------------------------------
+// =================================================
 
 let settings = {};
-
 let playlist = {};
 
 let visualItems = [];
-
 let audioItems = [];
 
+let currentVisual = 0;
+let currentAudio = 0;
 
-let currentVisual =
-  0;
+let backgroundMusicEnabled = false;
+let videoMusicBehavior = "pause";
 
-let currentAudio =
-  0;
+let visualTimer = null;
 
+let audioUnlocked = false;
+let audioRequired = false;
 
-let backgroundMusicEnabled =
-  false;
+let waitingToStartModeA = false;
 
-let videoMusicBehavior =
-  "pause";
+let quickCheckTimer = null;
+let fullSyncTimer = null;
 
-
-let visualTimer =
-  null;
-
-
-let audioUnlocked =
-  false;
-
-
-let quickCheckTimer =
-  null;
-
-let fullSyncTimer =
-  null;
+let settingsSignature = "";
+let playlistSignature = "";
+let visualSignature = "";
+let audioSignature = "";
 
 
-// Signatures let us know whether
-// anything actually changed.
-
-let settingsSignature =
-  "";
-
-let playlistSignature =
-  "";
-
-let visualSignature =
-  "";
-
-let audioSignature =
-  "";
-
-
-// ---------------------------------------------
-// START
-// ---------------------------------------------
+// =================================================
+// INITIAL START
+// =================================================
 
 async function startTV() {
 
@@ -443,13 +361,11 @@ async function startTV() {
     const fresh =
       await fetchFreshData();
 
-
     applyFreshData(
       fresh.settings,
       fresh.playlists,
       true
     );
-
 
     startUpdateTimers();
 
@@ -466,13 +382,11 @@ async function startTV() {
 }
 
 
-// ---------------------------------------------
-// FETCH STATIC GITHUB PAGES FILES
-// ---------------------------------------------
+// =================================================
+// FETCH JSON
+// =================================================
 
-async function fetchJSON(
-  filename
-) {
+async function fetchJSON(filename) {
 
   const response =
     await fetch(
@@ -482,12 +396,10 @@ async function fetchJSON(
       Date.now(),
 
       {
-        cache:
-          "no-store"
+        cache: "no-store"
       }
 
     );
-
 
   if (!response.ok) {
 
@@ -498,9 +410,7 @@ async function fetchJSON(
 
   }
 
-
-  return await
-    response.json();
+  return await response.json();
 
 }
 
@@ -512,12 +422,10 @@ async function fetchFreshData() {
       "settings.json"
     );
 
-
   const freshPlaylists =
     await fetchJSON(
       "playlists.json"
     );
-
 
   return {
 
@@ -532,9 +440,9 @@ async function fetchFreshData() {
 }
 
 
-// ---------------------------------------------
-// TIMERS
-// ---------------------------------------------
+// =================================================
+// UPDATE TIMERS
+// =================================================
 
 function startUpdateTimers() {
 
@@ -542,15 +450,12 @@ function startUpdateTimers() {
     quickCheckTimer
   );
 
-
   clearInterval(
     fullSyncTimer
   );
 
 
-  // --------------------------------
-  // QUICK CHECK
-  // --------------------------------
+  // FAST 30-SECOND CHANGE CHECK
 
   quickCheckTimer =
     setInterval(
@@ -569,14 +474,11 @@ function startUpdateTimers() {
     );
 
 
-  // --------------------------------
-  // PERIODIC FULL SYNC
-  // --------------------------------
+  // PERIODIC FULL SAFETY SYNC
 
   const minutes =
     settings.refreshMinutes ||
     15;
-
 
   fullSyncTimer =
     setInterval(
@@ -598,9 +500,9 @@ function startUpdateTimers() {
 }
 
 
-// ---------------------------------------------
+// =================================================
 // CHECK FOR CHANGES
-// ---------------------------------------------
+// =================================================
 
 async function checkForUpdates(
   fullSync
@@ -652,26 +554,15 @@ async function checkForUpdates(
 
     }
 
-
   }
 
   catch (error) {
 
-    // --------------------------------
-    // SAFETY MECHANISM
-    // --------------------------------
-    //
-    // GitHub unavailable?
-    // Wi-Fi hiccup?
-    // Bad request?
-    //
-    // DO NOTHING.
-    //
-    // Existing slideshow and
-    // music continue running.
+    // SAFETY:
+    // Leave the currently working display alone.
 
     console.log(
-      "Update check failed. Keeping current display running."
+      "Update check failed. Current display will continue."
     );
 
   }
@@ -679,16 +570,64 @@ async function checkForUpdates(
 }
 
 
-// ---------------------------------------------
-// APPLY NEW DATA
-// ---------------------------------------------
+// =================================================
+// DETERMINE WHETHER AUDIO IS ACTUALLY NEEDED
+// =================================================
+
+function determineAudioRequirement() {
+
+  // Background music means we definitely need
+  // audible playback permission.
+
+  if (
+    backgroundMusicEnabled &&
+    audioItems.length > 0
+  ) {
+
+    return true;
+
+  }
+
+
+  // If the global rule mutes all videos,
+  // video sound cannot require permission.
+
+  if (
+    videoMusicBehavior ===
+    "muteVideo"
+  ) {
+
+    return false;
+
+  }
+
+
+  // Otherwise, see whether ANY selected video
+  // is intentionally unmuted.
+
+  const audibleVideoExists =
+    visualItems.some(
+
+      item =>
+        item.type === "video" &&
+        item.muted !== true
+
+    );
+
+
+  return audibleVideoExists;
+
+}
+
+
+// =================================================
+// APPLY UPDATED DATA
+// =================================================
 
 function applyFreshData(
 
   freshSettings,
-
   freshPlaylists,
-
   initialLoad
 
 ) {
@@ -765,9 +704,7 @@ function applyFreshData(
     newAudioSignature;
 
 
-  // --------------------------------
-  // STORE NEW STATE
-  // --------------------------------
+  // SAVE NEW STATE
 
   settings =
     freshSettings;
@@ -795,6 +732,10 @@ function applyFreshData(
     "pause";
 
 
+  audioRequired =
+    determineAudioRequirement();
+
+
   settingsSignature =
     JSON.stringify(
       freshSettings
@@ -815,10 +756,7 @@ function applyFreshData(
     newAudioSignature;
 
 
-  // --------------------------------
-  // UPDATE FULL SYNC TIMER
-  // IF CONTROL PANEL CHANGED IT
-  // --------------------------------
+  // UPDATE FULL SYNC TIMER IF CHANGED
 
   if (
 
@@ -836,32 +774,31 @@ function applyFreshData(
   }
 
 
-  // =============================================
-  // MODE B
-  // =============================================
+  // =================================================
+  // MODE B — GOOGLE SLIDES
+  // =================================================
 
   if (
     settings.mode === "B"
   ) {
 
+    waitingToStartModeA =
+      false;
+
+
+    stopModeA();
+
+
     if (
-
       initialLoad ||
-      modeChanged ||
-      previousMode !== "B"
-
+      modeChanged
     ) {
-
-      stopModeA();
 
       loadGoogleSlides();
 
     }
 
     else {
-
-      // If the Google Slides URL changed,
-      // reload only the iframe.
 
       const iframe =
         document.querySelector(
@@ -870,9 +807,14 @@ function applyFreshData(
 
 
       if (
+
         iframe &&
-        iframe.src !==
+
+        iframe.getAttribute(
+          "src"
+        ) !==
           settings.googleSlidesUrl
+
       ) {
 
         loadGoogleSlides();
@@ -887,57 +829,14 @@ function applyFreshData(
   }
 
 
-  // =============================================
+  // =================================================
   // MODE A
-  // =============================================
+  // =================================================
 
   if (
     settings.mode === "A"
   ) {
 
-    // --------------------------------
-    // AUDIO
-    // --------------------------------
-
-    if (
-      backgroundMusicEnabled &&
-      audioItems.length
-    ) {
-
-      if (
-        !audioUnlocked
-      ) {
-
-        showAudioButton();
-
-      }
-
-      else if (
-
-        initialLoad ||
-        modeChanged ||
-        audioChanged
-
-      ) {
-
-        restartAudioPlaylist();
-
-      }
-
-    }
-
-    else {
-
-      stopBackgroundAudio();
-
-      hideAudioButton();
-
-    }
-
-
-    // --------------------------------
-    // VISUAL PLAYLIST
-    // --------------------------------
 
     if (
       !visualItems.length
@@ -951,6 +850,77 @@ function applyFreshData(
 
     }
 
+
+    // ---------------------------------------------
+    // AUDIO IS REQUIRED BUT HAS NEVER BEEN UNLOCKED
+    // ---------------------------------------------
+
+    if (
+      audioRequired &&
+      !audioUnlocked
+    ) {
+
+      waitingToStartModeA =
+        true;
+
+
+      clearTimeout(
+        visualTimer
+      );
+
+
+      showAudioButton();
+
+
+      return;
+
+    }
+
+
+    waitingToStartModeA =
+      false;
+
+
+    hideAudioButton();
+
+
+    // ---------------------------------------------
+    // BACKGROUND MUSIC
+    // ---------------------------------------------
+
+    if (
+      backgroundMusicEnabled &&
+      audioItems.length > 0
+    ) {
+
+      if (
+
+        audioUnlocked &&
+
+        (
+          initialLoad ||
+          modeChanged ||
+          audioChanged
+        )
+
+      ) {
+
+        restartAudioPlaylist();
+
+      }
+
+    }
+
+    else {
+
+      stopBackgroundAudio();
+
+    }
+
+
+    // ---------------------------------------------
+    // VISUAL PLAYLIST
+    // ---------------------------------------------
 
     if (
 
@@ -973,9 +943,9 @@ function applyFreshData(
 }
 
 
-// ---------------------------------------------
+// =================================================
 // MODE B
-// ---------------------------------------------
+// =================================================
 
 function loadGoogleSlides() {
 
@@ -999,9 +969,9 @@ function loadGoogleSlides() {
 }
 
 
-// ---------------------------------------------
-// MODE A VISUALS
-// ---------------------------------------------
+// =================================================
+// PLAY VISUAL
+// =================================================
 
 function playVisual() {
 
@@ -1043,13 +1013,11 @@ function playVisual() {
 }
 
 
-// ---------------------------------------------
+// =================================================
 // IMAGE
-// ---------------------------------------------
+// =================================================
 
-function playImage(
-  item
-) {
+function playImage(item) {
 
   resumeMusicAfterVideo();
 
@@ -1086,6 +1054,7 @@ function playImage(
 
       player.innerHTML =
         "";
+
 
       player.appendChild(
         image
@@ -1135,13 +1104,11 @@ function playImage(
 }
 
 
-// ---------------------------------------------
+// =================================================
 // VIDEO
-// ---------------------------------------------
+// =================================================
 
-function playVideo(
-  item
-) {
+function playVideo(item) {
 
   clearTimeout(
     visualTimer
@@ -1183,12 +1150,15 @@ function playVideo(
   );
 
 
-  // --------------------------------
-  // PER-VIDEO MUTE
-  // --------------------------------
+  // ---------------------------------------------
+  // SOUND RULES
+  // ---------------------------------------------
+
+
+  // PER-VIDEO MUTE ALWAYS WINS
 
   if (
-    item.muted
+    item.muted === true
   ) {
 
     video.muted =
@@ -1196,6 +1166,21 @@ function playVideo(
 
   }
 
+
+  // GLOBAL MUTE-VIDEO RULE
+
+  else if (
+    videoMusicBehavior ===
+    "muteVideo"
+  ) {
+
+    video.muted =
+      true;
+
+  }
+
+
+  // VIDEO SOUND ON — PAUSE MUSIC
 
   else if (
     videoMusicBehavior ===
@@ -1205,10 +1190,13 @@ function playVideo(
     video.muted =
       false;
 
+
     pauseBackgroundMusic();
 
   }
 
+
+  // VIDEO SOUND + MUSIC TOGETHER
 
   else if (
     videoMusicBehavior ===
@@ -1217,17 +1205,6 @@ function playVideo(
 
     video.muted =
       false;
-
-  }
-
-
-  else if (
-    videoMusicBehavior ===
-    "muteVideo"
-  ) {
-
-    video.muted =
-      true;
 
   }
 
@@ -1255,6 +1232,7 @@ function playVideo(
 
         resumeMusicAfterVideo();
 
+
         nextVisual();
 
       },
@@ -1266,6 +1244,8 @@ function playVideo(
   }
 
 
+  // FULL VIDEO
+
   if (
     item.videoMode !==
     "custom"
@@ -1276,6 +1256,8 @@ function playVideo(
 
   }
 
+
+  // CUSTOM VIDEO DURATION
 
   else {
 
@@ -1295,6 +1277,7 @@ function playVideo(
 
           video.pause();
 
+
           finishVideo();
 
         },
@@ -1306,25 +1289,34 @@ function playVideo(
   }
 
 
+  // Try desired playback first.
+
   video
     .play()
     .catch(
+
       () => {
+
+        // SAFETY FALLBACK:
+        // If audible autoplay somehow fails,
+        // don't freeze the display.
 
         video.muted =
           true;
 
+
         video.play();
 
       }
+
     );
 
 }
 
 
-// ---------------------------------------------
+// =================================================
 // NEXT VISUAL
-// ---------------------------------------------
+// =================================================
 
 function nextVisual() {
 
@@ -1353,9 +1345,9 @@ function nextVisual() {
 }
 
 
-// ---------------------------------------------
-// AUDIO START BUTTON
-// ---------------------------------------------
+// =================================================
+// AUDIO START
+// =================================================
 
 document
   .getElementById(
@@ -1396,14 +1388,36 @@ function unlockAudio() {
   hideAudioButton();
 
 
-  restartAudioPlaylist();
+  waitingToStartModeA =
+    false;
+
+
+  // START MUSIC IF SELECTED
+
+  if (
+    backgroundMusicEnabled &&
+    audioItems.length > 0
+  ) {
+
+    restartAudioPlaylist();
+
+  }
+
+
+  // START VISUAL PLAYLIST
+
+  currentVisual =
+    0;
+
+
+  playVisual();
 
 }
 
 
-// ---------------------------------------------
-// AUDIO PLAYLIST
-// ---------------------------------------------
+// =================================================
+// BACKGROUND MUSIC
+// =================================================
 
 function restartAudioPlaylist() {
 
@@ -1491,19 +1505,21 @@ function playCurrentAudio() {
   audio
     .play()
     .catch(
+
       () => {
 
         showAudioButton();
 
       }
+
     );
 
 }
 
 
-// ---------------------------------------------
-// AUDIO CONTROL
-// ---------------------------------------------
+// =================================================
+// MUSIC AROUND VIDEO
+// =================================================
 
 function pauseBackgroundMusic() {
 
@@ -1582,6 +1598,10 @@ function resumeMusicAfterVideo() {
 }
 
 
+// =================================================
+// STOP AUDIO / MODE A
+// =================================================
+
 function stopBackgroundAudio() {
 
   const audio =
@@ -1600,10 +1620,6 @@ function stopBackgroundAudio() {
 }
 
 
-// ---------------------------------------------
-// STOP MODE A
-// ---------------------------------------------
-
 function stopModeA() {
 
   clearTimeout(
@@ -1619,9 +1635,9 @@ function stopModeA() {
 }
 
 
-// ---------------------------------------------
+// =================================================
 // TRANSITIONS
-// ---------------------------------------------
+// =================================================
 
 function applyEnterTransition(
   element,
@@ -1673,13 +1689,11 @@ function applyExitTransition(
 }
 
 
-// ---------------------------------------------
+// =================================================
 // MESSAGE
-// ---------------------------------------------
+// =================================================
 
-function showMessage(
-  text
-) {
+function showMessage(text) {
 
   document.getElementById(
     "player"
@@ -1692,9 +1706,9 @@ function showMessage(
 }
 
 
-// ---------------------------------------------
+// =================================================
 // GO
-// ---------------------------------------------
+// =================================================
 
 startTV();
 
