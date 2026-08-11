@@ -59,6 +59,11 @@ button {
   cursor: pointer;
 }
 
+button:disabled {
+  opacity: .55;
+  cursor: not-allowed;
+}
+
 .mode-buttons {
   display: flex;
   gap: 12px;
@@ -169,8 +174,8 @@ button {
   <p class="small">Stored only in this browser.</p>
 </div>
 
-<div class="card">
 
+<div class="card">
   <h2>Display Mode</h2>
 
   <div class="mode-buttons">
@@ -190,8 +195,8 @@ button {
     </button>
 
   </div>
-
 </div>
+
 
 <div class="card">
 
@@ -210,7 +215,7 @@ button {
   </select>
 
   <p class="small">
-    Changes all items at once. Individual items can still be changed below.
+    Changes all visual items at once. Individual items can still be changed below.
   </p>
 
   <button onclick="loadMedia()">
@@ -222,6 +227,7 @@ button {
   </div>
 
 </div>
+
 
 <div class="card">
 
@@ -260,6 +266,7 @@ button {
 
 </div>
 
+
 <div class="card">
 
   <h2>Mode B — Google Slides</h2>
@@ -270,12 +277,13 @@ button {
 
 </div>
 
+
 <div class="card">
 
   <h2>TV Update Check</h2>
 
   <p class="small">
-    The TV checks for new settings without reloading the entire webpage.
+    TV checks for new settings without fully reloading the webpage.
   </p>
 
   <select id="refreshMinutes">
@@ -288,11 +296,13 @@ button {
 
 </div>
 
+
 <button
   class="save-button"
   onclick="goLive()">
   SAVE / GO LIVE
 </button>
+
 
 <div class="card" style="margin-top:20px;">
 
@@ -305,6 +315,7 @@ button {
 </div>
 
 </div>
+
 
 <script>
 
@@ -321,6 +332,11 @@ let playlistData = {};
 let visualItems = [];
 let audioItems = [];
 
+
+// ------------------------------------------------
+// TOKEN
+// ------------------------------------------------
+
 function saveToken() {
 
   const token =
@@ -336,8 +352,9 @@ function saveToken() {
     token
   );
 
-  setStatus("Token saved.");
+  setStatus("Token saved on this computer.");
 }
+
 
 function loadSavedToken() {
 
@@ -352,12 +369,18 @@ function loadSavedToken() {
   }
 }
 
+
 function getToken() {
 
   return localStorage.getItem(
     "tvDisplayGithubToken"
   );
 }
+
+
+// ------------------------------------------------
+// LOAD SETTINGS
+// ------------------------------------------------
 
 async function loadEverything() {
 
@@ -373,22 +396,27 @@ async function loadEverything() {
         "playlists.json?ts=" + Date.now()
       ).then(r => r.json());
 
+
     document.getElementById(
       "googleSlidesUrl"
     ).value =
       settings.googleSlidesUrl || "";
+
 
     document.getElementById(
       "refreshMinutes"
     ).value =
       settings.refreshMinutes || 15;
 
+
     chooseMode(
       settings.mode || "B"
     );
 
+
     const playlist =
       playlistData.default || {};
+
 
     document.getElementById(
       "musicEnabled"
@@ -396,11 +424,13 @@ async function loadEverything() {
       playlist.backgroundMusic?.enabled ||
       false;
 
+
     document.getElementById(
       "videoMusicBehavior"
     ).value =
       playlist.backgroundMusic?.videoBehavior ||
       "pause";
+
 
     document.getElementById(
       "defaultTransition"
@@ -408,14 +438,18 @@ async function loadEverything() {
       playlist.defaultTransition ||
       "fade";
 
+
     await loadMedia();
+
 
     setStatus(
       "Current live mode: " +
       (settings.mode || "B")
     );
 
-  } catch (error) {
+  }
+
+  catch (error) {
 
     setStatus(
       "ERROR loading settings."
@@ -423,6 +457,11 @@ async function loadEverything() {
 
   }
 }
+
+
+// ------------------------------------------------
+// MODE
+// ------------------------------------------------
 
 function chooseMode(mode) {
 
@@ -439,7 +478,13 @@ function chooseMode(mode) {
       "active",
       mode === "B"
     );
+
 }
+
+
+// ------------------------------------------------
+// LOAD MEDIA
+// ------------------------------------------------
 
 async function loadMedia() {
 
@@ -455,8 +500,10 @@ async function loadMedia() {
     return;
   }
 
+
   const apiURL =
     `https://api.github.com/repos/${OWNER}/${REPO}/contents/${MEDIA_FOLDER}`;
+
 
   try {
 
@@ -465,39 +512,50 @@ async function loadMedia() {
         apiURL,
         {
           headers: {
+
             "Authorization":
               `Bearer ${token}`,
 
             "Accept":
               "application/vnd.github+json"
+
           }
         }
       );
 
+
     if (!response.ok) {
+
       throw new Error(
         "Could not read media folder."
       );
+
     }
+
 
     const files =
       await response.json();
 
+
     const playlist =
       playlistData.default || {};
+
 
     const savedVisual =
       playlist.visualItems ||
       playlist.items ||
       [];
 
+
     const savedAudio =
       playlist.audioItems ||
       [];
 
+
     const defaultTransition =
       playlist.defaultTransition ||
       "fade";
+
 
     visualItems =
       files
@@ -510,22 +568,19 @@ async function loadMedia() {
 
           const saved =
             savedVisual.find(
-              x =>
-                x.file ===
-                file.name
+              x => x.file === file.name
             );
 
           const video =
-            /\.(mp4|webm)$/i
-              .test(file.name);
+            /\.(mp4|webm)$/i.test(
+              file.name
+            );
 
           return {
 
-            file:
-              file.name,
+            file: file.name,
 
-            url:
-              file.download_url,
+            url: file.download_url,
 
             type:
               video
@@ -536,24 +591,22 @@ async function loadMedia() {
               !!saved,
 
             duration:
-              saved?.duration ||
-              8,
+              saved?.duration || 8,
 
             videoMode:
-              saved?.videoMode ||
-              "full",
+              saved?.videoMode || "full",
 
             transition:
               saved?.transition ||
               defaultTransition,
 
             muted:
-              saved?.muted ||
-              false
+              saved?.muted || false
 
           };
 
         });
+
 
     audioItems =
       files
@@ -566,18 +619,14 @@ async function loadMedia() {
 
           const saved =
             savedAudio.find(
-              x =>
-                x.file ===
-                file.name
+              x => x.file === file.name
             );
 
           return {
 
-            file:
-              file.name,
+            file: file.name,
 
-            url:
-              file.download_url,
+            url: file.download_url,
 
             selected:
               !!saved
@@ -586,20 +635,25 @@ async function loadMedia() {
 
         });
 
+
     sortBySavedOrder(
       visualItems,
       savedVisual
     );
+
 
     sortBySavedOrder(
       audioItems,
       savedAudio
     );
 
+
     renderVisuals();
     renderAudio();
 
-  } catch (error) {
+  }
+
+  catch (error) {
 
     setStatus(
       "ERROR: " +
@@ -607,7 +661,13 @@ async function loadMedia() {
     );
 
   }
+
 }
+
+
+// ------------------------------------------------
+// ORDER SAVED ITEMS
+// ------------------------------------------------
 
 function sortBySavedOrder(
   items,
@@ -619,17 +679,14 @@ function sortBySavedOrder(
 
       const ai =
         saved.findIndex(
-          x =>
-            x.file ===
-            a.file
+          x => x.file === a.file
         );
 
       const bi =
         saved.findIndex(
-          x =>
-            x.file ===
-            b.file
+          x => x.file === b.file
         );
+
 
       if (
         ai === -1 &&
@@ -637,17 +694,26 @@ function sortBySavedOrder(
       )
         return 0;
 
+
       if (ai === -1)
         return 1;
 
+
       if (bi === -1)
         return -1;
+
 
       return ai - bi;
 
     }
   );
+
 }
+
+
+// ------------------------------------------------
+// DEFAULT TRANSITION
+// ------------------------------------------------
 
 function applyDefaultTransition() {
 
@@ -656,15 +722,25 @@ function applyDefaultTransition() {
       "defaultTransition"
     ).value;
 
+
   visualItems.forEach(
     item => {
+
       item.transition =
         value;
+
     }
   );
 
+
   renderVisuals();
+
 }
+
+
+// ------------------------------------------------
+// VISUAL UI
+// ------------------------------------------------
 
 function renderVisuals() {
 
@@ -673,9 +749,8 @@ function renderVisuals() {
       "visualList"
     );
 
-  if (
-    !visualItems.length
-  ) {
+
+  if (!visualItems.length) {
 
     container.innerHTML =
       "No images or videos found.";
@@ -683,7 +758,9 @@ function renderVisuals() {
     return;
   }
 
+
   container.innerHTML = "";
+
 
   visualItems.forEach(
     (item, index) => {
@@ -695,6 +772,9 @@ function renderVisuals() {
 
       row.className =
         "media-row";
+
+
+      // SELECT
 
       const checkbox =
         document.createElement(
@@ -712,11 +792,14 @@ function renderVisuals() {
           item.selected =
             checkbox.checked;
 
+
+      // PREVIEW
+
       let preview;
 
+
       if (
-        item.type ===
-        "image"
+        item.type === "image"
       ) {
 
         preview =
@@ -750,13 +833,18 @@ function renderVisuals() {
 
       }
 
+
       preview.className =
         "preview";
+
+
+      // INFO
 
       const info =
         document.createElement(
           "div"
         );
+
 
       info.innerHTML =
         `<div class="media-name">
@@ -767,14 +855,17 @@ function renderVisuals() {
           ${item.type.toUpperCase()}
         </div>`;
 
+
+      // TIMING
+
       const timing =
         document.createElement(
           "div"
         );
 
+
       if (
-        item.type ===
-        "image"
+        item.type === "image"
       ) {
 
         timing.innerHTML =
@@ -789,14 +880,15 @@ function renderVisuals() {
             value="${item.duration}"
           > sec`;
 
-        timing.querySelector(
-          "input"
-        ).onchange =
-          e =>
-            item.duration =
-              Number(
-                e.target.value
-              ) || 8;
+
+        timing
+          .querySelector("input")
+          .onchange =
+            e =>
+              item.duration =
+                Number(
+                  e.target.value
+                ) || 8;
 
       }
 
@@ -807,6 +899,7 @@ function renderVisuals() {
             "select"
           );
 
+
         select.innerHTML =
           `<option value="full">
             Full Video
@@ -816,13 +909,16 @@ function renderVisuals() {
             Custom Time
           </option>`;
 
+
         select.value =
           item.videoMode;
+
 
         const custom =
           document.createElement(
             "input"
           );
+
 
         custom.type =
           "number";
@@ -836,15 +932,16 @@ function renderVisuals() {
         custom.value =
           item.duration || 10;
 
+
         function updateVideoUI() {
 
           custom.style.display =
-            select.value ===
-            "custom"
+            select.value === "custom"
               ? "inline-block"
               : "none";
 
         }
+
 
         select.onchange =
           () => {
@@ -856,6 +953,7 @@ function renderVisuals() {
 
           };
 
+
         custom.onchange =
           () => {
 
@@ -865,6 +963,7 @@ function renderVisuals() {
               ) || 10;
 
           };
+
 
         timing.appendChild(
           select
@@ -880,19 +979,25 @@ function renderVisuals() {
           custom
         );
 
+
         updateVideoUI();
 
       }
+
+
+      // TRANSITION
 
       const transitionBox =
         document.createElement(
           "div"
         );
 
+
       const transition =
         document.createElement(
           "select"
         );
+
 
       transition.innerHTML =
         `
@@ -905,9 +1010,11 @@ function renderVisuals() {
         <option value="none">None</option>
         `;
 
+
       transition.value =
         item.transition ||
         "fade";
+
 
       transition.onchange =
         () => {
@@ -917,9 +1024,13 @@ function renderVisuals() {
 
         };
 
+
       transitionBox.appendChild(
         transition
       );
+
+
+      // MUTE
 
       const muteBox =
         document.createElement(
@@ -929,9 +1040,9 @@ function renderVisuals() {
       muteBox.className =
         "mute-box";
 
+
       if (
-        item.type ===
-        "video"
+        item.type === "video"
       ) {
 
         const mute =
@@ -939,22 +1050,26 @@ function renderVisuals() {
             "input"
           );
 
+
         mute.type =
           "checkbox";
 
         mute.checked =
           item.muted;
 
+
         mute.onchange =
           () =>
             item.muted =
               mute.checked;
+
 
         muteBox.appendChild(
           document.createTextNode(
             "Mute "
           )
         );
+
 
         muteBox.appendChild(
           mute
@@ -971,12 +1086,16 @@ function renderVisuals() {
 
       }
 
+
+      // ORDER
+
       const controls =
         createOrderButtons(
           visualItems,
           index,
           renderVisuals
         );
+
 
       row.appendChild(
         checkbox
@@ -1006,13 +1125,20 @@ function renderVisuals() {
         controls
       );
 
+
       container.appendChild(
         row
       );
 
     }
   );
+
 }
+
+
+// ------------------------------------------------
+// AUDIO UI
+// ------------------------------------------------
 
 function renderAudio() {
 
@@ -1021,17 +1147,19 @@ function renderAudio() {
       "audioList"
     );
 
-  if (
-    !audioItems.length
-  ) {
+
+  if (!audioItems.length) {
 
     container.innerHTML =
       "<span class='small'>No audio files found.</span>";
 
     return;
+
   }
 
+
   container.innerHTML = "";
+
 
   audioItems.forEach(
     (item, index) => {
@@ -1041,13 +1169,16 @@ function renderAudio() {
           "div"
         );
 
+
       row.className =
         "audio-row";
+
 
       const checkbox =
         document.createElement(
           "input"
         );
+
 
       checkbox.type =
         "checkbox";
@@ -1055,15 +1186,18 @@ function renderAudio() {
       checkbox.checked =
         item.selected;
 
+
       checkbox.onchange =
         () =>
           item.selected =
             checkbox.checked;
 
+
       const info =
         document.createElement(
           "div"
         );
+
 
       info.innerHTML =
         `<div>
@@ -1077,12 +1211,14 @@ function renderAudio() {
           style="width:100%; margin-top:7px;">
         </audio>`;
 
+
       const controls =
         createOrderButtons(
           audioItems,
           index,
           renderAudio
         );
+
 
       row.appendChild(
         checkbox
@@ -1096,13 +1232,20 @@ function renderAudio() {
         controls
       );
 
+
       container.appendChild(
         row
       );
 
     }
   );
+
 }
+
+
+// ------------------------------------------------
+// ORDER BUTTONS
+// ------------------------------------------------
 
 function createOrderButtons(
   array,
@@ -1115,16 +1258,20 @@ function createOrderButtons(
       "div"
     );
 
+
   controls.className =
     "order-buttons";
+
 
   const up =
     document.createElement(
       "button"
     );
 
+
   up.innerText =
     "↑";
+
 
   up.onclick =
     () =>
@@ -1135,13 +1282,16 @@ function createOrderButtons(
         renderFunction
       );
 
+
   const down =
     document.createElement(
       "button"
     );
 
+
   down.innerText =
     "↓";
+
 
   down.onclick =
     () =>
@@ -1152,16 +1302,21 @@ function createOrderButtons(
         renderFunction
       );
 
+
   controls.appendChild(
     up
   );
+
 
   controls.appendChild(
     down
   );
 
+
   return controls;
+
 }
+
 
 function moveItem(
   array,
@@ -1171,15 +1326,15 @@ function moveItem(
 ) {
 
   const newIndex =
-    index +
-    direction;
+    index + direction;
+
 
   if (
     newIndex < 0 ||
-    newIndex >=
-      array.length
+    newIndex >= array.length
   )
     return;
+
 
   [
     array[index],
@@ -1190,13 +1345,21 @@ function moveItem(
     array[index]
   ];
 
+
   renderFunction();
+
 }
+
+
+// ------------------------------------------------
+// SAVE / GO LIVE
+// ------------------------------------------------
 
 async function goLive() {
 
   const token =
     getToken();
+
 
   if (!token) {
 
@@ -1205,26 +1368,41 @@ async function goLive() {
     );
 
     return;
+
   }
 
-  setStatus(
-    "Saving..."
-  );
+
+  const saveButton =
+    document.querySelector(
+      ".save-button"
+    );
+
+
+  saveButton.disabled =
+    true;
+
+
+  saveButton.innerText =
+    "SAVING...";
+
 
   try {
+
+    setStatus(
+      "1/2 — Saving playlist..."
+    );
+
 
     const selectedVisuals =
       visualItems
         .filter(
-          x =>
-            x.selected
+          x => x.selected
         )
         .map(
           item => {
 
             if (
-              item.type ===
-              "image"
+              item.type === "image"
             ) {
 
               return {
@@ -1244,6 +1422,7 @@ async function goLive() {
               };
 
             }
+
 
             return {
 
@@ -1270,11 +1449,11 @@ async function goLive() {
           }
         );
 
+
     const selectedAudio =
       audioItems
         .filter(
-          x =>
-            x.selected
+          x => x.selected
         )
         .map(
           item => ({
@@ -1287,6 +1466,7 @@ async function goLive() {
 
           })
         );
+
 
     playlistData.default = {
 
@@ -1320,16 +1500,24 @@ async function goLive() {
 
     };
 
-    await updateGithubJSON(
+
+    await updateGithubJSONWithRetry(
       PLAYLISTS_FILE,
       playlistData,
       "Update TV playlists"
     );
 
+
+    setStatus(
+      "2/2 — Saving TV settings..."
+    );
+
+
     settings.googleSlidesUrl =
       document.getElementById(
         "googleSlidesUrl"
       ).value.trim();
+
 
     settings.refreshMinutes =
       Number(
@@ -1338,28 +1526,65 @@ async function goLive() {
         ).value
       );
 
+
     settings.activePlaylist =
       "default";
 
-    await updateGithubJSON(
+
+    await updateGithubJSONWithRetry(
       SETTINGS_FILE,
       settings,
       "Update TV settings"
     );
 
+
     setStatus(
       "SAVED — TV settings are now live."
     );
 
-  } catch (error) {
 
-    setStatus(
-      "ERROR: " +
-      error.message
+    saveButton.innerText =
+      "SAVED ✓";
+
+
+    setTimeout(
+      () => {
+
+        saveButton.innerText =
+          "SAVE / GO LIVE";
+
+        saveButton.disabled =
+          false;
+
+      },
+      2000
     );
 
   }
+
+  catch (error) {
+
+    setStatus(
+      "SAVE FAILED — " +
+      error.message
+    );
+
+
+    saveButton.innerText =
+      "TRY AGAIN";
+
+
+    saveButton.disabled =
+      false;
+
+  }
+
 }
+
+
+// ------------------------------------------------
+// WRITE TO GITHUB
+// ------------------------------------------------
 
 async function updateGithubJSON(
   filename,
@@ -1370,8 +1595,10 @@ async function updateGithubJSON(
   const token =
     getToken();
 
+
   const apiURL =
     `https://api.github.com/repos/${OWNER}/${REPO}/contents/${filename}`;
+
 
   const currentResponse =
     await fetch(
@@ -1389,9 +1616,8 @@ async function updateGithubJSON(
       }
     );
 
-  if (
-    !currentResponse.ok
-  ) {
+
+  if (!currentResponse.ok) {
 
     throw new Error(
       "Could not read " +
@@ -1400,8 +1626,10 @@ async function updateGithubJSON(
 
   }
 
+
   const currentFile =
     await currentResponse.json();
+
 
   const text =
     JSON.stringify(
@@ -1409,6 +1637,7 @@ async function updateGithubJSON(
       null,
       2
     );
+
 
   const encoded =
     btoa(
@@ -1418,6 +1647,7 @@ async function updateGithubJSON(
         )
       )
     );
+
 
   const saveResponse =
     await fetch(
@@ -1460,12 +1690,12 @@ async function updateGithubJSON(
       }
     );
 
-  if (
-    !saveResponse.ok
-  ) {
+
+  if (!saveResponse.ok) {
 
     const error =
       await saveResponse.json();
+
 
     throw new Error(
       error.message ||
@@ -1473,7 +1703,79 @@ async function updateGithubJSON(
     );
 
   }
+
 }
+
+
+// ------------------------------------------------
+// AUTOMATIC SAVE RETRY
+// ------------------------------------------------
+
+async function updateGithubJSONWithRetry(
+  filename,
+  data,
+  message
+) {
+
+  const maxAttempts =
+    3;
+
+
+  for (
+    let attempt = 1;
+    attempt <= maxAttempts;
+    attempt++
+  ) {
+
+    try {
+
+      await updateGithubJSON(
+        filename,
+        data,
+        message
+      );
+
+
+      return;
+
+    }
+
+    catch (error) {
+
+      if (
+        attempt === maxAttempts
+      ) {
+
+        throw error;
+
+      }
+
+
+      setStatus(
+        `Temporary GitHub save issue.
+Retrying ${filename}...
+Attempt ${attempt + 1} of ${maxAttempts}`
+      );
+
+
+      await new Promise(
+        resolve =>
+          setTimeout(
+            resolve,
+            1500 * attempt
+          )
+      );
+
+    }
+
+  }
+
+}
+
+
+// ------------------------------------------------
+// MISC
+// ------------------------------------------------
 
 function setStatus(text) {
 
@@ -1481,7 +1783,9 @@ function setStatus(text) {
     "status"
   ).innerText =
     text;
+
 }
+
 
 function escapeHTML(text) {
 
@@ -1490,11 +1794,19 @@ function escapeHTML(text) {
       "div"
     );
 
+
   div.textContent =
     text;
 
+
   return div.innerHTML;
+
 }
+
+
+// ------------------------------------------------
+// START CONTROL PAGE
+// ------------------------------------------------
 
 loadSavedToken();
 loadEverything();
