@@ -26,7 +26,7 @@
     ],
     "audioItems": [],
     "backgroundMusic": {
-      "enabled": true,
+      "enabled": false,
       "videoBehavior": "muteVideo"
     }
   }
