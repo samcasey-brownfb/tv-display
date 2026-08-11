@@ -12,7 +12,7 @@
       {
         "file": "BELLO + UNC - S26 MONEYBALL.jpg",
         "type": "image",
-        "duration": 5,
+        "duration": 13,
         "transition": "fade"
       },
       {
@@ -21,7 +21,7 @@
         "videoMode": "full",
         "duration": 8,
         "transition": "fade",
-        "muted": false
+        "muted": true
       }
     ],
     "audioItems": [],
