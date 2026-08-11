@@ -6,20 +6,13 @@
       {
         "file": "BELLO + UNC - S26 MONEYBALL.jpg",
         "type": "image",
-        "duration": 8,
+        "duration": 5,
         "transition": "fade"
       },
       {
         "file": "FUEL THE FIRE AI NEW.png",
         "type": "image",
-        "duration": 8,
-        "transition": "fade"
-      },
-      {
-        "file": "ITF VIRTUAL TOUR VID.mov.mp4",
-        "type": "video",
-        "videoMode": "full",
-        "duration": 8,
+        "duration": 5,
         "transition": "fade"
       }
     ],
@@ -30,7 +23,7 @@
       }
     ],
     "backgroundMusic": {
-      "enabled": false,
+      "enabled": true,
       "videoBehavior": "pause"
     }
   }
