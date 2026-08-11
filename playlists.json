@@ -23,15 +23,10 @@
         "transition": "fade"
       }
     ],
-    "audioItems": [
-      {
-        "file": "ACDC - Dirty Deeds Done Dirt Cheap (Official Audio).mp3",
-        "type": "audio"
-      }
-    ],
+    "audioItems": [],
     "backgroundMusic": {
-      "enabled": true,
-      "videoBehavior": "muteVideo"
+      "enabled": false,
+      "videoBehavior": "pause"
     }
   }
 }
