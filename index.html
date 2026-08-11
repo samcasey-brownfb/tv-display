@@ -24,6 +24,7 @@ body {
 }
 
 #player {
+  position: relative;
   width: 100vw;
   height: 100vh;
   background: black;
@@ -37,11 +38,23 @@ body {
   background: black;
 }
 
-iframe {
+
+/* GOOGLE SLIDES
+   Extra height pushes Google's bottom
+   navigation/control bar below the screen.
+*/
+
+#slidesFrame {
+  position: absolute;
+  top: 0;
+  left: 0;
+
   width: 100vw;
-  height: 100vh;
+  height: calc(100vh + 55px);
+
   border: 0;
 }
+
 
 #message {
   color: white;
@@ -558,9 +571,6 @@ async function checkForUpdates(
 
   catch (error) {
 
-    // SAFETY:
-    // Leave the currently working display alone.
-
     console.log(
       "Update check failed. Current display will continue."
     );
@@ -576,9 +586,6 @@ async function checkForUpdates(
 
 function determineAudioRequirement() {
 
-  // Background music means we definitely need
-  // audible playback permission.
-
   if (
     backgroundMusicEnabled &&
     audioItems.length > 0
@@ -589,9 +596,6 @@ function determineAudioRequirement() {
   }
 
 
-  // If the global rule mutes all videos,
-  // video sound cannot require permission.
-
   if (
     videoMusicBehavior ===
     "muteVideo"
@@ -601,9 +605,6 @@ function determineAudioRequirement() {
 
   }
 
-
-  // Otherwise, see whether ANY selected video
-  // is intentionally unmuted.
 
   const audibleVideoExists =
     visualItems.some(
@@ -638,6 +639,10 @@ function applyFreshData(
 
   const previousRefresh =
     settings.refreshMinutes;
+
+
+  const previousSlidesUrl =
+    settings.googleSlidesUrl;
 
 
   const newPlaylist =
@@ -690,6 +695,12 @@ function applyFreshData(
 
     previousMode !==
     freshSettings.mode;
+
+
+  const slidesUrlChanged =
+
+    previousSlidesUrl !==
+    freshSettings.googleSlidesUrl;
 
 
   const visualChanged =
@@ -790,36 +801,16 @@ function applyFreshData(
 
 
     if (
+
       initialLoad ||
-      modeChanged
+
+      modeChanged ||
+
+      slidesUrlChanged
+
     ) {
 
       loadGoogleSlides();
-
-    }
-
-    else {
-
-      const iframe =
-        document.querySelector(
-          "#player iframe"
-        );
-
-
-      if (
-
-        iframe &&
-
-        iframe.getAttribute(
-          "src"
-        ) !==
-          settings.googleSlidesUrl
-
-      ) {
-
-        loadGoogleSlides();
-
-      }
 
     }
 
@@ -851,9 +842,7 @@ function applyFreshData(
     }
 
 
-    // ---------------------------------------------
-    // AUDIO IS REQUIRED BUT HAS NEVER BEEN UNLOCKED
-    // ---------------------------------------------
+    // AUDIO REQUIRED BUT NOT YET UNLOCKED
 
     if (
       audioRequired &&
@@ -884,9 +873,7 @@ function applyFreshData(
     hideAudioButton();
 
 
-    // ---------------------------------------------
     // BACKGROUND MUSIC
-    // ---------------------------------------------
 
     if (
       backgroundMusicEnabled &&
@@ -918,9 +905,7 @@ function applyFreshData(
     }
 
 
-    // ---------------------------------------------
     // VISUAL PLAYLIST
-    // ---------------------------------------------
 
     if (
 
@@ -944,7 +929,7 @@ function applyFreshData(
 
 
 // =================================================
-// MODE B
+// MODE B — GOOGLE SLIDES
 // =================================================
 
 function loadGoogleSlides() {
@@ -958,13 +943,14 @@ function loadGoogleSlides() {
     );
 
 
-  player.innerHTML =
-
-    `<iframe
+  player.innerHTML = `
+    <iframe
+      id="slidesFrame"
       src="${settings.googleSlidesUrl}"
       allow="autoplay"
       allowfullscreen>
-    </iframe>`;
+    </iframe>
+  `;
 
 }
 
@@ -1150,11 +1136,6 @@ function playVideo(item) {
   );
 
 
-  // ---------------------------------------------
-  // SOUND RULES
-  // ---------------------------------------------
-
-
   // PER-VIDEO MUTE ALWAYS WINS
 
   if (
@@ -1167,7 +1148,7 @@ function playVideo(item) {
   }
 
 
-  // GLOBAL MUTE-VIDEO RULE
+  // GLOBAL MUTE VIDEO RULE
 
   else if (
     videoMusicBehavior ===
@@ -1180,7 +1161,7 @@ function playVideo(item) {
   }
 
 
-  // VIDEO SOUND ON — PAUSE MUSIC
+  // VIDEO AUDIO + PAUSE MUSIC
 
   else if (
     videoMusicBehavior ===
@@ -1196,7 +1177,7 @@ function playVideo(item) {
   }
 
 
-  // VIDEO SOUND + MUSIC TOGETHER
+  // VIDEO AUDIO + MUSIC TOGETHER
 
   else if (
     videoMusicBehavior ===
@@ -1244,8 +1225,6 @@ function playVideo(item) {
   }
 
 
-  // FULL VIDEO
-
   if (
     item.videoMode !==
     "custom"
@@ -1256,8 +1235,6 @@ function playVideo(item) {
 
   }
 
-
-  // CUSTOM VIDEO DURATION
 
   else {
 
@@ -1289,17 +1266,11 @@ function playVideo(item) {
   }
 
 
-  // Try desired playback first.
-
   video
     .play()
     .catch(
 
       () => {
-
-        // SAFETY FALLBACK:
-        // If audible autoplay somehow fails,
-        // don't freeze the display.
 
         video.muted =
           true;
@@ -1392,8 +1363,6 @@ function unlockAudio() {
     false;
 
 
-  // START MUSIC IF SELECTED
-
   if (
     backgroundMusicEnabled &&
     audioItems.length > 0
@@ -1403,8 +1372,6 @@ function unlockAudio() {
 
   }
 
-
-  // START VISUAL PLAYLIST
 
   currentVisual =
     0;
