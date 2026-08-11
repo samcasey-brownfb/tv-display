@@ -1,6 +1,37 @@
 {
   "default": {
     "name": "Default Playlist",
-    "items": []
+    "defaultTransition": "fade",
+    "visualItems": [
+      {
+        "file": "BELLO + UNC - S26 MONEYBALL.jpg",
+        "type": "image",
+        "duration": 5,
+        "transition": "fade"
+      },
+      {
+        "file": "FUEL THE FIRE AI NEW.png",
+        "type": "image",
+        "duration": 5,
+        "transition": "fade"
+      },
+      {
+        "file": "ITF VIRTUAL TOUR VID.mov.mp4",
+        "type": "video",
+        "videoMode": "full",
+        "duration": 8,
+        "transition": "fade"
+      }
+    ],
+    "audioItems": [
+      {
+        "file": "Bill Withers - Lovely Day (Official Audio).mp3",
+        "type": "audio"
+      }
+    ],
+    "backgroundMusic": {
+      "enabled": true,
+      "videoBehavior": "pause"
+    }
   }
 }
