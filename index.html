@@ -9,7 +9,6 @@
   <style>
     html, body {
       margin: 0;
-      padding: 0;
       width: 100%;
       height: 100%;
       background: black;
@@ -20,29 +19,28 @@
       width: 100vw;
       height: 100vh;
       object-fit: contain;
-      background: black;
     }
   </style>
 </head>
 
 <body>
 
-  <img id="slideshow" src="images/slide1.jpg">
+<img id="slideshow" src="images/FTF BACKGROUND JP.png">
 
-  <script>
-    const slides = [
-      "images/slide1.jpg",
-      "images/slide2.jpg",
-      "images/slide3.jpg"
-    ];
+<script>
+  const slides = [
+    "images/FTF BACKGROUND JP.png",
+    "images/AI IMAGE - LB - FULLY CHARGED 2.0.png",
+    "images/Not Afraid 16-9.png"
+  ];
 
-    let currentSlide = 0;
+  let current = 0;
 
-    setInterval(() => {
-      currentSlide = (currentSlide + 1) % slides.length;
-      document.getElementById("slideshow").src = slides[currentSlide];
-    }, 10000);
-  </script>
+  setInterval(() => {
+    current = (current + 1) % slides.length;
+    document.getElementById("slideshow").src = slides[current];
+  }, 5000);
+</script>
 
 </body>
 </html>
