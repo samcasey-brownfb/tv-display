@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>Brown Football TV</title>
 
   <style>
@@ -15,20 +16,136 @@
       overflow: hidden;
     }
 
-    iframe {
+    #player {
       width: 100vw;
       height: 100vh;
+    }
+
+    iframe,
+    img,
+    video {
+      width: 100%;
+      height: 100%;
       border: 0;
+      object-fit: contain;
+      background: black;
+    }
+
+    #message {
+      color: white;
+      font-family: Arial, sans-serif;
+      font-size: 3vw;
+      text-align: center;
+      padding-top: 40vh;
     }
   </style>
 </head>
 
 <body>
 
-  <iframe
-    src="https://docs.google.com/presentation/d/e/2PACX-1vRgp2rNfNO30S4pS4gxgEv8piiA8iHikyCeTC__8fckv5pQdqx-OVZIaqCwKq1a1w/embed?start=true&loop=true&delayms=5000"
-    allowfullscreen>
-  </iframe>
+  <div id="player">
+    <div id="message">Loading TV Display...</div>
+  </div>
+
+  <script>
+    async function loadSettings() {
+      try {
+        const response = await fetch("settings.json?ts=" + Date.now());
+        const settings = await response.json();
+
+        if (settings.mode === "B") {
+          loadGoogleSlides(settings);
+        } else if (settings.mode === "A") {
+          loadMediaPlaylist(settings);
+        } else {
+          showMessage("Unknown display mode.");
+        }
+
+        const minutes = settings.refreshMinutes || 15;
+
+        setTimeout(() => {
+          location.reload();
+        }, minutes * 60 * 1000);
+
+      } catch (error) {
+        showMessage("Could not load settings.");
+      }
+    }
+
+    function loadGoogleSlides(settings) {
+      const player = document.getElementById("player");
+
+      player.innerHTML = `
+        <iframe
+          src="${settings.googleSlidesUrl}"
+          allowfullscreen>
+        </iframe>
+      `;
+    }
+
+    async function loadMediaPlaylist(settings) {
+      try {
+        const response = await fetch("playlists.json?ts=" + Date.now());
+        const playlists = await response.json();
+
+        const playlist = playlists[settings.activePlaylist];
+
+        if (!playlist || !playlist.items || playlist.items.length === 0) {
+          showMessage("Mode A playlist is empty.");
+          return;
+        }
+
+        playPlaylist(playlist.items);
+
+      } catch (error) {
+        showMessage("Could not load Mode A playlist.");
+      }
+    }
+
+    function playPlaylist(items) {
+      let current = 0;
+
+      function playCurrent() {
+        const item = items[current];
+        const player = document.getElementById("player");
+
+        if (item.type === "video") {
+          player.innerHTML = `
+            <video autoplay playsinline>
+              <source src="media/${item.file}">
+            </video>
+          `;
+
+          const video = player.querySelector("video");
+
+          video.onended = nextItem;
+
+        } else {
+          player.innerHTML = `
+            <img src="media/${item.file}">
+          `;
+
+          const duration = (item.duration || 8) * 1000;
+
+          setTimeout(nextItem, duration);
+        }
+      }
+
+      function nextItem() {
+        current = (current + 1) % items.length;
+        playCurrent();
+      }
+
+      playCurrent();
+    }
+
+    function showMessage(text) {
+      document.getElementById("player").innerHTML =
+        `<div id="message">${text}</div>`;
+    }
+
+    loadSettings();
+  </script>
 
 </body>
 </html>
