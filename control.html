@@ -1,1 +1,192 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Brown Football TV Control</title>
 
+  <style>
+    body {
+      margin: 0;
+      background: #111;
+      color: white;
+      font-family: Arial, sans-serif;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: auto;
+      padding: 30px;
+    }
+
+    h1 {
+      margin-bottom: 5px;
+    }
+
+    .subtitle {
+      color: #aaa;
+      margin-bottom: 30px;
+    }
+
+    .card {
+      background: #222;
+      padding: 22px;
+      margin-bottom: 20px;
+      border-radius: 10px;
+    }
+
+    label {
+      display: block;
+      margin: 12px 0 6px;
+      font-weight: bold;
+    }
+
+    input, select {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 12px;
+      font-size: 16px;
+      border-radius: 6px;
+      border: none;
+    }
+
+    button {
+      padding: 14px 22px;
+      font-size: 16px;
+      font-weight: bold;
+      border: none;
+      border-radius: 7px;
+      cursor: pointer;
+      margin-top: 15px;
+    }
+
+    .mode-buttons {
+      display: flex;
+      gap: 12px;
+    }
+
+    .mode-button {
+      flex: 1;
+      background: #444;
+      color: white;
+    }
+
+    .mode-button.active {
+      background: #8b1e2d;
+    }
+
+    #status {
+      margin-top: 15px;
+      color: #ccc;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <h1>BROWN FOOTBALL TV</h1>
+  <div class="subtitle">Display Control</div>
+
+  <div class="card">
+
+    <h2>Display Mode</h2>
+
+    <div class="mode-buttons">
+      <button id="modeA" class="mode-button" onclick="chooseMode('A')">
+        MODE A — MEDIA
+      </button>
+
+      <button id="modeB" class="mode-button" onclick="chooseMode('B')">
+        MODE B — GOOGLE SLIDES
+      </button>
+    </div>
+
+  </div>
+
+  <div class="card">
+
+    <h2>Google Slides</h2>
+
+    <label>Published Google Slides URL</label>
+
+    <input
+      id="googleSlidesUrl"
+      type="text"
+      placeholder="Paste published Google Slides URL"
+    >
+
+  </div>
+
+  <div class="card">
+
+    <h2>TV Refresh</h2>
+
+    <label>Check for changes every:</label>
+
+    <select id="refreshMinutes">
+      <option value="5">5 Minutes</option>
+      <option value="10">10 Minutes</option>
+      <option value="15">15 Minutes</option>
+      <option value="30">30 Minutes</option>
+      <option value="60">60 Minutes</option>
+    </select>
+
+  </div>
+
+  <div class="card">
+
+    <h2>Current Settings</h2>
+
+    <div id="status">Loading...</div>
+
+  </div>
+
+</div>
+
+<script>
+
+  let settings = {};
+
+  async function loadSettings() {
+
+    const response =
+      await fetch("settings.json?ts=" + Date.now());
+
+    settings = await response.json();
+
+    document.getElementById("googleSlidesUrl").value =
+      settings.googleSlidesUrl || "";
+
+    document.getElementById("refreshMinutes").value =
+      settings.refreshMinutes || 15;
+
+    chooseMode(settings.mode || "B");
+
+    document.getElementById("status").innerText =
+      "Current mode: " + settings.mode;
+
+  }
+
+  function chooseMode(mode) {
+
+    settings.mode = mode;
+
+    document.getElementById("modeA")
+      .classList.toggle("active", mode === "A");
+
+    document.getElementById("modeB")
+      .classList.toggle("active", mode === "B");
+
+    document.getElementById("status").innerText =
+      "Selected mode: " + mode;
+
+  }
+
+  loadSettings();
+
+</script>
+
+</body>
+</html>
