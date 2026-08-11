@@ -4,18 +4,6 @@
     "defaultTransition": "fade",
     "visualItems": [
       {
-        "file": "FUEL THE FIRE AI NEW.png",
-        "type": "image",
-        "duration": 5,
-        "transition": "fade"
-      },
-      {
-        "file": "BELLO + UNC - S26 MONEYBALL.jpg",
-        "type": "image",
-        "duration": 2,
-        "transition": "fade"
-      },
-      {
         "file": "ITF VIRTUAL TOUR VID.mov.mp4",
         "type": "video",
         "videoMode": "full",
