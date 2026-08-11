@@ -24,7 +24,7 @@
     ],
     "backgroundMusic": {
       "enabled": true,
-      "videoBehavior": "pause"
+      "videoBehavior": "muteVideo"
     }
   }
 }
