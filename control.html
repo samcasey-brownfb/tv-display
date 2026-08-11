@@ -1,92 +1,143 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Brown Football TV Control</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <style>
-    body {
-      margin: 0;
-      background: #111;
-      color: white;
-      font-family: Arial, sans-serif;
-    }
+<title>Brown Football TV Control</title>
 
-    .container {
-      max-width: 900px;
-      margin: auto;
-      padding: 30px;
-    }
+<style>
+  body {
+    margin: 0;
+    background: #111;
+    color: white;
+    font-family: Arial, sans-serif;
+  }
 
-    .card {
-      background: #222;
-      padding: 22px;
-      margin-bottom: 20px;
-      border-radius: 10px;
-    }
+  .container {
+    max-width: 1000px;
+    margin: auto;
+    padding: 30px;
+  }
 
-    label {
-      display: block;
-      margin: 12px 0 6px;
-      font-weight: bold;
-    }
+  h1 {
+    margin-bottom: 4px;
+  }
 
-    input, select {
-      width: 100%;
-      box-sizing: border-box;
-      padding: 12px;
-      font-size: 16px;
-      border-radius: 6px;
-      border: none;
-    }
+  .subtitle {
+    color: #aaa;
+    margin-bottom: 25px;
+  }
 
-    button {
-      padding: 14px 22px;
-      font-size: 16px;
-      font-weight: bold;
-      border: none;
-      border-radius: 7px;
-      cursor: pointer;
-    }
+  .card {
+    background: #222;
+    padding: 22px;
+    margin-bottom: 20px;
+    border-radius: 10px;
+  }
 
-    .mode-buttons {
-      display: flex;
-      gap: 12px;
-    }
+  label {
+    display: block;
+    margin: 10px 0 6px;
+    font-weight: bold;
+  }
 
-    .mode-button {
-      flex: 1;
-      background: #444;
-      color: white;
-    }
+  input, select {
+    box-sizing: border-box;
+    padding: 10px;
+    font-size: 15px;
+    border-radius: 6px;
+    border: none;
+  }
 
-    .mode-button.active {
-      background: #8b1e2d;
-    }
+  input[type="text"],
+  input[type="password"],
+  select {
+    width: 100%;
+  }
 
-    .save-button {
-      width: 100%;
-      background: #8b1e2d;
-      color: white;
-      font-size: 20px;
-      margin-top: 10px;
-    }
+  button {
+    padding: 11px 16px;
+    font-size: 14px;
+    font-weight: bold;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+  }
 
-    .token-button {
-      margin-top: 12px;
-    }
+  .mode-buttons {
+    display: flex;
+    gap: 12px;
+  }
 
-    #status {
-      margin-top: 15px;
-      color: #ccc;
-    }
+  .mode-button {
+    flex: 1;
+    background: #444;
+    color: white;
+  }
 
-    .small {
-      color: #999;
-      font-size: 13px;
-    }
-  </style>
+  .mode-button.active {
+    background: #8b1e2d;
+  }
+
+  .save-button {
+    width: 100%;
+    background: #8b1e2d;
+    color: white;
+    font-size: 20px;
+    padding: 16px;
+  }
+
+  .small {
+    color: #999;
+    font-size: 13px;
+  }
+
+  #mediaList {
+    margin-top: 15px;
+  }
+
+  .media-row {
+    display: grid;
+    grid-template-columns: 35px 1fr 110px 100px;
+    gap: 10px;
+    align-items: center;
+
+    background: #333;
+    padding: 12px;
+    margin-bottom: 8px;
+    border-radius: 7px;
+  }
+
+  .media-name {
+    word-break: break-word;
+  }
+
+  .media-type {
+    color: #aaa;
+    font-size: 12px;
+  }
+
+  .duration {
+    width: 65px;
+  }
+
+  .order-buttons {
+    display: flex;
+    gap: 5px;
+  }
+
+  .order-buttons button {
+    background: #555;
+    color: white;
+    padding: 7px 10px;
+  }
+
+  #status {
+    color: #ccc;
+    white-space: pre-line;
+  }
+</style>
 </head>
 
 <body>
@@ -94,9 +145,13 @@
 <div class="container">
 
   <h1>BROWN FOOTBALL TV</h1>
-  <p>Display Control</p>
+  <div class="subtitle">Display Control</div>
+
+
+  <!-- GITHUB TOKEN -->
 
   <div class="card">
+
     <h2>GitHub Connection</h2>
 
     <label>GitHub Token</label>
@@ -107,44 +162,86 @@
       placeholder="Paste token here"
     >
 
-    <button class="token-button" onclick="saveToken()">
+    <br><br>
+
+    <button onclick="saveToken()">
       SAVE TOKEN ON THIS COMPUTER
     </button>
 
     <p class="small">
-      Token is stored only in this browser. It is not saved to GitHub.
+      Stored only in this browser.
     </p>
+
   </div>
 
+
+  <!-- MODE -->
+
   <div class="card">
+
     <h2>Display Mode</h2>
 
     <div class="mode-buttons">
 
-      <button id="modeA" class="mode-button" onclick="chooseMode('A')">
-        MODE A — MEDIA
+      <button
+        id="modeA"
+        class="mode-button"
+        onclick="chooseMode('A')"
+      >
+        MODE A — MEDIA PLAYLIST
       </button>
 
-      <button id="modeB" class="mode-button" onclick="chooseMode('B')">
+      <button
+        id="modeB"
+        class="mode-button"
+        onclick="chooseMode('B')"
+      >
         MODE B — GOOGLE SLIDES
       </button>
 
     </div>
+
   </div>
+
+
+  <!-- MODE A -->
 
   <div class="card">
 
-    <h2>Google Slides</h2>
+    <h2>Mode A — Media Playlist</h2>
+
+    <p class="small">
+      Everything uploaded to the /media folder will appear below automatically.
+    </p>
+
+    <button onclick="loadMedia()">
+      REFRESH MEDIA LIST
+    </button>
+
+    <div id="mediaList">
+      Loading media...
+    </div>
+
+  </div>
+
+
+  <!-- MODE B -->
+
+  <div class="card">
+
+    <h2>Mode B — Google Slides</h2>
 
     <label>Published Google Slides URL</label>
 
     <input
       id="googleSlidesUrl"
       type="text"
-      placeholder="Paste published Google Slides URL"
     >
 
   </div>
+
+
+  <!-- REFRESH -->
 
   <div class="card">
 
@@ -162,169 +259,843 @@
 
   </div>
 
-  <button class="save-button" onclick="goLive()">
+
+  <button
+    class="save-button"
+    onclick="goLive()"
+  >
     SAVE / GO LIVE
   </button>
 
+
   <div class="card" style="margin-top:20px;">
+
     <h2>Status</h2>
-    <div id="status">Loading...</div>
+
+    <div id="status">
+      Loading...
+    </div>
+
   </div>
 
 </div>
+
 
 <script>
 
 const OWNER = "samcasey-brownfb";
 const REPO = "tv-display";
+
 const SETTINGS_FILE = "settings.json";
+const PLAYLISTS_FILE = "playlists.json";
+const MEDIA_FOLDER = "media";
 
 let settings = {};
+let playlistData = {};
+let mediaItems = [];
+
+
+// ------------------------------------------------
+// TOKEN
+// ------------------------------------------------
 
 function saveToken() {
-  const token = document.getElementById("token").value.trim();
+
+  const token =
+    document.getElementById("token").value.trim();
 
   if (!token) {
     alert("Paste your GitHub token first.");
     return;
   }
 
-  localStorage.setItem("tvDisplayGithubToken", token);
+  localStorage.setItem(
+    "tvDisplayGithubToken",
+    token
+  );
 
-  document.getElementById("status").innerText =
-    "Token saved on this computer.";
+  setStatus("Token saved on this computer.");
+
 }
+
 
 function loadSavedToken() {
-  const savedToken =
-    localStorage.getItem("tvDisplayGithubToken");
 
-  if (savedToken) {
-    document.getElementById("token").value = savedToken;
+  const token =
+    localStorage.getItem(
+      "tvDisplayGithubToken"
+    );
+
+  if (token) {
+    document.getElementById("token").value =
+      token;
   }
+
 }
 
-async function loadSettings() {
+
+function getToken() {
+
+  return localStorage.getItem(
+    "tvDisplayGithubToken"
+  );
+
+}
+
+
+// ------------------------------------------------
+// INITIAL SETTINGS
+// ------------------------------------------------
+
+async function loadEverything() {
 
   try {
 
-    const response =
-      await fetch("settings.json?ts=" + Date.now());
+    const settingsResponse =
+      await fetch(
+        "settings.json?ts=" + Date.now()
+      );
 
-    settings = await response.json();
+    settings =
+      await settingsResponse.json();
 
-    document.getElementById("googleSlidesUrl").value =
+
+    const playlistsResponse =
+      await fetch(
+        "playlists.json?ts=" + Date.now()
+      );
+
+    playlistData =
+      await playlistsResponse.json();
+
+
+    document.getElementById(
+      "googleSlidesUrl"
+    ).value =
       settings.googleSlidesUrl || "";
 
-    document.getElementById("refreshMinutes").value =
+
+    document.getElementById(
+      "refreshMinutes"
+    ).value =
       settings.refreshMinutes || 15;
 
-    chooseMode(settings.mode || "B");
 
-    document.getElementById("status").innerText =
-      "Current live mode: " + (settings.mode || "B");
+    chooseMode(
+      settings.mode || "B"
+    );
 
-  } catch (error) {
 
-    document.getElementById("status").innerText =
-      "Could not load settings.";
+    await loadMedia();
+
+
+    setStatus(
+      "Current live mode: " +
+      (settings.mode || "B")
+    );
 
   }
+
+  catch (error) {
+
+    setStatus(
+      "ERROR loading TV settings."
+    );
+
+  }
+
 }
+
+
+// ------------------------------------------------
+// MODE
+// ------------------------------------------------
 
 function chooseMode(mode) {
 
   settings.mode = mode;
 
-  document.getElementById("modeA")
-    .classList.toggle("active", mode === "A");
+  document
+    .getElementById("modeA")
+    .classList.toggle(
+      "active",
+      mode === "A"
+    );
 
-  document.getElementById("modeB")
-    .classList.toggle("active", mode === "B");
+  document
+    .getElementById("modeB")
+    .classList.toggle(
+      "active",
+      mode === "B"
+    );
 
 }
 
-async function goLive() {
 
-  const token =
-    localStorage.getItem("tvDisplayGithubToken");
+// ------------------------------------------------
+// MEDIA
+// ------------------------------------------------
+
+async function loadMedia() {
+
+  const token = getToken();
 
   if (!token) {
-    alert("Save your GitHub token first.");
+
+    document.getElementById(
+      "mediaList"
+    ).innerText =
+      "Save your GitHub token first.";
+
     return;
   }
 
-  document.getElementById("status").innerText =
-    "Saving...";
-
-  settings.googleSlidesUrl =
-    document.getElementById("googleSlidesUrl").value.trim();
-
-  settings.refreshMinutes =
-    Number(document.getElementById("refreshMinutes").value);
 
   const apiURL =
-    `https://api.github.com/repos/${OWNER}/${REPO}/contents/${SETTINGS_FILE}`;
+    `https://api.github.com/repos/${OWNER}/${REPO}/contents/${MEDIA_FOLDER}`;
+
 
   try {
 
-    // Get the current settings.json SHA
-    const currentResponse = await fetch(apiURL, {
-      headers: {
-        "Authorization": `Bearer ${token}`,
-        "Accept": "application/vnd.github+json"
-      }
-    });
+    const response =
+      await fetch(apiURL, {
 
-    if (!currentResponse.ok) {
-      throw new Error("Could not read settings.json");
+        headers: {
+          "Authorization":
+            `Bearer ${token}`,
+
+          "Accept":
+            "application/vnd.github+json"
+        }
+
+      });
+
+
+    if (!response.ok) {
+
+      throw new Error(
+        "Could not read media folder."
+      );
+
     }
 
-    const currentFile = await currentResponse.json();
 
-    // Convert new settings into Base64
-    const jsonText =
-      JSON.stringify(settings, null, 2);
+    const files =
+      await response.json();
 
-    const encodedContent =
-      btoa(unescape(encodeURIComponent(jsonText)));
 
-    // Save the new settings.json
-    const saveResponse = await fetch(apiURL, {
-      method: "PUT",
+    const supportedFiles =
+      files.filter(file =>
+        file.type === "file" &&
+        /\.(png|jpg|jpeg|webp|gif|mp4|webm)$/i
+          .test(file.name)
+      );
 
-      headers: {
-        "Authorization": `Bearer ${token}`,
-        "Accept": "application/vnd.github+json",
-        "Content-Type": "application/json"
-      },
 
-      body: JSON.stringify({
-        message: "Update TV display settings",
-        content: encodedContent,
-        sha: currentFile.sha,
-        branch: "main"
-      })
+    const existingPlaylist =
+      playlistData.default?.items || [];
+
+
+    mediaItems =
+      supportedFiles.map(file => {
+
+        const existing =
+          existingPlaylist.find(
+            item =>
+              item.file === file.name
+          );
+
+        const isVideo =
+          /\.(mp4|webm)$/i.test(
+            file.name
+          );
+
+        return {
+
+          file: file.name,
+
+          type:
+            isVideo
+              ? "video"
+              : "image",
+
+          selected:
+            !!existing,
+
+          duration:
+            existing?.duration || 8
+
+        };
+
+      });
+
+
+    // Put currently selected items in their saved order
+
+    mediaItems.sort((a, b) => {
+
+      const ai =
+        existingPlaylist.findIndex(
+          x => x.file === a.file
+        );
+
+      const bi =
+        existingPlaylist.findIndex(
+          x => x.file === b.file
+        );
+
+
+      if (ai === -1 && bi === -1)
+        return 0;
+
+      if (ai === -1)
+        return 1;
+
+      if (bi === -1)
+        return -1;
+
+      return ai - bi;
+
     });
 
-    if (!saveResponse.ok) {
-      const errorInfo = await saveResponse.json();
-      throw new Error(errorInfo.message || "Save failed");
-    }
 
-    document.getElementById("status").innerText =
-      "SAVED — TV settings are now live.";
+    renderMedia();
 
-  } catch (error) {
+  }
 
-    document.getElementById("status").innerText =
+  catch (error) {
+
+    document.getElementById(
+      "mediaList"
+    ).innerText =
       "ERROR: " + error.message;
 
   }
+
 }
 
+
+// ------------------------------------------------
+// DISPLAY MEDIA LIST
+// ------------------------------------------------
+
+function renderMedia() {
+
+  const container =
+    document.getElementById(
+      "mediaList"
+    );
+
+
+  if (mediaItems.length === 0) {
+
+    container.innerHTML =
+      "No images or videos found in /media.";
+
+    return;
+
+  }
+
+
+  container.innerHTML = "";
+
+
+  mediaItems.forEach(
+    (item, index) => {
+
+      const row =
+        document.createElement(
+          "div"
+        );
+
+      row.className =
+        "media-row";
+
+
+      const checkbox =
+        document.createElement(
+          "input"
+        );
+
+      checkbox.type =
+        "checkbox";
+
+      checkbox.checked =
+        item.selected;
+
+      checkbox.onchange =
+        () => {
+
+          item.selected =
+            checkbox.checked;
+
+        };
+
+
+      const info =
+        document.createElement(
+          "div"
+        );
+
+      info.innerHTML =
+        `<div class="media-name">
+          ${escapeHTML(item.file)}
+        </div>
+
+        <div class="media-type">
+          ${item.type.toUpperCase()}
+        </div>`;
+
+
+      const timing =
+        document.createElement(
+          "div"
+        );
+
+
+      if (item.type === "image") {
+
+        timing.innerHTML =
+          `<input
+             class="duration"
+             type="number"
+             min="1"
+             value="${item.duration}"
+           > sec`;
+
+
+        timing.querySelector(
+          "input"
+        ).onchange =
+          e => {
+
+            item.duration =
+              Number(
+                e.target.value
+              ) || 8;
+
+          };
+
+      }
+
+      else {
+
+        timing.innerHTML =
+          `<span class="small">
+            Full video
+          </span>`;
+
+      }
+
+
+      const controls =
+        document.createElement(
+          "div"
+        );
+
+      controls.className =
+        "order-buttons";
+
+
+      const up =
+        document.createElement(
+          "button"
+        );
+
+      up.innerText = "↑";
+
+      up.onclick =
+        () => moveItem(
+          index,
+          -1
+        );
+
+
+      const down =
+        document.createElement(
+          "button"
+        );
+
+      down.innerText = "↓";
+
+      down.onclick =
+        () => moveItem(
+          index,
+          1
+        );
+
+
+      controls.appendChild(up);
+      controls.appendChild(down);
+
+
+      row.appendChild(
+        checkbox
+      );
+
+      row.appendChild(
+        info
+      );
+
+      row.appendChild(
+        timing
+      );
+
+      row.appendChild(
+        controls
+      );
+
+
+      container.appendChild(
+        row
+      );
+
+    });
+
+}
+
+
+// ------------------------------------------------
+// REORDER
+// ------------------------------------------------
+
+function moveItem(
+  index,
+  direction
+) {
+
+  const newIndex =
+    index + direction;
+
+
+  if (
+    newIndex < 0 ||
+    newIndex >=
+      mediaItems.length
+  ) {
+    return;
+  }
+
+
+  const temp =
+    mediaItems[index];
+
+  mediaItems[index] =
+    mediaItems[newIndex];
+
+  mediaItems[newIndex] =
+    temp;
+
+
+  renderMedia();
+
+}
+
+
+// ------------------------------------------------
+// GO LIVE
+// ------------------------------------------------
+
+async function goLive() {
+
+  const token = getToken();
+
+  if (!token) {
+
+    alert(
+      "Save your GitHub token first."
+    );
+
+    return;
+
+  }
+
+
+  setStatus(
+    "Saving..."
+  );
+
+
+  try {
+
+    // -------------------------
+    // BUILD MODE A PLAYLIST
+    // -------------------------
+
+    const selected =
+      mediaItems
+        .filter(
+          item =>
+            item.selected
+        )
+        .map(
+          item => {
+
+            if (
+              item.type ===
+              "video"
+            ) {
+
+              return {
+                file:
+                  item.file,
+
+                type:
+                  "video"
+              };
+
+            }
+
+
+            return {
+
+              file:
+                item.file,
+
+              type:
+                "image",
+
+              duration:
+                item.duration
+
+            };
+
+          });
+
+
+    playlistData.default = {
+
+      name:
+        "Default Playlist",
+
+      items:
+        selected
+
+    };
+
+
+    // -------------------------
+    // SAVE PLAYLIST
+    // -------------------------
+
+    await updateGithubJSON(
+      PLAYLISTS_FILE,
+      playlistData,
+      "Update TV media playlist"
+    );
+
+
+    // -------------------------
+    // SAVE SETTINGS
+    // -------------------------
+
+    settings.googleSlidesUrl =
+      document
+        .getElementById(
+          "googleSlidesUrl"
+        )
+        .value
+        .trim();
+
+
+    settings.refreshMinutes =
+      Number(
+        document
+          .getElementById(
+            "refreshMinutes"
+          )
+          .value
+      );
+
+
+    settings.activePlaylist =
+      "default";
+
+
+    await updateGithubJSON(
+      SETTINGS_FILE,
+      settings,
+      "Update TV display settings"
+    );
+
+
+    setStatus(
+      "SAVED — TV settings are now live."
+    );
+
+  }
+
+  catch (error) {
+
+    setStatus(
+      "ERROR: " +
+      error.message
+    );
+
+  }
+
+}
+
+
+// ------------------------------------------------
+// WRITE JSON TO GITHUB
+// ------------------------------------------------
+
+async function updateGithubJSON(
+  filename,
+  data,
+  message
+) {
+
+  const token =
+    getToken();
+
+
+  const apiURL =
+    `https://api.github.com/repos/${OWNER}/${REPO}/contents/${filename}`;
+
+
+  const currentResponse =
+    await fetch(
+      apiURL,
+      {
+
+        headers: {
+
+          "Authorization":
+            `Bearer ${token}`,
+
+          "Accept":
+            "application/vnd.github+json"
+
+        }
+
+      }
+    );
+
+
+  if (!currentResponse.ok) {
+
+    throw new Error(
+      "Could not read " +
+      filename
+    );
+
+  }
+
+
+  const currentFile =
+    await currentResponse.json();
+
+
+  const text =
+    JSON.stringify(
+      data,
+      null,
+      2
+    );
+
+
+  const encoded =
+    btoa(
+      unescape(
+        encodeURIComponent(
+          text
+        )
+      )
+    );
+
+
+  const saveResponse =
+    await fetch(
+      apiURL,
+      {
+
+        method: "PUT",
+
+        headers: {
+
+          "Authorization":
+            `Bearer ${token}`,
+
+          "Accept":
+            "application/vnd.github+json",
+
+          "Content-Type":
+            "application/json"
+
+        },
+
+        body:
+          JSON.stringify({
+
+            message:
+              message,
+
+            content:
+              encoded,
+
+            sha:
+              currentFile.sha,
+
+            branch:
+              "main"
+
+          })
+
+      }
+    );
+
+
+  if (!saveResponse.ok) {
+
+    const error =
+      await saveResponse.json();
+
+
+    throw new Error(
+      error.message ||
+      "Save failed"
+    );
+
+  }
+
+}
+
+
+// ------------------------------------------------
+// OTHER
+// ------------------------------------------------
+
+function setStatus(text) {
+
+  document
+    .getElementById(
+      "status"
+    )
+    .innerText =
+      text;
+
+}
+
+
+function escapeHTML(text) {
+
+  const div =
+    document.createElement(
+      "div"
+    );
+
+  div.textContent =
+    text;
+
+  return div.innerHTML;
+
+}
+
+
 loadSavedToken();
-loadSettings();
+loadEverything();
 
 </script>
 
