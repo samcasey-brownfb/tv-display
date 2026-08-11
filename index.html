@@ -15,7 +15,6 @@
 
 html,
 body {
-
   margin: 0;
   padding: 0;
 
@@ -25,42 +24,34 @@ body {
   background: black;
 
   overflow: hidden;
-
 }
 
 #player {
-
   width: 100vw;
   height: 100vh;
 
   background: black;
 
   overflow: hidden;
-
 }
 
 .visual {
-
   width: 100%;
   height: 100%;
 
   object-fit: contain;
 
   background: black;
-
 }
 
 iframe {
-
   width: 100vw;
   height: 100vh;
 
   border: 0;
-
 }
 
 #message {
-
   color: white;
 
   font-family:
@@ -72,14 +63,12 @@ iframe {
   text-align: center;
 
   padding-top: 40vh;
-
 }
 
 
 /* AUDIO START */
 
 #audioStart {
-
   position: fixed;
 
   inset: 0;
@@ -93,11 +82,9 @@ iframe {
     rgba(0,0,0,.82);
 
   z-index: 9999;
-
 }
 
 #audioStart button {
-
   padding:
     28px 42px;
 
@@ -114,85 +101,58 @@ iframe {
 
   cursor:
     pointer;
-
 }
 
 
 /* FADE */
 
 .enter-fade {
-
   animation:
     fadeIn .8s ease;
-
 }
 
 .exit-fade {
-
   animation:
     fadeOut .8s ease forwards;
-
 }
 
 @keyframes fadeIn {
-
-  from {
-    opacity: 0;
-  }
-
-  to {
-    opacity: 1;
-  }
-
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 @keyframes fadeOut {
-
-  from {
-    opacity: 1;
-  }
-
-  to {
-    opacity: 0;
-  }
-
+  from { opacity: 1; }
+  to { opacity: 0; }
 }
 
 
 /* SLIDE LEFT */
 
 .enter-slideLeft {
-
   animation:
     slideLeftIn .8s ease;
-
 }
 
 .exit-slideLeft {
-
   animation:
     slideLeftOut .8s ease forwards;
-
 }
 
 @keyframes slideLeftIn {
 
   from {
-
     transform:
       translateX(100%);
 
     opacity: 0;
-
   }
 
   to {
-
     transform:
       translateX(0);
 
     opacity: 1;
-
   }
 
 }
@@ -200,21 +160,17 @@ iframe {
 @keyframes slideLeftOut {
 
   from {
-
     transform:
       translateX(0);
 
     opacity: 1;
-
   }
 
   to {
-
     transform:
       translateX(-100%);
 
     opacity: 0;
-
   }
 
 }
@@ -223,37 +179,29 @@ iframe {
 /* SLIDE RIGHT */
 
 .enter-slideRight {
-
   animation:
     slideRightIn .8s ease;
-
 }
 
 .exit-slideRight {
-
   animation:
     slideRightOut .8s ease forwards;
-
 }
 
 @keyframes slideRightIn {
 
   from {
-
     transform:
       translateX(-100%);
 
     opacity: 0;
-
   }
 
   to {
-
     transform:
       translateX(0);
 
     opacity: 1;
-
   }
 
 }
@@ -261,21 +209,17 @@ iframe {
 @keyframes slideRightOut {
 
   from {
-
     transform:
       translateX(0);
 
     opacity: 1;
-
   }
 
   to {
-
     transform:
       translateX(100%);
 
     opacity: 0;
-
   }
 
 }
@@ -284,45 +228,35 @@ iframe {
 /* ZOOM */
 
 .enter-zoomIn {
-
   animation:
     zoomIn .8s ease;
-
 }
 
 .enter-zoomOut {
-
   animation:
     zoomOut .8s ease;
-
 }
 
 .exit-zoomIn,
 .exit-zoomOut {
-
   animation:
     fadeOut .8s ease forwards;
-
 }
 
 @keyframes zoomIn {
 
   from {
-
     transform:
       scale(.85);
 
     opacity: 0;
-
   }
 
   to {
-
     transform:
       scale(1);
 
     opacity: 1;
-
   }
 
 }
@@ -330,21 +264,17 @@ iframe {
 @keyframes zoomOut {
 
   from {
-
     transform:
       scale(1.15);
 
     opacity: 0;
-
   }
 
   to {
-
     transform:
       scale(1);
 
     opacity: 1;
-
   }
 
 }
@@ -353,37 +283,29 @@ iframe {
 /* BLUR */
 
 .enter-blur {
-
   animation:
     blurIn .8s ease;
-
 }
 
 .exit-blur {
-
   animation:
     blurOut .8s ease forwards;
-
 }
 
 @keyframes blurIn {
 
   from {
-
     filter:
       blur(18px);
 
     opacity: 0;
-
   }
 
   to {
-
     filter:
       blur(0);
 
     opacity: 1;
-
   }
 
 }
@@ -391,21 +313,17 @@ iframe {
 @keyframes blurOut {
 
   from {
-
     filter:
       blur(0);
 
     opacity: 1;
-
   }
 
   to {
-
     filter:
       blur(18px);
 
     opacity: 0;
-
   }
 
 }
@@ -445,6 +363,21 @@ const MEDIA_FOLDER =
   "media";
 
 
+// ---------------------------------------------
+// UPDATE SPEEDS
+// ---------------------------------------------
+
+// Fast background check.
+// Does NOT reload the page.
+
+const QUICK_CHECK_SECONDS =
+  30;
+
+
+// ---------------------------------------------
+// STATE
+// ---------------------------------------------
+
 let settings = {};
 
 let playlist = {};
@@ -476,45 +409,49 @@ let audioUnlocked =
   false;
 
 
-let currentSettingsSignature =
-  "";
+let quickCheckTimer =
+  null;
 
-let currentPlaylistSignature =
-  "";
-
-
-let updateTimer =
+let fullSyncTimer =
   null;
 
 
+// Signatures let us know whether
+// anything actually changed.
+
+let settingsSignature =
+  "";
+
+let playlistSignature =
+  "";
+
+let visualSignature =
+  "";
+
+let audioSignature =
+  "";
+
+
 // ---------------------------------------------
-// INITIAL START
+// START
 // ---------------------------------------------
 
 async function startTV() {
 
   try {
 
-    const freshSettings =
-      await fetchJSON(
-        "settings.json"
-      );
-
-
-    const freshPlaylists =
-      await fetchJSON(
-        "playlists.json"
-      );
+    const fresh =
+      await fetchFreshData();
 
 
     applyFreshData(
-      freshSettings,
-      freshPlaylists,
+      fresh.settings,
+      fresh.playlists,
       true
     );
 
 
-    scheduleUpdateChecks();
+    startUpdateTimers();
 
   }
 
@@ -530,18 +467,25 @@ async function startTV() {
 
 
 // ---------------------------------------------
-// FETCH WITH CACHE BUST
+// FETCH STATIC GITHUB PAGES FILES
 // ---------------------------------------------
 
 async function fetchJSON(
-  file
+  filename
 ) {
 
   const response =
     await fetch(
-      file +
+
+      filename +
       "?ts=" +
-      Date.now()
+      Date.now(),
+
+      {
+        cache:
+          "no-store"
+      }
+
     );
 
 
@@ -549,7 +493,7 @@ async function fetchJSON(
 
     throw new Error(
       "Could not load " +
-      file
+      filename
     );
 
   }
@@ -561,26 +505,89 @@ async function fetchJSON(
 }
 
 
+async function fetchFreshData() {
+
+  const freshSettings =
+    await fetchJSON(
+      "settings.json"
+    );
+
+
+  const freshPlaylists =
+    await fetchJSON(
+      "playlists.json"
+    );
+
+
+  return {
+
+    settings:
+      freshSettings,
+
+    playlists:
+      freshPlaylists
+
+  };
+
+}
+
+
 // ---------------------------------------------
-// SOFT REFRESH
+// TIMERS
 // ---------------------------------------------
 
-function scheduleUpdateChecks() {
+function startUpdateTimers() {
 
   clearInterval(
-    updateTimer
+    quickCheckTimer
   );
 
+
+  clearInterval(
+    fullSyncTimer
+  );
+
+
+  // --------------------------------
+  // QUICK CHECK
+  // --------------------------------
+
+  quickCheckTimer =
+    setInterval(
+
+      () => {
+
+        checkForUpdates(
+          false
+        );
+
+      },
+
+      QUICK_CHECK_SECONDS *
+      1000
+
+    );
+
+
+  // --------------------------------
+  // PERIODIC FULL SYNC
+  // --------------------------------
 
   const minutes =
     settings.refreshMinutes ||
     15;
 
 
-  updateTimer =
+  fullSyncTimer =
     setInterval(
 
-      checkForUpdates,
+      () => {
+
+        checkForUpdates(
+          true
+        );
+
+      },
 
       minutes *
       60 *
@@ -591,50 +598,56 @@ function scheduleUpdateChecks() {
 }
 
 
-async function checkForUpdates() {
+// ---------------------------------------------
+// CHECK FOR CHANGES
+// ---------------------------------------------
+
+async function checkForUpdates(
+  fullSync
+) {
 
   try {
 
-    const freshSettings =
-      await fetchJSON(
-        "settings.json"
-      );
+    const fresh =
+      await fetchFreshData();
 
 
-    const freshPlaylists =
-      await fetchJSON(
-        "playlists.json"
-      );
-
-
-    const settingsSignature =
+    const newSettingsSignature =
       JSON.stringify(
-        freshSettings
+        fresh.settings
       );
 
 
-    const playlistsSignature =
+    const newPlaylistSignature =
       JSON.stringify(
-        freshPlaylists
+        fresh.playlists
       );
 
 
-    if (
+    const changed =
 
-      settingsSignature !==
-        currentSettingsSignature
+      newSettingsSignature !==
+        settingsSignature
 
       ||
 
-      playlistsSignature !==
-        currentPlaylistSignature
+      newPlaylistSignature !==
+        playlistSignature;
 
+
+    if (
+      changed ||
+      fullSync
     ) {
 
       applyFreshData(
-        freshSettings,
-        freshPlaylists,
+
+        fresh.settings,
+
+        fresh.playlists,
+
         false
+
       );
 
     }
@@ -644,11 +657,18 @@ async function checkForUpdates() {
 
   catch (error) {
 
-    // SAFETY MECHANISM:
+    // --------------------------------
+    // SAFETY MECHANISM
+    // --------------------------------
+    //
+    // GitHub unavailable?
+    // Wi-Fi hiccup?
+    // Bad request?
+    //
     // DO NOTHING.
     //
-    // Current slideshow/music
-    // continues playing.
+    // Existing slideshow and
+    // music continue running.
 
     console.log(
       "Update check failed. Keeping current display running."
@@ -660,97 +680,224 @@ async function checkForUpdates() {
 
 
 // ---------------------------------------------
-// APPLY NEW SETTINGS
+// APPLY NEW DATA
 // ---------------------------------------------
 
 function applyFreshData(
+
   freshSettings,
+
   freshPlaylists,
+
   initialLoad
+
 ) {
 
-  const oldMode =
+  const previousMode =
     settings.mode;
 
+
+  const previousRefresh =
+    settings.refreshMinutes;
+
+
+  const newPlaylist =
+
+    freshPlaylists[
+
+      freshSettings.activePlaylist ||
+      "default"
+
+    ] || {};
+
+
+  const newVisualItems =
+
+    newPlaylist.visualItems ||
+    newPlaylist.items ||
+    [];
+
+
+  const newAudioItems =
+
+    newPlaylist.audioItems ||
+    [];
+
+
+  const newVisualSignature =
+    JSON.stringify(
+      newVisualItems
+    );
+
+
+  const newAudioSignature =
+    JSON.stringify({
+
+      items:
+        newAudioItems,
+
+      enabled:
+        newPlaylist.backgroundMusic?.enabled ||
+        false,
+
+      videoBehavior:
+        newPlaylist.backgroundMusic?.videoBehavior ||
+        "pause"
+
+    });
+
+
+  const modeChanged =
+
+    previousMode !==
+    freshSettings.mode;
+
+
+  const visualChanged =
+
+    visualSignature !==
+    newVisualSignature;
+
+
+  const audioChanged =
+
+    audioSignature !==
+    newAudioSignature;
+
+
+  // --------------------------------
+  // STORE NEW STATE
+  // --------------------------------
 
   settings =
     freshSettings;
 
 
-  const selectedPlaylist =
-    freshPlaylists[
-      settings.activePlaylist ||
-      "default"
-    ];
+  playlist =
+    newPlaylist;
 
 
-  currentSettingsSignature =
+  visualItems =
+    newVisualItems;
+
+
+  audioItems =
+    newAudioItems;
+
+
+  backgroundMusicEnabled =
+    playlist.backgroundMusic?.enabled ||
+    false;
+
+
+  videoMusicBehavior =
+    playlist.backgroundMusic?.videoBehavior ||
+    "pause";
+
+
+  settingsSignature =
     JSON.stringify(
       freshSettings
     );
 
 
-  currentPlaylistSignature =
+  playlistSignature =
     JSON.stringify(
       freshPlaylists
     );
 
 
-  scheduleUpdateChecks();
+  visualSignature =
+    newVisualSignature;
 
 
-  // MODE B
+  audioSignature =
+    newAudioSignature;
+
+
+  // --------------------------------
+  // UPDATE FULL SYNC TIMER
+  // IF CONTROL PANEL CHANGED IT
+  // --------------------------------
 
   if (
-    settings.mode ===
-    "B"
+
+    previousRefresh !==
+      settings.refreshMinutes
+
+    &&
+
+    !initialLoad
+
   ) {
 
-    stopModeA();
+    startUpdateTimers();
 
-    loadGoogleSlides();
+  }
+
+
+  // =============================================
+  // MODE B
+  // =============================================
+
+  if (
+    settings.mode === "B"
+  ) {
+
+    if (
+
+      initialLoad ||
+      modeChanged ||
+      previousMode !== "B"
+
+    ) {
+
+      stopModeA();
+
+      loadGoogleSlides();
+
+    }
+
+    else {
+
+      // If the Google Slides URL changed,
+      // reload only the iframe.
+
+      const iframe =
+        document.querySelector(
+          "#player iframe"
+        );
+
+
+      if (
+        iframe &&
+        iframe.src !==
+          settings.googleSlidesUrl
+      ) {
+
+        loadGoogleSlides();
+
+      }
+
+    }
+
 
     return;
 
   }
 
 
+  // =============================================
   // MODE A
+  // =============================================
 
   if (
-    settings.mode ===
-    "A"
+    settings.mode === "A"
   ) {
 
-    playlist =
-      selectedPlaylist ||
-      {};
-
-
-    visualItems =
-      playlist.visualItems ||
-      playlist.items ||
-      [];
-
-
-    audioItems =
-      playlist.audioItems ||
-      [];
-
-
-    backgroundMusicEnabled =
-      playlist.backgroundMusic?.enabled ||
-      false;
-
-
-    videoMusicBehavior =
-      playlist.backgroundMusic?.videoBehavior ||
-      "pause";
-
-
-    currentVisual =
-      0;
-
+    // --------------------------------
+    // AUDIO
+    // --------------------------------
 
     if (
       backgroundMusicEnabled &&
@@ -758,16 +905,22 @@ function applyFreshData(
     ) {
 
       if (
-        audioUnlocked
+        !audioUnlocked
       ) {
 
-        restartAudioPlaylist();
+        showAudioButton();
 
       }
 
-      else {
+      else if (
 
-        showAudioButton();
+        initialLoad ||
+        modeChanged ||
+        audioChanged
+
+      ) {
+
+        restartAudioPlaylist();
 
       }
 
@@ -782,19 +935,36 @@ function applyFreshData(
     }
 
 
+    // --------------------------------
+    // VISUAL PLAYLIST
+    // --------------------------------
+
     if (
-      visualItems.length
+      !visualItems.length
     ) {
-
-      playVisual();
-
-    }
-
-    else {
 
       showMessage(
         "Mode A playlist is empty."
       );
+
+      return;
+
+    }
+
+
+    if (
+
+      initialLoad ||
+      modeChanged ||
+      visualChanged
+
+    ) {
+
+      currentVisual =
+        0;
+
+
+      playVisual();
 
     }
 
@@ -819,6 +989,7 @@ function loadGoogleSlides() {
 
 
   player.innerHTML =
+
     `<iframe
       src="${settings.googleSlidesUrl}"
       allow="autoplay"
@@ -852,8 +1023,7 @@ function playVisual() {
 
 
   if (
-    item.type ===
-    "video"
+    item.type === "video"
   ) {
 
     playVideo(
@@ -872,6 +1042,10 @@ function playVisual() {
 
 }
 
+
+// ---------------------------------------------
+// IMAGE
+// ---------------------------------------------
 
 function playImage(
   item
@@ -893,7 +1067,8 @@ function playImage(
 
 
   image.src =
-    `${MEDIA_FOLDER}/${encodeURIComponent(item.file)}`;
+
+    `${MEDIA_FOLDER}/${encodeURIComponent(item.file)}?ts=${Date.now()}`;
 
 
   image.className =
@@ -924,6 +1099,7 @@ function playImage(
 
 
   const duration =
+
     (
       item.duration ||
       8
@@ -943,8 +1119,11 @@ function playImage(
 
 
         setTimeout(
+
           nextVisual,
+
           800
+
         );
 
       },
@@ -982,7 +1161,8 @@ function playVideo(
 
 
   video.src =
-    `${MEDIA_FOLDER}/${encodeURIComponent(item.file)}`;
+
+    `${MEDIA_FOLDER}/${encodeURIComponent(item.file)}?ts=${Date.now()}`;
 
 
   video.autoplay =
@@ -1004,7 +1184,7 @@ function playVideo(
 
 
   // --------------------------------
-  // PER-VIDEO MUTE OVERRIDE
+  // PER-VIDEO MUTE
   // --------------------------------
 
   if (
@@ -1013,9 +1193,6 @@ function playVideo(
 
     video.muted =
       true;
-
-    // Since video is muted,
-    // background music may continue.
 
   }
 
@@ -1103,6 +1280,7 @@ function playVideo(
   else {
 
     const duration =
+
       (
         item.duration ||
         10
@@ -1133,10 +1311,6 @@ function playVideo(
     .catch(
       () => {
 
-        // Browser blocked sound.
-        // Fall back to muted video
-        // rather than stopping playback.
-
         video.muted =
           true;
 
@@ -1166,6 +1340,7 @@ function nextVisual() {
 
 
   currentVisual =
+
     (
       currentVisual +
       1
@@ -1288,7 +1463,8 @@ function playCurrentAudio() {
 
 
   audio.src =
-    `${MEDIA_FOLDER}/${encodeURIComponent(track.file)}`;
+
+    `${MEDIA_FOLDER}/${encodeURIComponent(track.file)}?ts=${Date.now()}`;
 
 
   audio.loop =
@@ -1299,6 +1475,7 @@ function playCurrentAudio() {
     () => {
 
       currentAudio =
+
         (
           currentAudio +
           1
@@ -1388,10 +1565,13 @@ function resumeMusicAfterVideo() {
       audioUnlocked
     ) {
 
-      audio.play()
+      audio
+        .play()
         .catch(
           () => {
+
             showAudioButton();
+
           }
         );
 
@@ -1411,6 +1591,7 @@ function stopBackgroundAudio() {
 
 
   audio.pause();
+
 
   audio.removeAttribute(
     "src"
@@ -1503,6 +1684,7 @@ function showMessage(
   document.getElementById(
     "player"
   ).innerHTML =
+
     `<div id="message">
       ${text}
     </div>`;
@@ -1511,7 +1693,7 @@ function showMessage(
 
 
 // ---------------------------------------------
-// START
+// GO
 // ---------------------------------------------
 
 startTV();
