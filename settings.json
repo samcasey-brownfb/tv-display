@@ -1,1 +1,6 @@
-
+{
+  "mode": "B",
+  "refreshMinutes": 15,
+  "googleSlidesUrl": "https://docs.google.com/presentation/d/e/2PACX-1vRgp2rNfNO30S4pS4gxgEv8piiA8iHikyCeTC__8fckv5pQdqx-OVZIaqCwKq1a1w/embed?start=true&loop=true&delayms=5000",
+  "activePlaylist": "default"
+}
