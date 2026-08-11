@@ -14,6 +14,13 @@
         "type": "image",
         "duration": 5,
         "transition": "fade"
+      },
+      {
+        "file": "ITF VIRTUAL TOUR VID.mov.mp4",
+        "type": "video",
+        "videoMode": "full",
+        "duration": 8,
+        "transition": "fade"
       }
     ],
     "audioItems": [
