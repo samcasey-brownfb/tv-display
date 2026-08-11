@@ -3,7 +3,6 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
   <title>Brown Football TV</title>
 
   <style>
@@ -16,76 +15,20 @@
       overflow: hidden;
     }
 
-    #slideshow {
+    iframe {
       width: 100vw;
       height: 100vh;
-      object-fit: contain;
-      background: black;
-    }
-
-    #message {
-      color: white;
-      font-family: Arial, sans-serif;
-      font-size: 3vw;
-      text-align: center;
-      padding-top: 40vh;
+      border: 0;
     }
   </style>
 </head>
 
 <body>
 
-  <div id="message">Loading TV Display...</div>
-  <img id="slideshow" style="display:none;">
-
-  <script>
-    const USERNAME = "samcasey-brownfb";
-    const REPOSITORY = "tv-display";
-    const FOLDER = "images";
-    const SLIDE_TIME = 5000;
-
-    async function loadSlides() {
-      const apiURL =
-        `https://api.github.com/repos/${USERNAME}/${REPOSITORY}/contents/${FOLDER}`;
-
-      try {
-        const response = await fetch(apiURL);
-        const files = await response.json();
-
-        const slides = files
-          .filter(file =>
-            /\.(png|jpg|jpeg|webp|gif)$/i.test(file.name)
-          )
-          .map(file => file.download_url);
-
-        if (slides.length === 0) {
-          document.getElementById("message").innerText =
-            "No images found.";
-          return;
-        }
-
-        const image = document.getElementById("slideshow");
-        const message = document.getElementById("message");
-
-        message.style.display = "none";
-        image.style.display = "block";
-
-        let current = 0;
-        image.src = slides[current];
-
-        setInterval(() => {
-          current = (current + 1) % slides.length;
-          image.src = slides[current];
-        }, SLIDE_TIME);
-
-      } catch (error) {
-        document.getElementById("message").innerText =
-          "Unable to load slideshow.";
-      }
-    }
-
-    loadSlides();
-  </script>
+  <iframe
+    src="https://docs.google.com/presentation/d/e/2PACX-1vRgp2rNfNO30S4pS4gxgEv8piiA8iHikyCeTC__8fckv5pQdqx-OVZIaqCwKq1a1w/embed?start=true&loop=true&delayms=5000"
+    allowfullscreen>
+  </iframe>
 
 </body>
 </html>
