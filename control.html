@@ -84,8 +84,8 @@ button {
 
 .media-row {
   display: grid;
-  grid-template-columns: 35px 120px 1fr 160px 160px 100px;
-  gap: 12px;
+  grid-template-columns: 35px 120px 1fr 150px 150px 115px 90px;
+  gap: 10px;
   align-items: center;
   background: #333;
   padding: 12px;
@@ -136,6 +136,10 @@ button {
   border-radius: 8px;
 }
 
+.mute-box {
+  text-align: center;
+}
+
 #status {
   white-space: pre-line;
   color: #ccc;
@@ -166,23 +170,27 @@ button {
 </div>
 
 <div class="card">
+
   <h2>Display Mode</h2>
 
   <div class="mode-buttons">
 
-    <button id="modeA"
-            class="mode-button"
-            onclick="chooseMode('A')">
+    <button
+      id="modeA"
+      class="mode-button"
+      onclick="chooseMode('A')">
       MODE A — MEDIA PLAYLIST
     </button>
 
-    <button id="modeB"
-            class="mode-button"
-            onclick="chooseMode('B')">
+    <button
+      id="modeB"
+      class="mode-button"
+      onclick="chooseMode('B')">
       MODE B — GOOGLE SLIDES
     </button>
 
   </div>
+
 </div>
 
 <div class="card">
@@ -202,7 +210,7 @@ button {
   </select>
 
   <p class="small">
-    This changes all visual items at once. You can still override each item below.
+    Changes all items at once. Individual items can still be changed below.
   </p>
 
   <button onclick="loadMedia()">
@@ -225,21 +233,25 @@ button {
   </label>
 
   <p class="small">
-    Selected songs play one after another, then loop back to the first.
+    Selected songs play one after another and loop continuously.
   </p>
 
-  <label>When a video plays:</label>
+  <label>When a video with sound plays:</label>
 
   <select id="videoMusicBehavior">
+
     <option value="pause">
       Pause background music during video
     </option>
+
     <option value="continue">
-      Keep background music playing
+      Play video audio + background music together
     </option>
+
     <option value="muteVideo">
-      Keep music playing and mute video
+      Keep music playing and mute videos
     </option>
+
   </select>
 
   <div id="audioList" style="margin-top:20px;">
@@ -260,7 +272,11 @@ button {
 
 <div class="card">
 
-  <h2>TV Refresh</h2>
+  <h2>TV Update Check</h2>
+
+  <p class="small">
+    The TV checks for new settings without reloading the entire webpage.
+  </p>
 
   <select id="refreshMinutes">
     <option value="5">5 Minutes</option>
@@ -272,13 +288,20 @@ button {
 
 </div>
 
-<button class="save-button" onclick="goLive()">
+<button
+  class="save-button"
+  onclick="goLive()">
   SAVE / GO LIVE
 </button>
 
 <div class="card" style="margin-top:20px;">
+
   <h2>Status</h2>
-  <div id="status">Loading...</div>
+
+  <div id="status">
+    Loading...
+  </div>
+
 </div>
 
 </div>
@@ -294,61 +317,96 @@ const PLAYLISTS_FILE = "playlists.json";
 
 let settings = {};
 let playlistData = {};
+
 let visualItems = [];
 let audioItems = [];
 
 function saveToken() {
-  const token = document.getElementById("token").value.trim();
+
+  const token =
+    document.getElementById("token").value.trim();
 
   if (!token) {
     alert("Paste your GitHub token first.");
     return;
   }
 
-  localStorage.setItem("tvDisplayGithubToken", token);
+  localStorage.setItem(
+    "tvDisplayGithubToken",
+    token
+  );
+
   setStatus("Token saved.");
 }
 
 function loadSavedToken() {
-  const token = localStorage.getItem("tvDisplayGithubToken");
+
+  const token =
+    localStorage.getItem(
+      "tvDisplayGithubToken"
+    );
 
   if (token) {
-    document.getElementById("token").value = token;
+    document.getElementById("token").value =
+      token;
   }
 }
 
 function getToken() {
-  return localStorage.getItem("tvDisplayGithubToken");
+
+  return localStorage.getItem(
+    "tvDisplayGithubToken"
+  );
 }
 
 async function loadEverything() {
+
   try {
+
     settings =
-      await fetch("settings.json?ts=" + Date.now())
-        .then(r => r.json());
+      await fetch(
+        "settings.json?ts=" + Date.now()
+      ).then(r => r.json());
 
     playlistData =
-      await fetch("playlists.json?ts=" + Date.now())
-        .then(r => r.json());
+      await fetch(
+        "playlists.json?ts=" + Date.now()
+      ).then(r => r.json());
 
-    document.getElementById("googleSlidesUrl").value =
+    document.getElementById(
+      "googleSlidesUrl"
+    ).value =
       settings.googleSlidesUrl || "";
 
-    document.getElementById("refreshMinutes").value =
+    document.getElementById(
+      "refreshMinutes"
+    ).value =
       settings.refreshMinutes || 15;
 
-    chooseMode(settings.mode || "B");
+    chooseMode(
+      settings.mode || "B"
+    );
 
-    const playlist = playlistData.default || {};
+    const playlist =
+      playlistData.default || {};
 
-    document.getElementById("musicEnabled").checked =
-      playlist.backgroundMusic?.enabled || false;
+    document.getElementById(
+      "musicEnabled"
+    ).checked =
+      playlist.backgroundMusic?.enabled ||
+      false;
 
-    document.getElementById("videoMusicBehavior").value =
-      playlist.backgroundMusic?.videoBehavior || "pause";
+    document.getElementById(
+      "videoMusicBehavior"
+    ).value =
+      playlist.backgroundMusic?.videoBehavior ||
+      "pause";
 
-    document.getElementById("defaultTransition").value =
-      playlist.defaultTransition || "fade";
+    document.getElementById(
+      "defaultTransition"
+    ).value =
+      playlist.defaultTransition ||
+      "fade";
 
     await loadMedia();
 
@@ -358,26 +416,42 @@ async function loadEverything() {
     );
 
   } catch (error) {
-    setStatus("ERROR loading settings.");
+
+    setStatus(
+      "ERROR loading settings."
+    );
+
   }
 }
 
 function chooseMode(mode) {
+
   settings.mode = mode;
 
   document.getElementById("modeA")
-    .classList.toggle("active", mode === "A");
+    .classList.toggle(
+      "active",
+      mode === "A"
+    );
 
   document.getElementById("modeB")
-    .classList.toggle("active", mode === "B");
+    .classList.toggle(
+      "active",
+      mode === "B"
+    );
 }
 
 async function loadMedia() {
+
   const token = getToken();
 
   if (!token) {
-    document.getElementById("visualList").innerText =
+
+    document.getElementById(
+      "visualList"
+    ).innerText =
       "Save GitHub token first.";
+
     return;
   }
 
@@ -385,21 +459,32 @@ async function loadMedia() {
     `https://api.github.com/repos/${OWNER}/${REPO}/contents/${MEDIA_FOLDER}`;
 
   try {
+
     const response =
-      await fetch(apiURL, {
-        headers: {
-          "Authorization": `Bearer ${token}`,
-          "Accept": "application/vnd.github+json"
+      await fetch(
+        apiURL,
+        {
+          headers: {
+            "Authorization":
+              `Bearer ${token}`,
+
+            "Accept":
+              "application/vnd.github+json"
+          }
         }
-      });
+      );
 
     if (!response.ok) {
-      throw new Error("Could not read media folder.");
+      throw new Error(
+        "Could not read media folder."
+      );
     }
 
-    const files = await response.json();
+    const files =
+      await response.json();
 
-    const playlist = playlistData.default || {};
+    const playlist =
+      playlistData.default || {};
 
     const savedVisual =
       playlist.visualItems ||
@@ -411,7 +496,8 @@ async function loadMedia() {
       [];
 
     const defaultTransition =
-      playlist.defaultTransition || "fade";
+      playlist.defaultTransition ||
+      "fade";
 
     visualItems =
       files
@@ -424,7 +510,9 @@ async function loadMedia() {
 
           const saved =
             savedVisual.find(
-              x => x.file === file.name
+              x =>
+                x.file ===
+                file.name
             );
 
           const video =
@@ -432,15 +520,37 @@ async function loadMedia() {
               .test(file.name);
 
           return {
-            file: file.name,
-            url: file.download_url,
-            type: video ? "video" : "image",
-            selected: !!saved,
-            duration: saved?.duration || 8,
-            videoMode: saved?.videoMode || "full",
+
+            file:
+              file.name,
+
+            url:
+              file.download_url,
+
+            type:
+              video
+                ? "video"
+                : "image",
+
+            selected:
+              !!saved,
+
+            duration:
+              saved?.duration ||
+              8,
+
+            videoMode:
+              saved?.videoMode ||
+              "full",
+
             transition:
               saved?.transition ||
-              defaultTransition
+              defaultTransition,
+
+            muted:
+              saved?.muted ||
+              false
+
           };
 
         });
@@ -456,13 +566,22 @@ async function loadMedia() {
 
           const saved =
             savedAudio.find(
-              x => x.file === file.name
+              x =>
+                x.file ===
+                file.name
             );
 
           return {
-            file: file.name,
-            url: file.download_url,
-            selected: !!saved
+
+            file:
+              file.name,
+
+            url:
+              file.download_url,
+
+            selected:
+              !!saved
+
           };
 
         });
@@ -481,283 +600,508 @@ async function loadMedia() {
     renderAudio();
 
   } catch (error) {
+
     setStatus(
-      "ERROR: " + error.message
+      "ERROR: " +
+      error.message
     );
+
   }
 }
 
-function sortBySavedOrder(items, saved) {
-  items.sort((a, b) => {
+function sortBySavedOrder(
+  items,
+  saved
+) {
 
-    const ai =
-      saved.findIndex(
-        x => x.file === a.file
-      );
+  items.sort(
+    (a, b) => {
 
-    const bi =
-      saved.findIndex(
-        x => x.file === b.file
-      );
+      const ai =
+        saved.findIndex(
+          x =>
+            x.file ===
+            a.file
+        );
 
-    if (ai === -1 && bi === -1) return 0;
-    if (ai === -1) return 1;
-    if (bi === -1) return -1;
+      const bi =
+        saved.findIndex(
+          x =>
+            x.file ===
+            b.file
+        );
 
-    return ai - bi;
-  });
+      if (
+        ai === -1 &&
+        bi === -1
+      )
+        return 0;
+
+      if (ai === -1)
+        return 1;
+
+      if (bi === -1)
+        return -1;
+
+      return ai - bi;
+
+    }
+  );
 }
 
 function applyDefaultTransition() {
-  const value =
-    document.getElementById("defaultTransition").value;
 
-  visualItems.forEach(item => {
-    item.transition = value;
-  });
+  const value =
+    document.getElementById(
+      "defaultTransition"
+    ).value;
+
+  visualItems.forEach(
+    item => {
+      item.transition =
+        value;
+    }
+  );
 
   renderVisuals();
 }
 
 function renderVisuals() {
-  const container =
-    document.getElementById("visualList");
 
-  if (!visualItems.length) {
+  const container =
+    document.getElementById(
+      "visualList"
+    );
+
+  if (
+    !visualItems.length
+  ) {
+
     container.innerHTML =
       "No images or videos found.";
+
     return;
   }
 
   container.innerHTML = "";
 
-  visualItems.forEach((item, index) => {
+  visualItems.forEach(
+    (item, index) => {
 
-    const row =
-      document.createElement("div");
+      const row =
+        document.createElement(
+          "div"
+        );
 
-    row.className = "media-row";
+      row.className =
+        "media-row";
 
-    const checkbox =
-      document.createElement("input");
+      const checkbox =
+        document.createElement(
+          "input"
+        );
 
-    checkbox.type = "checkbox";
-    checkbox.checked = item.selected;
+      checkbox.type =
+        "checkbox";
 
-    checkbox.onchange =
-      () =>
-        item.selected =
-          checkbox.checked;
+      checkbox.checked =
+        item.selected;
 
-    let preview;
+      checkbox.onchange =
+        () =>
+          item.selected =
+            checkbox.checked;
 
-    if (item.type === "image") {
-      preview =
-        document.createElement("img");
+      let preview;
 
-      preview.src = item.url;
+      if (
+        item.type ===
+        "image"
+      ) {
 
-    } else {
-      preview =
-        document.createElement("video");
+        preview =
+          document.createElement(
+            "img"
+          );
 
-      preview.src = item.url;
-      preview.muted = true;
-      preview.controls = true;
-      preview.preload = "metadata";
-    }
+        preview.src =
+          item.url;
 
-    preview.className = "preview";
+      }
 
-    const info =
-      document.createElement("div");
+      else {
 
-    info.innerHTML =
-      `<div class="media-name">
-        ${escapeHTML(item.file)}
-      </div>
-      <div class="media-type">
-        ${item.type.toUpperCase()}
-      </div>`;
+        preview =
+          document.createElement(
+            "video"
+          );
 
-    const timing =
-      document.createElement("div");
+        preview.src =
+          item.url;
 
-    if (item.type === "image") {
+        preview.muted =
+          true;
 
-      timing.innerHTML =
-        `<label class="small">
-           Display
-         </label>
-         <input
-           class="duration-box"
-           type="number"
-           min="1"
-           value="${item.duration}"
-         > sec`;
+        preview.controls =
+          true;
 
-      timing.querySelector("input")
-        .onchange =
+        preview.preload =
+          "metadata";
+
+      }
+
+      preview.className =
+        "preview";
+
+      const info =
+        document.createElement(
+          "div"
+        );
+
+      info.innerHTML =
+        `<div class="media-name">
+          ${escapeHTML(item.file)}
+        </div>
+
+        <div class="media-type">
+          ${item.type.toUpperCase()}
+        </div>`;
+
+      const timing =
+        document.createElement(
+          "div"
+        );
+
+      if (
+        item.type ===
+        "image"
+      ) {
+
+        timing.innerHTML =
+          `<label class="small">
+            Display
+          </label>
+
+          <input
+            class="duration-box"
+            type="number"
+            min="1"
+            value="${item.duration}"
+          > sec`;
+
+        timing.querySelector(
+          "input"
+        ).onchange =
           e =>
             item.duration =
               Number(
                 e.target.value
               ) || 8;
 
-    } else {
-
-      const select =
-        document.createElement("select");
-
-      select.innerHTML =
-        `<option value="full">Full Video</option>
-         <option value="custom">Custom Time</option>`;
-
-      select.value =
-        item.videoMode;
-
-      const custom =
-        document.createElement("input");
-
-      custom.type = "number";
-      custom.min = "1";
-      custom.className = "duration-box";
-      custom.value = item.duration || 10;
-
-      function updateVideoUI() {
-        custom.style.display =
-          select.value === "custom"
-            ? "inline-block"
-            : "none";
       }
 
-      select.onchange =
+      else {
+
+        const select =
+          document.createElement(
+            "select"
+          );
+
+        select.innerHTML =
+          `<option value="full">
+            Full Video
+          </option>
+
+          <option value="custom">
+            Custom Time
+          </option>`;
+
+        select.value =
+          item.videoMode;
+
+        const custom =
+          document.createElement(
+            "input"
+          );
+
+        custom.type =
+          "number";
+
+        custom.min =
+          "1";
+
+        custom.className =
+          "duration-box";
+
+        custom.value =
+          item.duration || 10;
+
+        function updateVideoUI() {
+
+          custom.style.display =
+            select.value ===
+            "custom"
+              ? "inline-block"
+              : "none";
+
+        }
+
+        select.onchange =
+          () => {
+
+            item.videoMode =
+              select.value;
+
+            updateVideoUI();
+
+          };
+
+        custom.onchange =
+          () => {
+
+            item.duration =
+              Number(
+                custom.value
+              ) || 10;
+
+          };
+
+        timing.appendChild(
+          select
+        );
+
+        timing.appendChild(
+          document.createElement(
+            "br"
+          )
+        );
+
+        timing.appendChild(
+          custom
+        );
+
+        updateVideoUI();
+
+      }
+
+      const transitionBox =
+        document.createElement(
+          "div"
+        );
+
+      const transition =
+        document.createElement(
+          "select"
+        );
+
+      transition.innerHTML =
+        `
+        <option value="fade">Fade</option>
+        <option value="slideLeft">Slide Left</option>
+        <option value="slideRight">Slide Right</option>
+        <option value="zoomIn">Zoom In</option>
+        <option value="zoomOut">Zoom Out</option>
+        <option value="blur">Blur</option>
+        <option value="none">None</option>
+        `;
+
+      transition.value =
+        item.transition ||
+        "fade";
+
+      transition.onchange =
         () => {
-          item.videoMode = select.value;
-          updateVideoUI();
+
+          item.transition =
+            transition.value;
+
         };
 
-      custom.onchange =
-        () => {
-          item.duration =
-            Number(custom.value) || 10;
-        };
-
-      timing.appendChild(select);
-      timing.appendChild(
-        document.createElement("br")
+      transitionBox.appendChild(
+        transition
       );
-      timing.appendChild(custom);
 
-      updateVideoUI();
+      const muteBox =
+        document.createElement(
+          "div"
+        );
+
+      muteBox.className =
+        "mute-box";
+
+      if (
+        item.type ===
+        "video"
+      ) {
+
+        const mute =
+          document.createElement(
+            "input"
+          );
+
+        mute.type =
+          "checkbox";
+
+        mute.checked =
+          item.muted;
+
+        mute.onchange =
+          () =>
+            item.muted =
+              mute.checked;
+
+        muteBox.appendChild(
+          document.createTextNode(
+            "Mute "
+          )
+        );
+
+        muteBox.appendChild(
+          mute
+        );
+
+      }
+
+      else {
+
+        muteBox.innerHTML =
+          `<span class="small">
+            —
+          </span>`;
+
+      }
+
+      const controls =
+        createOrderButtons(
+          visualItems,
+          index,
+          renderVisuals
+        );
+
+      row.appendChild(
+        checkbox
+      );
+
+      row.appendChild(
+        preview
+      );
+
+      row.appendChild(
+        info
+      );
+
+      row.appendChild(
+        timing
+      );
+
+      row.appendChild(
+        transitionBox
+      );
+
+      row.appendChild(
+        muteBox
+      );
+
+      row.appendChild(
+        controls
+      );
+
+      container.appendChild(
+        row
+      );
+
     }
-
-    const transitionBox =
-      document.createElement("div");
-
-    const transitionSelect =
-      document.createElement("select");
-
-    transitionSelect.innerHTML =
-      `
-      <option value="fade">Fade</option>
-      <option value="slideLeft">Slide Left</option>
-      <option value="slideRight">Slide Right</option>
-      <option value="zoomIn">Zoom In</option>
-      <option value="zoomOut">Zoom Out</option>
-      <option value="blur">Blur</option>
-      <option value="none">None</option>
-      `;
-
-    transitionSelect.value =
-      item.transition || "fade";
-
-    transitionSelect.onchange =
-      () => {
-        item.transition =
-          transitionSelect.value;
-      };
-
-    transitionBox.appendChild(
-      transitionSelect
-    );
-
-    const controls =
-      createOrderButtons(
-        visualItems,
-        index,
-        renderVisuals
-      );
-
-    row.appendChild(checkbox);
-    row.appendChild(preview);
-    row.appendChild(info);
-    row.appendChild(timing);
-    row.appendChild(transitionBox);
-    row.appendChild(controls);
-
-    container.appendChild(row);
-  });
+  );
 }
 
 function renderAudio() {
-  const container =
-    document.getElementById("audioList");
 
-  if (!audioItems.length) {
+  const container =
+    document.getElementById(
+      "audioList"
+    );
+
+  if (
+    !audioItems.length
+  ) {
+
     container.innerHTML =
       "<span class='small'>No audio files found.</span>";
+
     return;
   }
 
   container.innerHTML = "";
 
-  audioItems.forEach((item, index) => {
+  audioItems.forEach(
+    (item, index) => {
 
-    const row =
-      document.createElement("div");
+      const row =
+        document.createElement(
+          "div"
+        );
 
-    row.className = "audio-row";
+      row.className =
+        "audio-row";
 
-    const checkbox =
-      document.createElement("input");
+      const checkbox =
+        document.createElement(
+          "input"
+        );
 
-    checkbox.type = "checkbox";
-    checkbox.checked = item.selected;
+      checkbox.type =
+        "checkbox";
 
-    checkbox.onchange =
-      () =>
-        item.selected =
-          checkbox.checked;
+      checkbox.checked =
+        item.selected;
 
-    const info =
-      document.createElement("div");
+      checkbox.onchange =
+        () =>
+          item.selected =
+            checkbox.checked;
 
-    info.innerHTML =
-      `<div>
-        ${escapeHTML(item.file)}
-      </div>
+      const info =
+        document.createElement(
+          "div"
+        );
 
-      <audio
-        controls
-        preload="metadata"
-        src="${item.url}"
-        style="width:100%; margin-top:7px;">
-      </audio>`;
+      info.innerHTML =
+        `<div>
+          ${escapeHTML(item.file)}
+        </div>
 
-    const controls =
-      createOrderButtons(
-        audioItems,
-        index,
-        renderAudio
+        <audio
+          controls
+          preload="metadata"
+          src="${item.url}"
+          style="width:100%; margin-top:7px;">
+        </audio>`;
+
+      const controls =
+        createOrderButtons(
+          audioItems,
+          index,
+          renderAudio
+        );
+
+      row.appendChild(
+        checkbox
       );
 
-    row.appendChild(checkbox);
-    row.appendChild(info);
-    row.appendChild(controls);
+      row.appendChild(
+        info
+      );
 
-    container.appendChild(row);
-  });
+      row.appendChild(
+        controls
+      );
+
+      container.appendChild(
+        row
+      );
+
+    }
+  );
 }
 
 function createOrderButtons(
@@ -765,16 +1109,22 @@ function createOrderButtons(
   index,
   renderFunction
 ) {
+
   const controls =
-    document.createElement("div");
+    document.createElement(
+      "div"
+    );
 
   controls.className =
     "order-buttons";
 
   const up =
-    document.createElement("button");
+    document.createElement(
+      "button"
+    );
 
-  up.innerText = "↑";
+  up.innerText =
+    "↑";
 
   up.onclick =
     () =>
@@ -786,9 +1136,12 @@ function createOrderButtons(
       );
 
   const down =
-    document.createElement("button");
+    document.createElement(
+      "button"
+    );
 
-  down.innerText = "↓";
+  down.innerText =
+    "↓";
 
   down.onclick =
     () =>
@@ -799,8 +1152,13 @@ function createOrderButtons(
         renderFunction
       );
 
-  controls.appendChild(up);
-  controls.appendChild(down);
+  controls.appendChild(
+    up
+  );
+
+  controls.appendChild(
+    down
+  );
 
   return controls;
 }
@@ -811,68 +1169,129 @@ function moveItem(
   direction,
   renderFunction
 ) {
+
   const newIndex =
-    index + direction;
+    index +
+    direction;
 
   if (
     newIndex < 0 ||
-    newIndex >= array.length
-  ) return;
+    newIndex >=
+      array.length
+  )
+    return;
 
-  [array[index], array[newIndex]] =
-    [array[newIndex], array[index]];
+  [
+    array[index],
+    array[newIndex]
+  ] =
+  [
+    array[newIndex],
+    array[index]
+  ];
 
   renderFunction();
 }
 
 async function goLive() {
-  const token = getToken();
+
+  const token =
+    getToken();
 
   if (!token) {
+
     alert(
       "Save your GitHub token first."
     );
+
     return;
   }
 
-  setStatus("Saving...");
+  setStatus(
+    "Saving..."
+  );
 
   try {
 
     const selectedVisuals =
       visualItems
-        .filter(x => x.selected)
-        .map(item => {
+        .filter(
+          x =>
+            x.selected
+        )
+        .map(
+          item => {
 
-          if (item.type === "image") {
+            if (
+              item.type ===
+              "image"
+            ) {
+
+              return {
+
+                file:
+                  item.file,
+
+                type:
+                  "image",
+
+                duration:
+                  item.duration,
+
+                transition:
+                  item.transition
+
+              };
+
+            }
+
             return {
-              file: item.file,
-              type: "image",
-              duration: item.duration,
-              transition: item.transition
+
+              file:
+                item.file,
+
+              type:
+                "video",
+
+              videoMode:
+                item.videoMode,
+
+              duration:
+                item.duration,
+
+              transition:
+                item.transition,
+
+              muted:
+                item.muted
+
             };
+
           }
-
-          return {
-            file: item.file,
-            type: "video",
-            videoMode: item.videoMode,
-            duration: item.duration,
-            transition: item.transition
-          };
-
-        });
+        );
 
     const selectedAudio =
       audioItems
-        .filter(x => x.selected)
-        .map(item => ({
-          file: item.file,
-          type: "audio"
-        }));
+        .filter(
+          x =>
+            x.selected
+        )
+        .map(
+          item => ({
+
+            file:
+              item.file,
+
+            type:
+              "audio"
+
+          })
+        );
 
     playlistData.default = {
-      name: "Default Playlist",
+
+      name:
+        "Default Playlist",
 
       defaultTransition:
         document.getElementById(
@@ -886,6 +1305,7 @@ async function goLive() {
         selectedAudio,
 
       backgroundMusic: {
+
         enabled:
           document.getElementById(
             "musicEnabled"
@@ -895,7 +1315,9 @@ async function goLive() {
           document.getElementById(
             "videoMusicBehavior"
           ).value
+
       }
+
     };
 
     await updateGithubJSON(
@@ -930,9 +1352,12 @@ async function goLive() {
     );
 
   } catch (error) {
+
     setStatus(
-      "ERROR: " + error.message
+      "ERROR: " +
+      error.message
     );
+
   }
 }
 
@@ -941,6 +1366,7 @@ async function updateGithubJSON(
   data,
   message
 ) {
+
   const token =
     getToken();
 
@@ -952,18 +1378,26 @@ async function updateGithubJSON(
       apiURL,
       {
         headers: {
+
           "Authorization":
             `Bearer ${token}`,
+
           "Accept":
             "application/vnd.github+json"
+
         }
       }
     );
 
-  if (!currentResponse.ok) {
+  if (
+    !currentResponse.ok
+  ) {
+
     throw new Error(
-      "Could not read " + filename
+      "Could not read " +
+      filename
     );
+
   }
 
   const currentFile =
@@ -979,7 +1413,9 @@ async function updateGithubJSON(
   const encoded =
     btoa(
       unescape(
-        encodeURIComponent(text)
+        encodeURIComponent(
+          text
+        )
       )
     );
 
@@ -987,32 +1423,47 @@ async function updateGithubJSON(
     await fetch(
       apiURL,
       {
-        method: "PUT",
+
+        method:
+          "PUT",
 
         headers: {
+
           "Authorization":
             `Bearer ${token}`,
+
           "Accept":
             "application/vnd.github+json",
+
           "Content-Type":
             "application/json"
+
         },
 
         body:
           JSON.stringify({
+
             message:
               message,
+
             content:
               encoded,
+
             sha:
               currentFile.sha,
+
             branch:
               "main"
+
           })
+
       }
     );
 
-  if (!saveResponse.ok) {
+  if (
+    !saveResponse.ok
+  ) {
+
     const error =
       await saveResponse.json();
 
@@ -1020,20 +1471,27 @@ async function updateGithubJSON(
       error.message ||
       "Save failed"
     );
+
   }
 }
 
 function setStatus(text) {
+
   document.getElementById(
     "status"
-  ).innerText = text;
+  ).innerText =
+    text;
 }
 
 function escapeHTML(text) {
-  const div =
-    document.createElement("div");
 
-  div.textContent = text;
+  const div =
+    document.createElement(
+      "div"
+    );
+
+  div.textContent =
+    text;
 
   return div.innerHTML;
 }
