@@ -3,7 +3,6 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>Brown Football TV Control</title>
 
 <style>
@@ -85,7 +84,7 @@ button {
 
 .media-row {
   display: grid;
-  grid-template-columns: 35px 120px 1fr 170px 100px;
+  grid-template-columns: 35px 120px 1fr 160px 160px 100px;
   gap: 12px;
   align-items: center;
   background: #333;
@@ -151,7 +150,6 @@ button {
 <h1>BROWN FOOTBALL TV</h1>
 <p class="small">Display Control</p>
 
-
 <div class="card">
   <h2>GitHub Connection</h2>
 
@@ -164,11 +162,8 @@ button {
     SAVE TOKEN ON THIS COMPUTER
   </button>
 
-  <p class="small">
-    Stored only in this browser.
-  </p>
+  <p class="small">Stored only in this browser.</p>
 </div>
-
 
 <div class="card">
   <h2>Display Mode</h2>
@@ -190,13 +185,24 @@ button {
   </div>
 </div>
 
-
 <div class="card">
 
   <h2>Mode A — Visual Playlist</h2>
 
+  <label>Default Transition</label>
+
+  <select id="defaultTransition" onchange="applyDefaultTransition()">
+    <option value="fade">Fade</option>
+    <option value="slideLeft">Slide Left</option>
+    <option value="slideRight">Slide Right</option>
+    <option value="zoomIn">Zoom In</option>
+    <option value="zoomOut">Zoom Out</option>
+    <option value="blur">Blur</option>
+    <option value="none">None</option>
+  </select>
+
   <p class="small">
-    Select the images/videos you want. Use ↑ ↓ to change their order.
+    This changes all visual items at once. You can still override each item below.
   </p>
 
   <button onclick="loadMedia()">
@@ -209,7 +215,6 @@ button {
 
 </div>
 
-
 <div class="card">
 
   <h2>Background Music</h2>
@@ -220,7 +225,7 @@ button {
   </label>
 
   <p class="small">
-    Selected songs will play one after another, then loop back to the first song.
+    Selected songs play one after another, then loop back to the first.
   </p>
 
   <label>When a video plays:</label>
@@ -229,11 +234,9 @@ button {
     <option value="pause">
       Pause background music during video
     </option>
-
     <option value="continue">
       Keep background music playing
     </option>
-
     <option value="muteVideo">
       Keep music playing and mute video
     </option>
@@ -245,7 +248,6 @@ button {
 
 </div>
 
-
 <div class="card">
 
   <h2>Mode B — Google Slides</h2>
@@ -255,7 +257,6 @@ button {
   <input id="googleSlidesUrl" type="text">
 
 </div>
-
 
 <div class="card">
 
@@ -271,11 +272,9 @@ button {
 
 </div>
 
-
 <button class="save-button" onclick="goLive()">
   SAVE / GO LIVE
 </button>
-
 
 <div class="card" style="margin-top:20px;">
   <h2>Status</h2>
@@ -283,7 +282,6 @@ button {
 </div>
 
 </div>
-
 
 <script>
 
@@ -296,197 +294,112 @@ const PLAYLISTS_FILE = "playlists.json";
 
 let settings = {};
 let playlistData = {};
-
 let visualItems = [];
 let audioItems = [];
 
-
-// TOKEN
-
 function saveToken() {
-
-  const token =
-    document.getElementById("token").value.trim();
+  const token = document.getElementById("token").value.trim();
 
   if (!token) {
     alert("Paste your GitHub token first.");
     return;
   }
 
-  localStorage.setItem(
-    "tvDisplayGithubToken",
-    token
-  );
-
+  localStorage.setItem("tvDisplayGithubToken", token);
   setStatus("Token saved.");
 }
 
-
 function loadSavedToken() {
-
-  const token =
-    localStorage.getItem(
-      "tvDisplayGithubToken"
-    );
+  const token = localStorage.getItem("tvDisplayGithubToken");
 
   if (token) {
-    document.getElementById("token").value =
-      token;
+    document.getElementById("token").value = token;
   }
 }
 
-
 function getToken() {
-
-  return localStorage.getItem(
-    "tvDisplayGithubToken"
-  );
+  return localStorage.getItem("tvDisplayGithubToken");
 }
 
-
-// LOAD EVERYTHING
-
 async function loadEverything() {
-
   try {
-
     settings =
-      await fetch(
-        "settings.json?ts=" + Date.now()
-      ).then(r => r.json());
-
+      await fetch("settings.json?ts=" + Date.now())
+        .then(r => r.json());
 
     playlistData =
-      await fetch(
-        "playlists.json?ts=" + Date.now()
-      ).then(r => r.json());
+      await fetch("playlists.json?ts=" + Date.now())
+        .then(r => r.json());
 
-
-    document.getElementById(
-      "googleSlidesUrl"
-    ).value =
+    document.getElementById("googleSlidesUrl").value =
       settings.googleSlidesUrl || "";
 
-
-    document.getElementById(
-      "refreshMinutes"
-    ).value =
+    document.getElementById("refreshMinutes").value =
       settings.refreshMinutes || 15;
 
+    chooseMode(settings.mode || "B");
 
-    chooseMode(
-      settings.mode || "B"
-    );
+    const playlist = playlistData.default || {};
 
-
-    const playlist =
-      playlistData.default || {};
-
-
-    document.getElementById(
-      "musicEnabled"
-    ).checked =
+    document.getElementById("musicEnabled").checked =
       playlist.backgroundMusic?.enabled || false;
 
-
-    document.getElementById(
-      "videoMusicBehavior"
-    ).value =
+    document.getElementById("videoMusicBehavior").value =
       playlist.backgroundMusic?.videoBehavior || "pause";
 
+    document.getElementById("defaultTransition").value =
+      playlist.defaultTransition || "fade";
 
     await loadMedia();
-
 
     setStatus(
       "Current live mode: " +
       (settings.mode || "B")
     );
 
-  }
-
-  catch (error) {
-
-    setStatus(
-      "ERROR loading settings."
-    );
-
+  } catch (error) {
+    setStatus("ERROR loading settings.");
   }
 }
 
-
-// MODE
-
 function chooseMode(mode) {
-
   settings.mode = mode;
 
   document.getElementById("modeA")
-    .classList.toggle(
-      "active",
-      mode === "A"
-    );
+    .classList.toggle("active", mode === "A");
 
   document.getElementById("modeB")
-    .classList.toggle(
-      "active",
-      mode === "B"
-    );
+    .classList.toggle("active", mode === "B");
 }
 
-
-// LOAD MEDIA
-
 async function loadMedia() {
-
   const token = getToken();
 
   if (!token) {
-
-    document.getElementById(
-      "visualList"
-    ).innerText =
+    document.getElementById("visualList").innerText =
       "Save GitHub token first.";
-
     return;
   }
-
 
   const apiURL =
     `https://api.github.com/repos/${OWNER}/${REPO}/contents/${MEDIA_FOLDER}`;
 
-
   try {
-
     const response =
       await fetch(apiURL, {
-
         headers: {
-          "Authorization":
-            `Bearer ${token}`,
-
-          "Accept":
-            "application/vnd.github+json"
+          "Authorization": `Bearer ${token}`,
+          "Accept": "application/vnd.github+json"
         }
-
       });
 
+    if (!response.ok) {
+      throw new Error("Could not read media folder.");
+    }
 
-    if (!response.ok)
-      throw new Error(
-        "Could not read media folder."
-      );
+    const files = await response.json();
 
-
-    const files =
-      await response.json();
-
-
-    const playlist =
-      playlistData.default || {};
-
-
-    // Backward compatibility with old playlist structure
+    const playlist = playlistData.default || {};
 
     const savedVisual =
       playlist.visualItems ||
@@ -497,6 +410,8 @@ async function loadMedia() {
       playlist.audioItems ||
       [];
 
+    const defaultTransition =
+      playlist.defaultTransition || "fade";
 
     visualItems =
       files
@@ -517,29 +432,18 @@ async function loadMedia() {
               .test(file.name);
 
           return {
-
             file: file.name,
-
             url: file.download_url,
-
-            type:
-              video
-                ? "video"
-                : "image",
-
-            selected:
-              !!saved,
-
-            duration:
-              saved?.duration || 8,
-
-            videoMode:
-              saved?.videoMode || "full"
-
+            type: video ? "video" : "image",
+            selected: !!saved,
+            duration: saved?.duration || 8,
+            videoMode: saved?.videoMode || "full",
+            transition:
+              saved?.transition ||
+              defaultTransition
           };
 
         });
-
 
     audioItems =
       files
@@ -556,51 +460,34 @@ async function loadMedia() {
             );
 
           return {
-
             file: file.name,
-
             url: file.download_url,
-
-            selected:
-              !!saved
-
+            selected: !!saved
           };
 
         });
-
 
     sortBySavedOrder(
       visualItems,
       savedVisual
     );
 
-
     sortBySavedOrder(
       audioItems,
       savedAudio
     );
 
-
     renderVisuals();
     renderAudio();
 
-  }
-
-  catch (error) {
-
+  } catch (error) {
     setStatus(
       "ERROR: " + error.message
     );
-
   }
 }
 
-
-function sortBySavedOrder(
-  items,
-  saved
-) {
-
+function sortBySavedOrder(items, saved) {
   items.sort((a, b) => {
 
     const ai =
@@ -613,377 +500,279 @@ function sortBySavedOrder(
         x => x.file === b.file
       );
 
-
-    if (ai === -1 && bi === -1)
-      return 0;
-
-    if (ai === -1)
-      return 1;
-
-    if (bi === -1)
-      return -1;
+    if (ai === -1 && bi === -1) return 0;
+    if (ai === -1) return 1;
+    if (bi === -1) return -1;
 
     return ai - bi;
-
   });
 }
 
+function applyDefaultTransition() {
+  const value =
+    document.getElementById("defaultTransition").value;
 
-// VISUAL MEDIA UI
+  visualItems.forEach(item => {
+    item.transition = value;
+  });
+
+  renderVisuals();
+}
 
 function renderVisuals() {
-
   const container =
-    document.getElementById(
-      "visualList"
-    );
-
+    document.getElementById("visualList");
 
   if (!visualItems.length) {
-
     container.innerHTML =
       "No images or videos found.";
-
     return;
   }
 
-
   container.innerHTML = "";
 
+  visualItems.forEach((item, index) => {
 
-  visualItems.forEach(
-    (item, index) => {
+    const row =
+      document.createElement("div");
 
-      const row =
-        document.createElement("div");
+    row.className = "media-row";
 
-      row.className =
-        "media-row";
+    const checkbox =
+      document.createElement("input");
 
+    checkbox.type = "checkbox";
+    checkbox.checked = item.selected;
 
-      // checkbox
+    checkbox.onchange =
+      () =>
+        item.selected =
+          checkbox.checked;
 
-      const checkbox =
-        document.createElement("input");
+    let preview;
 
-      checkbox.type =
-        "checkbox";
+    if (item.type === "image") {
+      preview =
+        document.createElement("img");
 
-      checkbox.checked =
-        item.selected;
+      preview.src = item.url;
 
-      checkbox.onchange =
-        () =>
-          item.selected =
-            checkbox.checked;
+    } else {
+      preview =
+        document.createElement("video");
 
+      preview.src = item.url;
+      preview.muted = true;
+      preview.controls = true;
+      preview.preload = "metadata";
+    }
 
-      // preview
+    preview.className = "preview";
 
-      let preview;
+    const info =
+      document.createElement("div");
 
-      if (item.type === "image") {
+    info.innerHTML =
+      `<div class="media-name">
+        ${escapeHTML(item.file)}
+      </div>
+      <div class="media-type">
+        ${item.type.toUpperCase()}
+      </div>`;
 
-        preview =
-          document.createElement("img");
+    const timing =
+      document.createElement("div");
 
-        preview.src =
-          item.url;
+    if (item.type === "image") {
 
-      } else {
+      timing.innerHTML =
+        `<label class="small">
+           Display
+         </label>
+         <input
+           class="duration-box"
+           type="number"
+           min="1"
+           value="${item.duration}"
+         > sec`;
 
-        preview =
-          document.createElement("video");
-
-        preview.src =
-          item.url;
-
-        preview.muted =
-          true;
-
-        preview.controls =
-          true;
-
-        preview.preload =
-          "metadata";
-
-      }
-
-      preview.className =
-        "preview";
-
-
-      // filename
-
-      const info =
-        document.createElement("div");
-
-      info.innerHTML =
-        `<div class="media-name">
-          ${escapeHTML(item.file)}
-        </div>
-
-        <div class="media-type">
-          ${item.type.toUpperCase()}
-        </div>`;
-
-
-      // timing
-
-      const timing =
-        document.createElement("div");
-
-
-      if (item.type === "image") {
-
-        timing.innerHTML =
-          `<label class="small">
-             Display
-           </label>
-
-           <input
-             class="duration-box"
-             type="number"
-             min="1"
-             value="${item.duration}"
-           > sec`;
-
-
-        timing.querySelector(
-          "input"
-        ).onchange =
+      timing.querySelector("input")
+        .onchange =
           e =>
             item.duration =
               Number(
                 e.target.value
               ) || 8;
 
+    } else {
+
+      const select =
+        document.createElement("select");
+
+      select.innerHTML =
+        `<option value="full">Full Video</option>
+         <option value="custom">Custom Time</option>`;
+
+      select.value =
+        item.videoMode;
+
+      const custom =
+        document.createElement("input");
+
+      custom.type = "number";
+      custom.min = "1";
+      custom.className = "duration-box";
+      custom.value = item.duration || 10;
+
+      function updateVideoUI() {
+        custom.style.display =
+          select.value === "custom"
+            ? "inline-block"
+            : "none";
       }
 
-      else {
+      select.onchange =
+        () => {
+          item.videoMode = select.value;
+          updateVideoUI();
+        };
 
-        const select =
-          document.createElement(
-            "select"
-          );
+      custom.onchange =
+        () => {
+          item.duration =
+            Number(custom.value) || 10;
+        };
 
-        select.innerHTML =
-          `<option value="full">
-             Full Video
-           </option>
+      timing.appendChild(select);
+      timing.appendChild(
+        document.createElement("br")
+      );
+      timing.appendChild(custom);
 
-           <option value="custom">
-             Custom Time
-           </option>`;
+      updateVideoUI();
+    }
 
-        select.value =
-          item.videoMode;
+    const transitionBox =
+      document.createElement("div");
 
+    const transitionSelect =
+      document.createElement("select");
 
-        const custom =
-          document.createElement(
-            "input"
-          );
+    transitionSelect.innerHTML =
+      `
+      <option value="fade">Fade</option>
+      <option value="slideLeft">Slide Left</option>
+      <option value="slideRight">Slide Right</option>
+      <option value="zoomIn">Zoom In</option>
+      <option value="zoomOut">Zoom Out</option>
+      <option value="blur">Blur</option>
+      <option value="none">None</option>
+      `;
 
-        custom.type =
-          "number";
+    transitionSelect.value =
+      item.transition || "fade";
 
-        custom.min =
-          "1";
+    transitionSelect.onchange =
+      () => {
+        item.transition =
+          transitionSelect.value;
+      };
 
-        custom.className =
-          "duration-box";
-
-        custom.value =
-          item.duration || 10;
-
-
-        const secondsText =
-          document.createTextNode(
-            " sec"
-          );
-
-
-        function updateVideoUI() {
-
-          custom.style.display =
-            select.value === "custom"
-              ? "inline-block"
-              : "none";
-
-          secondsText.parentNode &&
-          (secondsText.parentNode.style = "");
-        }
-
-
-        select.onchange =
-          () => {
-
-            item.videoMode =
-              select.value;
-
-            updateVideoUI();
-
-          };
-
-
-        custom.onchange =
-          () => {
-
-            item.duration =
-              Number(
-                custom.value
-              ) || 10;
-
-          };
-
-
-        timing.appendChild(select);
-
-        timing.appendChild(
-          document.createElement("br")
-        );
-
-        timing.appendChild(custom);
-
-        timing.appendChild(
-          secondsText
-        );
-
-
-        updateVideoUI();
-
-      }
-
-
-      // order
-
-      const controls =
-        createOrderButtons(
-          visualItems,
-          index,
-          renderVisuals
-        );
-
-
-      row.appendChild(checkbox);
-      row.appendChild(preview);
-      row.appendChild(info);
-      row.appendChild(timing);
-      row.appendChild(controls);
-
-      container.appendChild(row);
-
-    });
-
-}
-
-
-// AUDIO UI
-
-function renderAudio() {
-
-  const container =
-    document.getElementById(
-      "audioList"
+    transitionBox.appendChild(
+      transitionSelect
     );
 
+    const controls =
+      createOrderButtons(
+        visualItems,
+        index,
+        renderVisuals
+      );
+
+    row.appendChild(checkbox);
+    row.appendChild(preview);
+    row.appendChild(info);
+    row.appendChild(timing);
+    row.appendChild(transitionBox);
+    row.appendChild(controls);
+
+    container.appendChild(row);
+  });
+}
+
+function renderAudio() {
+  const container =
+    document.getElementById("audioList");
 
   if (!audioItems.length) {
-
     container.innerHTML =
       "<span class='small'>No audio files found.</span>";
-
     return;
   }
 
-
   container.innerHTML = "";
 
+  audioItems.forEach((item, index) => {
 
-  audioItems.forEach(
-    (item, index) => {
+    const row =
+      document.createElement("div");
 
-      const row =
-        document.createElement("div");
+    row.className = "audio-row";
 
-      row.className =
-        "audio-row";
+    const checkbox =
+      document.createElement("input");
 
+    checkbox.type = "checkbox";
+    checkbox.checked = item.selected;
 
-      const checkbox =
-        document.createElement(
-          "input"
-        );
+    checkbox.onchange =
+      () =>
+        item.selected =
+          checkbox.checked;
 
-      checkbox.type =
-        "checkbox";
+    const info =
+      document.createElement("div");
 
-      checkbox.checked =
-        item.selected;
+    info.innerHTML =
+      `<div>
+        ${escapeHTML(item.file)}
+      </div>
 
-      checkbox.onchange =
-        () =>
-          item.selected =
-            checkbox.checked;
+      <audio
+        controls
+        preload="metadata"
+        src="${item.url}"
+        style="width:100%; margin-top:7px;">
+      </audio>`;
 
+    const controls =
+      createOrderButtons(
+        audioItems,
+        index,
+        renderAudio
+      );
 
-      const info =
-        document.createElement("div");
+    row.appendChild(checkbox);
+    row.appendChild(info);
+    row.appendChild(controls);
 
-      info.innerHTML =
-        `<div>
-          ${escapeHTML(item.file)}
-        </div>
-
-        <audio
-          controls
-          preload="metadata"
-          src="${item.url}"
-          style="width:100%; margin-top:7px;">
-        </audio>`;
-
-
-      const controls =
-        createOrderButtons(
-          audioItems,
-          index,
-          renderAudio
-        );
-
-
-      row.appendChild(checkbox);
-      row.appendChild(info);
-      row.appendChild(controls);
-
-      container.appendChild(row);
-
-    });
-
+    container.appendChild(row);
+  });
 }
-
-
-// ORDER BUTTONS
 
 function createOrderButtons(
   array,
   index,
   renderFunction
 ) {
-
   const controls =
-    document.createElement(
-      "div"
-    );
+    document.createElement("div");
 
   controls.className =
     "order-buttons";
 
-
   const up =
-    document.createElement(
-      "button"
-    );
+    document.createElement("button");
 
   up.innerText = "↑";
 
@@ -996,11 +785,8 @@ function createOrderButtons(
         renderFunction
       );
 
-
   const down =
-    document.createElement(
-      "button"
-    );
+    document.createElement("button");
 
   down.innerText = "↓";
 
@@ -1013,13 +799,11 @@ function createOrderButtons(
         renderFunction
       );
 
-
   controls.appendChild(up);
   controls.appendChild(down);
 
   return controls;
 }
-
 
 function moveItem(
   array,
@@ -1027,117 +811,73 @@ function moveItem(
   direction,
   renderFunction
 ) {
-
   const newIndex =
     index + direction;
-
 
   if (
     newIndex < 0 ||
     newIndex >= array.length
-  )
-    return;
-
+  ) return;
 
   [array[index], array[newIndex]] =
     [array[newIndex], array[index]];
 
-
   renderFunction();
 }
 
-
-// GO LIVE
-
 async function goLive() {
-
-  const token =
-    getToken();
-
+  const token = getToken();
 
   if (!token) {
-
     alert(
       "Save your GitHub token first."
     );
-
     return;
   }
 
-
-  setStatus(
-    "Saving..."
-  );
-
+  setStatus("Saving...");
 
   try {
 
     const selectedVisuals =
       visualItems
-        .filter(
-          x => x.selected
-        )
+        .filter(x => x.selected)
         .map(item => {
 
-          if (
-            item.type === "image"
-          ) {
-
+          if (item.type === "image") {
             return {
-
-              file:
-                item.file,
-
-              type:
-                "image",
-
-              duration:
-                item.duration
-
+              file: item.file,
+              type: "image",
+              duration: item.duration,
+              transition: item.transition
             };
-
           }
 
-
           return {
-
-            file:
-              item.file,
-
-            type:
-              "video",
-
-            videoMode:
-              item.videoMode,
-
-            duration:
-              item.duration
-
+            file: item.file,
+            type: "video",
+            videoMode: item.videoMode,
+            duration: item.duration,
+            transition: item.transition
           };
 
         });
 
-
     const selectedAudio =
       audioItems
-        .filter(
-          x => x.selected
-        )
+        .filter(x => x.selected)
         .map(item => ({
-
-          file:
-            item.file,
-
-          type:
-            "audio"
-
+          file: item.file,
+          type: "audio"
         }));
 
-
     playlistData.default = {
+      name: "Default Playlist",
 
-      name:
-        "Default Playlist",
+      defaultTransition:
+        document.getElementById(
+          "defaultTransition"
+        ).value,
 
       visualItems:
         selectedVisuals,
@@ -1146,134 +886,88 @@ async function goLive() {
         selectedAudio,
 
       backgroundMusic: {
-
         enabled:
-          document
-            .getElementById(
-              "musicEnabled"
-            )
-            .checked,
+          document.getElementById(
+            "musicEnabled"
+          ).checked,
 
         videoBehavior:
-          document
-            .getElementById(
-              "videoMusicBehavior"
-            )
-            .value
-
+          document.getElementById(
+            "videoMusicBehavior"
+          ).value
       }
-
     };
 
-
     await updateGithubJSON(
-
       PLAYLISTS_FILE,
-
       playlistData,
-
       "Update TV playlists"
-
     );
 
-
     settings.googleSlidesUrl =
-      document
-        .getElementById(
-          "googleSlidesUrl"
-        )
-        .value
-        .trim();
-
+      document.getElementById(
+        "googleSlidesUrl"
+      ).value.trim();
 
     settings.refreshMinutes =
       Number(
-        document
-          .getElementById(
-            "refreshMinutes"
-          )
-          .value
+        document.getElementById(
+          "refreshMinutes"
+        ).value
       );
-
 
     settings.activePlaylist =
       "default";
 
-
     await updateGithubJSON(
-
       SETTINGS_FILE,
-
       settings,
-
       "Update TV settings"
-
     );
-
 
     setStatus(
       "SAVED — TV settings are now live."
     );
 
-  }
-
-  catch (error) {
-
+  } catch (error) {
     setStatus(
-      "ERROR: " +
-      error.message
+      "ERROR: " + error.message
     );
-
   }
-
 }
-
-
-// GITHUB WRITE
 
 async function updateGithubJSON(
   filename,
   data,
   message
 ) {
-
   const token =
     getToken();
 
-
   const apiURL =
     `https://api.github.com/repos/${OWNER}/${REPO}/contents/${filename}`;
-
 
   const currentResponse =
     await fetch(
       apiURL,
       {
-
         headers: {
-
           "Authorization":
             `Bearer ${token}`,
-
           "Accept":
             "application/vnd.github+json"
-
         }
-
       }
     );
 
-
-  if (!currentResponse.ok)
+  if (!currentResponse.ok) {
     throw new Error(
-      "Could not read " +
-      filename
+      "Could not read " + filename
     );
-
+  }
 
   const currentFile =
     await currentResponse.json();
-
 
   const text =
     JSON.stringify(
@@ -1282,103 +976,67 @@ async function updateGithubJSON(
       2
     );
 
-
   const encoded =
     btoa(
       unescape(
-        encodeURIComponent(
-          text
-        )
+        encodeURIComponent(text)
       )
     );
-
 
   const saveResponse =
     await fetch(
       apiURL,
       {
-
-        method:
-          "PUT",
+        method: "PUT",
 
         headers: {
-
           "Authorization":
             `Bearer ${token}`,
-
           "Accept":
             "application/vnd.github+json",
-
           "Content-Type":
             "application/json"
-
         },
 
         body:
           JSON.stringify({
-
             message:
               message,
-
             content:
               encoded,
-
             sha:
               currentFile.sha,
-
             branch:
               "main"
-
           })
-
       }
     );
 
-
   if (!saveResponse.ok) {
-
     const error =
       await saveResponse.json();
-
 
     throw new Error(
       error.message ||
       "Save failed"
     );
-
   }
-
 }
-
-
-// MISC
 
 function setStatus(text) {
-
-  document
-    .getElementById(
-      "status"
-    )
-    .innerText =
-      text;
-
+  document.getElementById(
+    "status"
+  ).innerText = text;
 }
-
 
 function escapeHTML(text) {
-
   const div =
-    document.createElement(
-      "div"
-    );
+    document.createElement("div");
 
-  div.textContent =
-    text;
+  div.textContent = text;
 
   return div.innerHTML;
-
 }
-
 
 loadSavedToken();
 loadEverything();
