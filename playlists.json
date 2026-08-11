@@ -2,10 +2,36 @@
   "default": {
     "name": "Default Playlist",
     "defaultTransition": "fade",
-    "visualItems": [],
-    "audioItems": [],
+    "visualItems": [
+      {
+        "file": "FUEL THE FIRE AI NEW.png",
+        "type": "image",
+        "duration": 6,
+        "transition": "fade"
+      },
+      {
+        "file": "BELLO + UNC - S26 MONEYBALL.jpg",
+        "type": "image",
+        "duration": 6,
+        "transition": "fade"
+      },
+      {
+        "file": "ITF VIRTUAL TOUR VID.mov.mp4",
+        "type": "video",
+        "videoMode": "full",
+        "duration": 8,
+        "transition": "fade",
+        "muted": true
+      }
+    ],
+    "audioItems": [
+      {
+        "file": "ACDC - Dirty Deeds Done Dirt Cheap (Official Audio).mp3",
+        "type": "audio"
+      }
+    ],
     "backgroundMusic": {
-      "enabled": false,
+      "enabled": true,
       "videoBehavior": "muteVideo"
     }
   }
