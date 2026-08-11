@@ -2,22 +2,7 @@
   "default": {
     "name": "Default Playlist",
     "defaultTransition": "fade",
-    "visualItems": [
-      {
-        "file": "BELLO + UNC - S26 MONEYBALL.jpg",
-        "type": "image",
-        "duration": 4,
-        "transition": "fade"
-      },
-      {
-        "file": "ITF VIRTUAL TOUR VID.mov.mp4",
-        "type": "video",
-        "videoMode": "full",
-        "duration": 8,
-        "transition": "fade",
-        "muted": false
-      }
-    ],
+    "visualItems": [],
     "audioItems": [],
     "backgroundMusic": {
       "enabled": false,
