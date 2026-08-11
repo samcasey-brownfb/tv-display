@@ -305,13 +305,8 @@ button:disabled {
 
 
 <div class="card" style="margin-top:20px;">
-
   <h2>Status</h2>
-
-  <div id="status">
-    Loading...
-  </div>
-
+  <div id="status">Loading...</div>
 </div>
 
 </div>
@@ -321,8 +316,9 @@ button:disabled {
 
 const OWNER = "samcasey-brownfb";
 const REPO = "tv-display";
-const MEDIA_FOLDER = "media";
+const BRANCH = "main";
 
+const MEDIA_FOLDER = "media";
 const SETTINGS_FILE = "settings.json";
 const PLAYLISTS_FILE = "playlists.json";
 
@@ -333,9 +329,9 @@ let visualItems = [];
 let audioItems = [];
 
 
-// ------------------------------------------------
+// ==================================================
 // TOKEN
-// ------------------------------------------------
+// ==================================================
 
 function saveToken() {
 
@@ -353,6 +349,8 @@ function saveToken() {
   );
 
   setStatus("Token saved on this computer.");
+
+  loadEverything();
 }
 
 
@@ -375,26 +373,126 @@ function getToken() {
   return localStorage.getItem(
     "tvDisplayGithubToken"
   );
+
 }
 
 
-// ------------------------------------------------
-// LOAD SETTINGS
-// ------------------------------------------------
+// ==================================================
+// GITHUB API HELPERS
+// ==================================================
+
+function githubHeaders() {
+
+  const token = getToken();
+
+  return {
+
+    "Authorization":
+      `Bearer ${token}`,
+
+    "Accept":
+      "application/vnd.github+json",
+
+    "X-GitHub-Api-Version":
+      "2022-11-28"
+
+  };
+
+}
+
+
+// READ JSON DIRECTLY FROM GITHUB REPO
+
+async function readGithubJSON(filename) {
+
+  const apiURL =
+    `https://api.github.com/repos/${OWNER}/${REPO}/contents/${filename}?ref=${BRANCH}&ts=${Date.now()}`;
+
+
+  const response =
+    await fetch(
+      apiURL,
+      {
+        headers:
+          githubHeaders(),
+
+        cache:
+          "no-store"
+      }
+    );
+
+
+  if (!response.ok) {
+
+    throw new Error(
+      `Could not read ${filename} from GitHub`
+    );
+
+  }
+
+
+  const file =
+    await response.json();
+
+
+  const decoded =
+    decodeURIComponent(
+      escape(
+        atob(
+          file.content.replace(
+            /\n/g,
+            ""
+          )
+        )
+      )
+    );
+
+
+  return JSON.parse(
+    decoded
+  );
+
+}
+
+
+// ==================================================
+// LOAD EVERYTHING
+// ==================================================
 
 async function loadEverything() {
 
+  const token =
+    getToken();
+
+
+  if (!token) {
+
+    setStatus(
+      "Save your GitHub token to load the control panel."
+    );
+
+    return;
+
+  }
+
+
   try {
 
+    setStatus(
+      "Loading latest settings directly from GitHub..."
+    );
+
+
     settings =
-      await fetch(
-        "settings.json?ts=" + Date.now()
-      ).then(r => r.json());
+      await readGithubJSON(
+        SETTINGS_FILE
+      );
+
 
     playlistData =
-      await fetch(
-        "playlists.json?ts=" + Date.now()
-      ).then(r => r.json());
+      await readGithubJSON(
+        PLAYLISTS_FILE
+      );
 
 
     document.getElementById(
@@ -443,7 +541,7 @@ async function loadEverything() {
 
 
     setStatus(
-      "Current live mode: " +
+      "Loaded latest settings directly from GitHub.\nCurrent live mode: " +
       (settings.mode || "B")
     );
 
@@ -452,26 +550,31 @@ async function loadEverything() {
   catch (error) {
 
     setStatus(
-      "ERROR loading settings."
+      "LOAD ERROR — " +
+      error.message
     );
 
   }
+
 }
 
 
-// ------------------------------------------------
+// ==================================================
 // MODE
-// ------------------------------------------------
+// ==================================================
 
 function chooseMode(mode) {
 
-  settings.mode = mode;
+  settings.mode =
+    mode;
+
 
   document.getElementById("modeA")
     .classList.toggle(
       "active",
       mode === "A"
     );
+
 
   document.getElementById("modeB")
     .classList.toggle(
@@ -482,13 +585,15 @@ function chooseMode(mode) {
 }
 
 
-// ------------------------------------------------
-// LOAD MEDIA
-// ------------------------------------------------
+// ==================================================
+// LOAD MEDIA DIRECTLY FROM GITHUB
+// ==================================================
 
 async function loadMedia() {
 
-  const token = getToken();
+  const token =
+    getToken();
+
 
   if (!token) {
 
@@ -498,11 +603,12 @@ async function loadMedia() {
       "Save GitHub token first.";
 
     return;
+
   }
 
 
   const apiURL =
-    `https://api.github.com/repos/${OWNER}/${REPO}/contents/${MEDIA_FOLDER}`;
+    `https://api.github.com/repos/${OWNER}/${REPO}/contents/${MEDIA_FOLDER}?ref=${BRANCH}&ts=${Date.now()}`;
 
 
   try {
@@ -511,15 +617,13 @@ async function loadMedia() {
       await fetch(
         apiURL,
         {
-          headers: {
 
-            "Authorization":
-              `Bearer ${token}`,
+          headers:
+            githubHeaders(),
 
-            "Accept":
-              "application/vnd.github+json"
+          cache:
+            "no-store"
 
-          }
         }
       );
 
@@ -559,81 +663,95 @@ async function loadMedia() {
 
     visualItems =
       files
-        .filter(file =>
-          file.type === "file" &&
-          /\.(png|jpg|jpeg|webp|gif|mp4|webm)$/i
-            .test(file.name)
+        .filter(
+          file =>
+            file.type === "file" &&
+            /\.(png|jpg|jpeg|webp|gif|mp4|webm)$/i
+              .test(file.name)
         )
-        .map(file => {
+        .map(
+          file => {
 
-          const saved =
-            savedVisual.find(
-              x => x.file === file.name
-            );
+            const saved =
+              savedVisual.find(
+                x =>
+                  x.file === file.name
+              );
 
-          const video =
-            /\.(mp4|webm)$/i.test(
-              file.name
-            );
 
-          return {
+            const video =
+              /\.(mp4|webm)$/i
+                .test(file.name);
 
-            file: file.name,
 
-            url: file.download_url,
+            return {
 
-            type:
-              video
-                ? "video"
-                : "image",
+              file:
+                file.name,
 
-            selected:
-              !!saved,
+              url:
+                file.download_url,
 
-            duration:
-              saved?.duration || 8,
+              type:
+                video
+                  ? "video"
+                  : "image",
 
-            videoMode:
-              saved?.videoMode || "full",
+              selected:
+                !!saved,
 
-            transition:
-              saved?.transition ||
-              defaultTransition,
+              duration:
+                saved?.duration || 8,
 
-            muted:
-              saved?.muted || false
+              videoMode:
+                saved?.videoMode || "full",
 
-          };
+              transition:
+                saved?.transition ||
+                defaultTransition,
 
-        });
+              muted:
+                saved?.muted || false
+
+            };
+
+          }
+        );
 
 
     audioItems =
       files
-        .filter(file =>
-          file.type === "file" &&
-          /\.(mp3|m4a|ogg|wav)$/i
-            .test(file.name)
+        .filter(
+          file =>
+            file.type === "file" &&
+            /\.(mp3|m4a|ogg|wav)$/i
+              .test(file.name)
         )
-        .map(file => {
+        .map(
+          file => {
 
-          const saved =
-            savedAudio.find(
-              x => x.file === file.name
-            );
+            const saved =
+              savedAudio.find(
+                x =>
+                  x.file === file.name
+              );
 
-          return {
 
-            file: file.name,
+            return {
 
-            url: file.download_url,
+              file:
+                file.name,
 
-            selected:
-              !!saved
+              url:
+                file.download_url,
 
-          };
+              selected:
+                !!saved
 
-        });
+            };
+
+          }
+        );
 
 
     sortBySavedOrder(
@@ -656,7 +774,7 @@ async function loadMedia() {
   catch (error) {
 
     setStatus(
-      "ERROR: " +
+      "MEDIA ERROR — " +
       error.message
     );
 
@@ -665,9 +783,9 @@ async function loadMedia() {
 }
 
 
-// ------------------------------------------------
-// ORDER SAVED ITEMS
-// ------------------------------------------------
+// ==================================================
+// ORDER
+// ==================================================
 
 function sortBySavedOrder(
   items,
@@ -679,12 +797,15 @@ function sortBySavedOrder(
 
       const ai =
         saved.findIndex(
-          x => x.file === a.file
+          x =>
+            x.file === a.file
         );
+
 
       const bi =
         saved.findIndex(
-          x => x.file === b.file
+          x =>
+            x.file === b.file
         );
 
 
@@ -711,9 +832,9 @@ function sortBySavedOrder(
 }
 
 
-// ------------------------------------------------
-// DEFAULT TRANSITION
-// ------------------------------------------------
+// ==================================================
+// TRANSITIONS
+// ==================================================
 
 function applyDefaultTransition() {
 
@@ -738,9 +859,9 @@ function applyDefaultTransition() {
 }
 
 
-// ------------------------------------------------
-// VISUAL UI
-// ------------------------------------------------
+// ==================================================
+// VISUAL MEDIA UI
+// ==================================================
 
 function renderVisuals() {
 
@@ -756,10 +877,12 @@ function renderVisuals() {
       "No images or videos found.";
 
     return;
+
   }
 
 
-  container.innerHTML = "";
+  container.innerHTML =
+    "";
 
 
   visualItems.forEach(
@@ -769,6 +892,7 @@ function renderVisuals() {
         document.createElement(
           "div"
         );
+
 
       row.className =
         "media-row";
@@ -781,16 +905,22 @@ function renderVisuals() {
           "input"
         );
 
+
       checkbox.type =
         "checkbox";
+
 
       checkbox.checked =
         item.selected;
 
+
       checkbox.onchange =
-        () =>
+        () => {
+
           item.selected =
             checkbox.checked;
+
+        };
 
 
       // PREVIEW
@@ -807,6 +937,7 @@ function renderVisuals() {
             "img"
           );
 
+
         preview.src =
           item.url;
 
@@ -819,14 +950,18 @@ function renderVisuals() {
             "video"
           );
 
+
         preview.src =
           item.url;
+
 
         preview.muted =
           true;
 
+
         preview.controls =
           true;
+
 
         preview.preload =
           "metadata";
@@ -882,13 +1017,18 @@ function renderVisuals() {
 
 
         timing
-          .querySelector("input")
+          .querySelector(
+            "input"
+          )
           .onchange =
-            e =>
+            e => {
+
               item.duration =
                 Number(
                   e.target.value
                 ) || 8;
+
+            };
 
       }
 
@@ -923,11 +1063,14 @@ function renderVisuals() {
         custom.type =
           "number";
 
+
         custom.min =
           "1";
 
+
         custom.className =
           "duration-box";
+
 
         custom.value =
           item.duration || 10;
@@ -936,7 +1079,8 @@ function renderVisuals() {
         function updateVideoUI() {
 
           custom.style.display =
-            select.value === "custom"
+            select.value ===
+            "custom"
               ? "inline-block"
               : "none";
 
@@ -969,11 +1113,13 @@ function renderVisuals() {
           select
         );
 
+
         timing.appendChild(
           document.createElement(
             "br"
           )
         );
+
 
         timing.appendChild(
           custom
@@ -1037,6 +1183,7 @@ function renderVisuals() {
           "div"
         );
 
+
       muteBox.className =
         "mute-box";
 
@@ -1054,14 +1201,18 @@ function renderVisuals() {
         mute.type =
           "checkbox";
 
+
         mute.checked =
           item.muted;
 
 
         mute.onchange =
-          () =>
+          () => {
+
             item.muted =
               mute.checked;
+
+          };
 
 
         muteBox.appendChild(
@@ -1080,9 +1231,7 @@ function renderVisuals() {
       else {
 
         muteBox.innerHTML =
-          `<span class="small">
-            —
-          </span>`;
+          `<span class="small">—</span>`;
 
       }
 
@@ -1101,25 +1250,31 @@ function renderVisuals() {
         checkbox
       );
 
+
       row.appendChild(
         preview
       );
+
 
       row.appendChild(
         info
       );
 
+
       row.appendChild(
         timing
       );
+
 
       row.appendChild(
         transitionBox
       );
 
+
       row.appendChild(
         muteBox
       );
+
 
       row.appendChild(
         controls
@@ -1136,9 +1291,9 @@ function renderVisuals() {
 }
 
 
-// ------------------------------------------------
+// ==================================================
 // AUDIO UI
-// ------------------------------------------------
+// ==================================================
 
 function renderAudio() {
 
@@ -1158,7 +1313,8 @@ function renderAudio() {
   }
 
 
-  container.innerHTML = "";
+  container.innerHTML =
+    "";
 
 
   audioItems.forEach(
@@ -1183,14 +1339,18 @@ function renderAudio() {
       checkbox.type =
         "checkbox";
 
+
       checkbox.checked =
         item.selected;
 
 
       checkbox.onchange =
-        () =>
+        () => {
+
           item.selected =
             checkbox.checked;
+
+        };
 
 
       const info =
@@ -1224,9 +1384,11 @@ function renderAudio() {
         checkbox
       );
 
+
       row.appendChild(
         info
       );
+
 
       row.appendChild(
         controls
@@ -1243,9 +1405,9 @@ function renderAudio() {
 }
 
 
-// ------------------------------------------------
+// ==================================================
 // ORDER BUTTONS
-// ------------------------------------------------
+// ==================================================
 
 function createOrderButtons(
   array,
@@ -1274,13 +1436,16 @@ function createOrderButtons(
 
 
   up.onclick =
-    () =>
+    () => {
+
       moveItem(
         array,
         index,
         -1,
         renderFunction
       );
+
+    };
 
 
   const down =
@@ -1294,13 +1459,16 @@ function createOrderButtons(
 
 
   down.onclick =
-    () =>
+    () => {
+
       moveItem(
         array,
         index,
         1,
         renderFunction
       );
+
+    };
 
 
   controls.appendChild(
@@ -1351,9 +1519,9 @@ function moveItem(
 }
 
 
-// ------------------------------------------------
-// SAVE / GO LIVE
-// ------------------------------------------------
+// ==================================================
+// SAVE
+// ==================================================
 
 async function goLive() {
 
@@ -1388,21 +1556,20 @@ async function goLive() {
 
   try {
 
-    setStatus(
-      "1/2 — Saving playlist..."
-    );
-
+    // BUILD PLAYLIST
 
     const selectedVisuals =
       visualItems
         .filter(
-          x => x.selected
+          x =>
+            x.selected
         )
         .map(
           item => {
 
             if (
-              item.type === "image"
+              item.type ===
+              "image"
             ) {
 
               return {
@@ -1453,7 +1620,8 @@ async function goLive() {
     const selectedAudio =
       audioItems
         .filter(
-          x => x.selected
+          x =>
+            x.selected
         )
         .map(
           item => ({
@@ -1501,6 +1669,13 @@ async function goLive() {
     };
 
 
+    // PLAYLIST SAVE
+
+    setStatus(
+      "1/2 — Saving playlist..."
+    );
+
+
     await updateGithubJSONWithRetry(
       PLAYLISTS_FILE,
       playlistData,
@@ -1508,10 +1683,7 @@ async function goLive() {
     );
 
 
-    setStatus(
-      "2/2 — Saving TV settings..."
-    );
-
+    // SETTINGS SAVE
 
     settings.googleSlidesUrl =
       document.getElementById(
@@ -1531,6 +1703,11 @@ async function goLive() {
       "default";
 
 
+    setStatus(
+      "2/2 — Saving TV settings..."
+    );
+
+
     await updateGithubJSONWithRetry(
       SETTINGS_FILE,
       settings,
@@ -1538,8 +1715,27 @@ async function goLive() {
     );
 
 
+    // VERIFY BY READING THE REPO AGAIN
+
     setStatus(
-      "SAVED — TV settings are now live."
+      "Verifying saved settings..."
+    );
+
+
+    settings =
+      await readGithubJSON(
+        SETTINGS_FILE
+      );
+
+
+    playlistData =
+      await readGithubJSON(
+        PLAYLISTS_FILE
+      );
+
+
+    setStatus(
+      "SAVED & VERIFIED — TV settings are now live."
     );
 
 
@@ -1552,6 +1748,7 @@ async function goLive() {
 
         saveButton.innerText =
           "SAVE / GO LIVE";
+
 
         saveButton.disabled =
           false;
@@ -1582,9 +1779,9 @@ async function goLive() {
 }
 
 
-// ------------------------------------------------
-// WRITE TO GITHUB
-// ------------------------------------------------
+// ==================================================
+// GITHUB WRITE
+// ==================================================
 
 async function updateGithubJSON(
   filename,
@@ -1592,27 +1789,24 @@ async function updateGithubJSON(
   message
 ) {
 
-  const token =
-    getToken();
-
-
   const apiURL =
     `https://api.github.com/repos/${OWNER}/${REPO}/contents/${filename}`;
 
 
+  // ALWAYS FETCH CURRENT SHA FIRST
+
   const currentResponse =
     await fetch(
-      apiURL,
+      apiURL +
+      `?ref=${BRANCH}&ts=${Date.now()}`,
       {
-        headers: {
 
-          "Authorization":
-            `Bearer ${token}`,
+        headers:
+          githubHeaders(),
 
-          "Accept":
-            "application/vnd.github+json"
+        cache:
+          "no-store"
 
-        }
       }
     );
 
@@ -1620,8 +1814,7 @@ async function updateGithubJSON(
   if (!currentResponse.ok) {
 
     throw new Error(
-      "Could not read " +
-      filename
+      `Could not read current ${filename}`
     );
 
   }
@@ -1659,11 +1852,7 @@ async function updateGithubJSON(
 
         headers: {
 
-          "Authorization":
-            `Bearer ${token}`,
-
-          "Accept":
-            "application/vnd.github+json",
+          ...githubHeaders(),
 
           "Content-Type":
             "application/json"
@@ -1683,7 +1872,7 @@ async function updateGithubJSON(
               currentFile.sha,
 
             branch:
-              "main"
+              BRANCH
 
           })
 
@@ -1698,18 +1887,25 @@ async function updateGithubJSON(
 
 
     throw new Error(
-      error.message ||
-      "Save failed"
+      `${filename}: ` +
+      (
+        error.message ||
+        "GitHub save failed"
+      )
     );
 
   }
 
+
+  return await
+    saveResponse.json();
+
 }
 
 
-// ------------------------------------------------
-// AUTOMATIC SAVE RETRY
-// ------------------------------------------------
+// ==================================================
+// RETRY
+// ==================================================
 
 async function updateGithubJSONWithRetry(
   filename,
@@ -1719,6 +1915,9 @@ async function updateGithubJSONWithRetry(
 
   const maxAttempts =
     3;
+
+
+  let lastError;
 
 
   for (
@@ -1742,18 +1941,23 @@ async function updateGithubJSONWithRetry(
 
     catch (error) {
 
+      lastError =
+        error;
+
+
       if (
-        attempt === maxAttempts
+        attempt ===
+        maxAttempts
       ) {
 
-        throw error;
+        break;
 
       }
 
 
       setStatus(
-        `Temporary GitHub save issue.
-Retrying ${filename}...
+        `Temporary save issue with ${filename}.
+Retrying automatically...
 Attempt ${attempt + 1} of ${maxAttempts}`
       );
 
@@ -1770,12 +1974,15 @@ Attempt ${attempt + 1} of ${maxAttempts}`
 
   }
 
+
+  throw lastError;
+
 }
 
 
-// ------------------------------------------------
+// ==================================================
 // MISC
-// ------------------------------------------------
+// ==================================================
 
 function setStatus(text) {
 
@@ -1804,9 +2011,9 @@ function escapeHTML(text) {
 }
 
 
-// ------------------------------------------------
-// START CONTROL PAGE
-// ------------------------------------------------
+// ==================================================
+// START
+// ==================================================
 
 loadSavedToken();
 loadEverything();
