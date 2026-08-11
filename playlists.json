@@ -20,13 +20,14 @@
         "type": "video",
         "videoMode": "full",
         "duration": 8,
-        "transition": "fade"
+        "transition": "fade",
+        "muted": false
       }
     ],
     "audioItems": [],
     "backgroundMusic": {
       "enabled": false,
-      "videoBehavior": "pause"
+      "videoBehavior": "muteVideo"
     }
   }
 }
