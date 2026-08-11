@@ -6,13 +6,13 @@
       {
         "file": "BELLO + UNC - S26 MONEYBALL.jpg",
         "type": "image",
-        "duration": 5,
+        "duration": 8,
         "transition": "fade"
       },
       {
         "file": "FUEL THE FIRE AI NEW.png",
         "type": "image",
-        "duration": 5,
+        "duration": 8,
         "transition": "fade"
       },
       {
@@ -30,7 +30,7 @@
       }
     ],
     "backgroundMusic": {
-      "enabled": true,
+      "enabled": false,
       "videoBehavior": "pause"
     }
   }
