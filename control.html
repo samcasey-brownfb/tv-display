@@ -19,15 +19,6 @@
       padding: 30px;
     }
 
-    h1 {
-      margin-bottom: 5px;
-    }
-
-    .subtitle {
-      color: #aaa;
-      margin-bottom: 30px;
-    }
-
     .card {
       background: #222;
       padding: 22px;
@@ -57,7 +48,6 @@
       border: none;
       border-radius: 7px;
       cursor: pointer;
-      margin-top: 15px;
     }
 
     .mode-buttons {
@@ -75,9 +65,26 @@
       background: #8b1e2d;
     }
 
+    .save-button {
+      width: 100%;
+      background: #8b1e2d;
+      color: white;
+      font-size: 20px;
+      margin-top: 10px;
+    }
+
+    .token-button {
+      margin-top: 12px;
+    }
+
     #status {
       margin-top: 15px;
       color: #ccc;
+    }
+
+    .small {
+      color: #999;
+      font-size: 13px;
     }
   </style>
 </head>
@@ -87,13 +94,33 @@
 <div class="container">
 
   <h1>BROWN FOOTBALL TV</h1>
-  <div class="subtitle">Display Control</div>
+  <p>Display Control</p>
 
   <div class="card">
+    <h2>GitHub Connection</h2>
 
+    <label>GitHub Token</label>
+
+    <input
+      id="token"
+      type="password"
+      placeholder="Paste token here"
+    >
+
+    <button class="token-button" onclick="saveToken()">
+      SAVE TOKEN ON THIS COMPUTER
+    </button>
+
+    <p class="small">
+      Token is stored only in this browser. It is not saved to GitHub.
+    </p>
+  </div>
+
+  <div class="card">
     <h2>Display Mode</h2>
 
     <div class="mode-buttons">
+
       <button id="modeA" class="mode-button" onclick="chooseMode('A')">
         MODE A — MEDIA
       </button>
@@ -101,8 +128,8 @@
       <button id="modeB" class="mode-button" onclick="chooseMode('B')">
         MODE B — GOOGLE SLIDES
       </button>
-    </div>
 
+    </div>
   </div>
 
   <div class="card">
@@ -135,21 +162,51 @@
 
   </div>
 
-  <div class="card">
+  <button class="save-button" onclick="goLive()">
+    SAVE / GO LIVE
+  </button>
 
-    <h2>Current Settings</h2>
-
+  <div class="card" style="margin-top:20px;">
+    <h2>Status</h2>
     <div id="status">Loading...</div>
-
   </div>
 
 </div>
 
 <script>
 
-  let settings = {};
+const OWNER = "samcasey-brownfb";
+const REPO = "tv-display";
+const SETTINGS_FILE = "settings.json";
 
-  async function loadSettings() {
+let settings = {};
+
+function saveToken() {
+  const token = document.getElementById("token").value.trim();
+
+  if (!token) {
+    alert("Paste your GitHub token first.");
+    return;
+  }
+
+  localStorage.setItem("tvDisplayGithubToken", token);
+
+  document.getElementById("status").innerText =
+    "Token saved on this computer.";
+}
+
+function loadSavedToken() {
+  const savedToken =
+    localStorage.getItem("tvDisplayGithubToken");
+
+  if (savedToken) {
+    document.getElementById("token").value = savedToken;
+  }
+}
+
+async function loadSettings() {
+
+  try {
 
     const response =
       await fetch("settings.json?ts=" + Date.now());
@@ -165,26 +222,109 @@
     chooseMode(settings.mode || "B");
 
     document.getElementById("status").innerText =
-      "Current mode: " + settings.mode;
+      "Current live mode: " + (settings.mode || "B");
 
-  }
-
-  function chooseMode(mode) {
-
-    settings.mode = mode;
-
-    document.getElementById("modeA")
-      .classList.toggle("active", mode === "A");
-
-    document.getElementById("modeB")
-      .classList.toggle("active", mode === "B");
+  } catch (error) {
 
     document.getElementById("status").innerText =
-      "Selected mode: " + mode;
+      "Could not load settings.";
 
   }
+}
 
-  loadSettings();
+function chooseMode(mode) {
+
+  settings.mode = mode;
+
+  document.getElementById("modeA")
+    .classList.toggle("active", mode === "A");
+
+  document.getElementById("modeB")
+    .classList.toggle("active", mode === "B");
+
+}
+
+async function goLive() {
+
+  const token =
+    localStorage.getItem("tvDisplayGithubToken");
+
+  if (!token) {
+    alert("Save your GitHub token first.");
+    return;
+  }
+
+  document.getElementById("status").innerText =
+    "Saving...";
+
+  settings.googleSlidesUrl =
+    document.getElementById("googleSlidesUrl").value.trim();
+
+  settings.refreshMinutes =
+    Number(document.getElementById("refreshMinutes").value);
+
+  const apiURL =
+    `https://api.github.com/repos/${OWNER}/${REPO}/contents/${SETTINGS_FILE}`;
+
+  try {
+
+    // Get the current settings.json SHA
+    const currentResponse = await fetch(apiURL, {
+      headers: {
+        "Authorization": `Bearer ${token}`,
+        "Accept": "application/vnd.github+json"
+      }
+    });
+
+    if (!currentResponse.ok) {
+      throw new Error("Could not read settings.json");
+    }
+
+    const currentFile = await currentResponse.json();
+
+    // Convert new settings into Base64
+    const jsonText =
+      JSON.stringify(settings, null, 2);
+
+    const encodedContent =
+      btoa(unescape(encodeURIComponent(jsonText)));
+
+    // Save the new settings.json
+    const saveResponse = await fetch(apiURL, {
+      method: "PUT",
+
+      headers: {
+        "Authorization": `Bearer ${token}`,
+        "Accept": "application/vnd.github+json",
+        "Content-Type": "application/json"
+      },
+
+      body: JSON.stringify({
+        message: "Update TV display settings",
+        content: encodedContent,
+        sha: currentFile.sha,
+        branch: "main"
+      })
+    });
+
+    if (!saveResponse.ok) {
+      const errorInfo = await saveResponse.json();
+      throw new Error(errorInfo.message || "Save failed");
+    }
+
+    document.getElementById("status").innerText =
+      "SAVED — TV settings are now live.";
+
+  } catch (error) {
+
+    document.getElementById("status").innerText =
+      "ERROR: " + error.message;
+
+  }
+}
+
+loadSavedToken();
+loadSettings();
 
 </script>
 
