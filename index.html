@@ -1,151 +1,750 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>Brown Football TV</title>
+<title>Brown Football TV</title>
 
-  <style>
-    html, body {
-      margin: 0;
-      padding: 0;
-      width: 100%;
-      height: 100%;
-      background: black;
-      overflow: hidden;
-    }
+<style>
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  background: black;
+  overflow: hidden;
+}
 
-    #player {
-      width: 100vw;
-      height: 100vh;
-    }
+#player {
+  width: 100vw;
+  height: 100vh;
+  background: black;
+}
 
-    iframe,
-    img,
-    video {
-      width: 100%;
-      height: 100%;
-      border: 0;
-      object-fit: contain;
-      background: black;
-    }
+#player img,
+#player video {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background: black;
+}
 
-    #message {
-      color: white;
-      font-family: Arial, sans-serif;
-      font-size: 3vw;
-      text-align: center;
-      padding-top: 40vh;
-    }
-  </style>
+iframe {
+  width: 100vw;
+  height: 100vh;
+  border: 0;
+}
+
+#message {
+  color: white;
+  font-family: Arial, sans-serif;
+  font-size: 3vw;
+  text-align: center;
+  padding-top: 40vh;
+}
+
+/* Fade transition for images */
+
+.visual {
+  opacity: 1;
+  transition: opacity 0.8s ease;
+}
+
+.fade-out {
+  opacity: 0;
+}
+</style>
 </head>
 
 <body>
 
-  <div id="player">
-    <div id="message">Loading TV Display...</div>
-  </div>
+<div id="player">
+  <div id="message">Loading TV Display...</div>
+</div>
 
-  <script>
-    async function loadSettings() {
-      try {
-        const response = await fetch("settings.json?ts=" + Date.now());
-        const settings = await response.json();
+<audio id="backgroundAudio"></audio>
 
-        if (settings.mode === "B") {
-          loadGoogleSlides(settings);
-        } else if (settings.mode === "A") {
-          loadMediaPlaylist(settings);
-        } else {
-          showMessage("Unknown display mode.");
-        }
+<script>
 
-        const minutes = settings.refreshMinutes || 15;
+const MEDIA_FOLDER = "media";
 
-        setTimeout(() => {
-          location.reload();
-        }, minutes * 60 * 1000);
+let settings = {};
+let playlist = {};
 
-      } catch (error) {
-        showMessage("Could not load settings.");
+let visualItems = [];
+let audioItems = [];
+
+let currentVisual = 0;
+let currentAudio = 0;
+
+let backgroundMusicEnabled = false;
+let videoMusicBehavior = "pause";
+
+let visualTimer = null;
+
+
+// ------------------------------------------------
+// START
+// ------------------------------------------------
+
+async function startTV() {
+
+  try {
+
+    settings =
+      await fetch(
+        "settings.json?ts=" + Date.now()
+      ).then(r => r.json());
+
+
+    // Reload entire TV page at chosen interval
+
+    const refreshMinutes =
+      settings.refreshMinutes || 15;
+
+    setTimeout(() => {
+
+      location.reload();
+
+    }, refreshMinutes * 60 * 1000);
+
+
+    // MODE B
+
+    if (settings.mode === "B") {
+
+      loadGoogleSlides();
+
+      return;
+
+    }
+
+
+    // MODE A
+
+    if (settings.mode === "A") {
+
+      await loadModeA();
+
+      return;
+
+    }
+
+
+    showMessage(
+      "Unknown display mode."
+    );
+
+  }
+
+  catch (error) {
+
+    showMessage(
+      "Could not load TV settings."
+    );
+
+  }
+
+}
+
+
+// ------------------------------------------------
+// MODE B
+// ------------------------------------------------
+
+function loadGoogleSlides() {
+
+  const player =
+    document.getElementById(
+      "player"
+    );
+
+
+  player.innerHTML = `
+
+    <iframe
+      src="${settings.googleSlidesUrl}"
+      allow="autoplay"
+      allowfullscreen>
+    </iframe>
+
+  `;
+
+}
+
+
+// ------------------------------------------------
+// MODE A
+// ------------------------------------------------
+
+async function loadModeA() {
+
+  try {
+
+    const playlists =
+      await fetch(
+        "playlists.json?ts=" + Date.now()
+      ).then(r => r.json());
+
+
+    playlist =
+      playlists[
+        settings.activePlaylist || "default"
+      ];
+
+
+    if (!playlist) {
+
+      showMessage(
+        "Playlist not found."
+      );
+
+      return;
+
+    }
+
+
+    visualItems =
+      playlist.visualItems ||
+      playlist.items ||
+      [];
+
+
+    audioItems =
+      playlist.audioItems ||
+      [];
+
+
+    backgroundMusicEnabled =
+      playlist.backgroundMusic?.enabled ||
+      false;
+
+
+    videoMusicBehavior =
+      playlist.backgroundMusic?.videoBehavior ||
+      "pause";
+
+
+    // Start music
+
+    if (
+      backgroundMusicEnabled &&
+      audioItems.length > 0
+    ) {
+
+      startAudioPlaylist();
+
+    }
+
+
+    // Start visual playlist
+
+    if (
+      visualItems.length > 0
+    ) {
+
+      playVisual();
+
+    }
+
+    else {
+
+      showMessage(
+        "Mode A playlist is empty."
+      );
+
+    }
+
+  }
+
+  catch (error) {
+
+    showMessage(
+      "Could not load Mode A."
+    );
+
+  }
+
+}
+
+
+// ------------------------------------------------
+// VISUAL PLAYLIST
+// ------------------------------------------------
+
+function playVisual() {
+
+  clearTimeout(
+    visualTimer
+  );
+
+
+  const item =
+    visualItems[
+      currentVisual
+    ];
+
+
+  if (
+    item.type === "video"
+  ) {
+
+    playVideo(item);
+
+  }
+
+  else {
+
+    playImage(item);
+
+  }
+
+}
+
+
+// ------------------------------------------------
+// IMAGE
+// ------------------------------------------------
+
+function playImage(item) {
+
+  // Resume background music if it was paused by a video
+
+  resumeMusicAfterVideo();
+
+
+  const player =
+    document.getElementById(
+      "player"
+    );
+
+
+  const image =
+    document.createElement(
+      "img"
+    );
+
+
+  image.src =
+    `${MEDIA_FOLDER}/${encodeURIComponent(item.file)}`;
+
+
+  image.className =
+    "visual";
+
+
+  image.onload =
+    () => {
+
+      player.innerHTML = "";
+
+      player.appendChild(
+        image
+      );
+
+    };
+
+
+  image.onerror =
+    () => {
+
+      nextVisual();
+
+    };
+
+
+  const duration =
+    (item.duration || 8) *
+    1000;
+
+
+  visualTimer =
+    setTimeout(
+      () => {
+
+        image.classList.add(
+          "fade-out"
+        );
+
+
+        setTimeout(
+          nextVisual,
+          800
+        );
+
+      },
+      duration
+    );
+
+}
+
+
+// ------------------------------------------------
+// VIDEO
+// ------------------------------------------------
+
+function playVideo(item) {
+
+  clearTimeout(
+    visualTimer
+  );
+
+
+  const player =
+    document.getElementById(
+      "player"
+    );
+
+
+  const video =
+    document.createElement(
+      "video"
+    );
+
+
+  video.src =
+    `${MEDIA_FOLDER}/${encodeURIComponent(item.file)}`;
+
+
+  video.autoplay =
+    true;
+
+
+  video.playsInline =
+    true;
+
+
+  video.className =
+    "visual";
+
+
+  // ------------------------------
+  // MUSIC / VIDEO SOUND BEHAVIOR
+  // ------------------------------
+
+  if (
+    videoMusicBehavior ===
+    "pause"
+  ) {
+
+    pauseBackgroundMusic();
+
+    video.muted =
+      false;
+
+  }
+
+
+  else if (
+    videoMusicBehavior ===
+    "continue"
+  ) {
+
+    video.muted =
+      false;
+
+  }
+
+
+  else if (
+    videoMusicBehavior ===
+    "muteVideo"
+  ) {
+
+    video.muted =
+      true;
+
+  }
+
+
+  player.innerHTML = "";
+
+  player.appendChild(
+    video
+  );
+
+
+  // ------------------------------
+  // FULL VIDEO
+  // ------------------------------
+
+  if (
+    item.videoMode !==
+    "custom"
+  ) {
+
+    video.onended =
+      () => {
+
+        resumeMusicAfterVideo();
+
+        nextVisual();
+
+      };
+
+  }
+
+
+  // ------------------------------
+  // CUSTOM VIDEO LENGTH
+  // ------------------------------
+
+  else {
+
+    const duration =
+      (item.duration || 10) *
+      1000;
+
+
+    visualTimer =
+      setTimeout(
+        () => {
+
+          video.pause();
+
+          resumeMusicAfterVideo();
+
+          nextVisual();
+
+        },
+        duration
+      );
+
+  }
+
+
+  // If browser blocks autoplay with sound,
+  // try muted autoplay instead.
+
+  const playAttempt =
+    video.play();
+
+
+  if (
+    playAttempt !== undefined
+  ) {
+
+    playAttempt.catch(
+      () => {
+
+        video.muted =
+          true;
+
+        video.play();
+
       }
+    );
+
+  }
+
+}
+
+
+// ------------------------------------------------
+// NEXT VISUAL
+// ------------------------------------------------
+
+function nextVisual() {
+
+  clearTimeout(
+    visualTimer
+  );
+
+
+  currentVisual =
+    (
+      currentVisual + 1
+    ) %
+    visualItems.length;
+
+
+  playVisual();
+
+}
+
+
+// ------------------------------------------------
+// AUDIO PLAYLIST
+// ------------------------------------------------
+
+function startAudioPlaylist() {
+
+  if (
+    !backgroundMusicEnabled ||
+    audioItems.length === 0
+  ) {
+
+    return;
+
+  }
+
+
+  currentAudio =
+    currentAudio %
+    audioItems.length;
+
+
+  playCurrentAudio();
+
+}
+
+
+function playCurrentAudio() {
+
+  if (
+    !backgroundMusicEnabled ||
+    audioItems.length === 0
+  ) {
+
+    return;
+
+  }
+
+
+  const audio =
+    document.getElementById(
+      "backgroundAudio"
+    );
+
+
+  const track =
+    audioItems[
+      currentAudio
+    ];
+
+
+  audio.src =
+    `${MEDIA_FOLDER}/${encodeURIComponent(track.file)}`;
+
+
+  audio.loop =
+    false;
+
+
+  audio.onended =
+    () => {
+
+      currentAudio =
+        (
+          currentAudio + 1
+        ) %
+        audioItems.length;
+
+
+      playCurrentAudio();
+
+    };
+
+
+  audio.play().catch(
+    () => {
+
+      console.log(
+        "Background audio autoplay was blocked."
+      );
+
     }
+  );
 
-    function loadGoogleSlides(settings) {
-      const player = document.getElementById("player");
+}
 
-      player.innerHTML = `
-        <iframe
-          src="${settings.googleSlidesUrl}"
-          allowfullscreen>
-        </iframe>
-      `;
-    }
 
-    async function loadMediaPlaylist(settings) {
-      try {
-        const response = await fetch("playlists.json?ts=" + Date.now());
-        const playlists = await response.json();
+// ------------------------------------------------
+// MUSIC CONTROL DURING VIDEOS
+// ------------------------------------------------
 
-        const playlist = playlists[settings.activePlaylist];
+function pauseBackgroundMusic() {
 
-        if (!playlist || !playlist.items || playlist.items.length === 0) {
-          showMessage("Mode A playlist is empty.");
-          return;
-        }
+  if (
+    !backgroundMusicEnabled
+  ) {
 
-        playPlaylist(playlist.items);
+    return;
 
-      } catch (error) {
-        showMessage("Could not load Mode A playlist.");
-      }
-    }
+  }
 
-    function playPlaylist(items) {
-      let current = 0;
 
-      function playCurrent() {
-        const item = items[current];
-        const player = document.getElementById("player");
+  const audio =
+    document.getElementById(
+      "backgroundAudio"
+    );
 
-        if (item.type === "video") {
-          player.innerHTML = `
-            <video autoplay playsinline>
-              <source src="media/${item.file}">
-            </video>
-          `;
 
-          const video = player.querySelector("video");
+  if (
+    !audio.paused
+  ) {
 
-          video.onended = nextItem;
+    audio.pause();
 
-        } else {
-          player.innerHTML = `
-            <img src="media/${item.file}">
-          `;
+    audio.dataset.pausedForVideo =
+      "true";
 
-          const duration = (item.duration || 8) * 1000;
+  }
 
-          setTimeout(nextItem, duration);
-        }
-      }
+}
 
-      function nextItem() {
-        current = (current + 1) % items.length;
-        playCurrent();
-      }
 
-      playCurrent();
-    }
+function resumeMusicAfterVideo() {
 
-    function showMessage(text) {
-      document.getElementById("player").innerHTML =
-        `<div id="message">${text}</div>`;
-    }
+  if (
+    !backgroundMusicEnabled
+  ) {
 
-    loadSettings();
-  </script>
+    return;
+
+  }
+
+
+  const audio =
+    document.getElementById(
+      "backgroundAudio"
+    );
+
+
+  if (
+    audio.dataset.pausedForVideo ===
+    "true"
+  ) {
+
+    delete audio.dataset.pausedForVideo;
+
+
+    audio.play().catch(
+      () => {}
+    );
+
+  }
+
+}
+
+
+// ------------------------------------------------
+// MESSAGE
+// ------------------------------------------------
+
+function showMessage(text) {
+
+  document.getElementById(
+    "player"
+  ).innerHTML = `
+
+    <div id="message">
+      ${text}
+    </div>
+
+  `;
+
+}
+
+
+// ------------------------------------------------
+// GO
+// ------------------------------------------------
+
+startTV();
+
+</script>
 
 </body>
 </html>
