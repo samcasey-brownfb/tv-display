@@ -7,136 +7,140 @@
 <title>Brown Football TV Control</title>
 
 <style>
-  body {
-    margin: 0;
-    background: #111;
-    color: white;
-    font-family: Arial, sans-serif;
-  }
+body {
+  margin: 0;
+  background: #111;
+  color: white;
+  font-family: Arial, sans-serif;
+}
 
-  .container {
-    max-width: 1000px;
-    margin: auto;
-    padding: 30px;
-  }
+.container {
+  max-width: 1100px;
+  margin: auto;
+  padding: 30px;
+}
 
-  h1 {
-    margin-bottom: 4px;
-  }
+.card {
+  background: #222;
+  padding: 22px;
+  margin-bottom: 20px;
+  border-radius: 10px;
+}
 
-  .subtitle {
-    color: #aaa;
-    margin-bottom: 25px;
-  }
+.small {
+  color: #aaa;
+  font-size: 13px;
+}
 
-  .card {
-    background: #222;
-    padding: 22px;
-    margin-bottom: 20px;
-    border-radius: 10px;
-  }
+label {
+  display: block;
+  margin: 10px 0 6px;
+  font-weight: bold;
+}
 
-  label {
-    display: block;
-    margin: 10px 0 6px;
-    font-weight: bold;
-  }
+input, select {
+  box-sizing: border-box;
+  padding: 9px;
+  font-size: 15px;
+  border-radius: 6px;
+  border: none;
+}
 
-  input, select {
-    box-sizing: border-box;
-    padding: 10px;
-    font-size: 15px;
-    border-radius: 6px;
-    border: none;
-  }
+input[type="text"],
+input[type="password"],
+select {
+  width: 100%;
+}
 
-  input[type="text"],
-  input[type="password"],
-  select {
-    width: 100%;
-  }
+button {
+  padding: 10px 15px;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+}
 
-  button {
-    padding: 11px 16px;
-    font-size: 14px;
-    font-weight: bold;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-  }
+.mode-buttons {
+  display: flex;
+  gap: 12px;
+}
 
-  .mode-buttons {
-    display: flex;
-    gap: 12px;
-  }
+.mode-button {
+  flex: 1;
+  background: #444;
+  color: white;
+}
 
-  .mode-button {
-    flex: 1;
-    background: #444;
-    color: white;
-  }
+.mode-button.active {
+  background: #8b1e2d;
+}
 
-  .mode-button.active {
-    background: #8b1e2d;
-  }
+.save-button {
+  width: 100%;
+  background: #8b1e2d;
+  color: white;
+  font-size: 20px;
+  padding: 16px;
+}
 
-  .save-button {
-    width: 100%;
-    background: #8b1e2d;
-    color: white;
-    font-size: 20px;
-    padding: 16px;
-  }
+.media-row {
+  display: grid;
+  grid-template-columns: 35px 120px 1fr 170px 100px;
+  gap: 12px;
+  align-items: center;
+  background: #333;
+  padding: 12px;
+  margin-bottom: 10px;
+  border-radius: 8px;
+}
 
-  .small {
-    color: #999;
-    font-size: 13px;
-  }
+.preview {
+  width: 120px;
+  height: 68px;
+  object-fit: contain;
+  background: black;
+  border-radius: 5px;
+}
 
-  #mediaList {
-    margin-top: 15px;
-  }
+.media-name {
+  word-break: break-word;
+}
 
-  .media-row {
-    display: grid;
-    grid-template-columns: 35px 1fr 110px 100px;
-    gap: 10px;
-    align-items: center;
+.media-type {
+  color: #aaa;
+  font-size: 12px;
+  margin-top: 4px;
+}
 
-    background: #333;
-    padding: 12px;
-    margin-bottom: 8px;
-    border-radius: 7px;
-  }
+.order-buttons {
+  display: flex;
+  gap: 5px;
+}
 
-  .media-name {
-    word-break: break-word;
-  }
+.order-buttons button {
+  background: #555;
+  color: white;
+}
 
-  .media-type {
-    color: #aaa;
-    font-size: 12px;
-  }
+.duration-box {
+  width: 65px;
+}
 
-  .duration {
-    width: 65px;
-  }
+.audio-row {
+  display: grid;
+  grid-template-columns: 35px 1fr 100px;
+  gap: 12px;
+  align-items: center;
+  background: #333;
+  padding: 12px;
+  margin-bottom: 8px;
+  border-radius: 8px;
+}
 
-  .order-buttons {
-    display: flex;
-    gap: 5px;
-  }
-
-  .order-buttons button {
-    background: #555;
-    color: white;
-    padding: 7px 10px;
-  }
-
-  #status {
-    color: #ccc;
-    white-space: pre-line;
-  }
+#status {
+  white-space: pre-line;
+  color: #ccc;
+}
 </style>
 </head>
 
@@ -144,139 +148,139 @@
 
 <div class="container">
 
-  <h1>BROWN FOOTBALL TV</h1>
-  <div class="subtitle">Display Control</div>
+<h1>BROWN FOOTBALL TV</h1>
+<p class="small">Display Control</p>
 
 
-  <!-- GITHUB TOKEN -->
+<div class="card">
+  <h2>GitHub Connection</h2>
 
-  <div class="card">
+  <label>GitHub Token</label>
+  <input id="token" type="password">
 
-    <h2>GitHub Connection</h2>
+  <br><br>
 
-    <label>GitHub Token</label>
-
-    <input
-      id="token"
-      type="password"
-      placeholder="Paste token here"
-    >
-
-    <br><br>
-
-    <button onclick="saveToken()">
-      SAVE TOKEN ON THIS COMPUTER
-    </button>
-
-    <p class="small">
-      Stored only in this browser.
-    </p>
-
-  </div>
-
-
-  <!-- MODE -->
-
-  <div class="card">
-
-    <h2>Display Mode</h2>
-
-    <div class="mode-buttons">
-
-      <button
-        id="modeA"
-        class="mode-button"
-        onclick="chooseMode('A')"
-      >
-        MODE A — MEDIA PLAYLIST
-      </button>
-
-      <button
-        id="modeB"
-        class="mode-button"
-        onclick="chooseMode('B')"
-      >
-        MODE B — GOOGLE SLIDES
-      </button>
-
-    </div>
-
-  </div>
-
-
-  <!-- MODE A -->
-
-  <div class="card">
-
-    <h2>Mode A — Media Playlist</h2>
-
-    <p class="small">
-      Everything uploaded to the /media folder will appear below automatically.
-    </p>
-
-    <button onclick="loadMedia()">
-      REFRESH MEDIA LIST
-    </button>
-
-    <div id="mediaList">
-      Loading media...
-    </div>
-
-  </div>
-
-
-  <!-- MODE B -->
-
-  <div class="card">
-
-    <h2>Mode B — Google Slides</h2>
-
-    <label>Published Google Slides URL</label>
-
-    <input
-      id="googleSlidesUrl"
-      type="text"
-    >
-
-  </div>
-
-
-  <!-- REFRESH -->
-
-  <div class="card">
-
-    <h2>TV Refresh</h2>
-
-    <label>Check for changes every:</label>
-
-    <select id="refreshMinutes">
-      <option value="5">5 Minutes</option>
-      <option value="10">10 Minutes</option>
-      <option value="15">15 Minutes</option>
-      <option value="30">30 Minutes</option>
-      <option value="60">60 Minutes</option>
-    </select>
-
-  </div>
-
-
-  <button
-    class="save-button"
-    onclick="goLive()"
-  >
-    SAVE / GO LIVE
+  <button onclick="saveToken()">
+    SAVE TOKEN ON THIS COMPUTER
   </button>
 
+  <p class="small">
+    Stored only in this browser.
+  </p>
+</div>
 
-  <div class="card" style="margin-top:20px;">
 
-    <h2>Status</h2>
+<div class="card">
+  <h2>Display Mode</h2>
 
-    <div id="status">
-      Loading...
-    </div>
+  <div class="mode-buttons">
+
+    <button id="modeA"
+            class="mode-button"
+            onclick="chooseMode('A')">
+      MODE A — MEDIA PLAYLIST
+    </button>
+
+    <button id="modeB"
+            class="mode-button"
+            onclick="chooseMode('B')">
+      MODE B — GOOGLE SLIDES
+    </button>
 
   </div>
+</div>
+
+
+<div class="card">
+
+  <h2>Mode A — Visual Playlist</h2>
+
+  <p class="small">
+    Select the images/videos you want. Use ↑ ↓ to change their order.
+  </p>
+
+  <button onclick="loadMedia()">
+    REFRESH MEDIA
+  </button>
+
+  <div id="visualList" style="margin-top:15px;">
+    Loading...
+  </div>
+
+</div>
+
+
+<div class="card">
+
+  <h2>Background Music</h2>
+
+  <label>
+    <input id="musicEnabled" type="checkbox">
+    Enable Background Music
+  </label>
+
+  <p class="small">
+    Selected songs will play one after another, then loop back to the first song.
+  </p>
+
+  <label>When a video plays:</label>
+
+  <select id="videoMusicBehavior">
+    <option value="pause">
+      Pause background music during video
+    </option>
+
+    <option value="continue">
+      Keep background music playing
+    </option>
+
+    <option value="muteVideo">
+      Keep music playing and mute video
+    </option>
+  </select>
+
+  <div id="audioList" style="margin-top:20px;">
+    Loading...
+  </div>
+
+</div>
+
+
+<div class="card">
+
+  <h2>Mode B — Google Slides</h2>
+
+  <label>Published Google Slides URL</label>
+
+  <input id="googleSlidesUrl" type="text">
+
+</div>
+
+
+<div class="card">
+
+  <h2>TV Refresh</h2>
+
+  <select id="refreshMinutes">
+    <option value="5">5 Minutes</option>
+    <option value="10">10 Minutes</option>
+    <option value="15">15 Minutes</option>
+    <option value="30">30 Minutes</option>
+    <option value="60">60 Minutes</option>
+  </select>
+
+</div>
+
+
+<button class="save-button" onclick="goLive()">
+  SAVE / GO LIVE
+</button>
+
+
+<div class="card" style="margin-top:20px;">
+  <h2>Status</h2>
+  <div id="status">Loading...</div>
+</div>
 
 </div>
 
@@ -285,19 +289,19 @@
 
 const OWNER = "samcasey-brownfb";
 const REPO = "tv-display";
+const MEDIA_FOLDER = "media";
 
 const SETTINGS_FILE = "settings.json";
 const PLAYLISTS_FILE = "playlists.json";
-const MEDIA_FOLDER = "media";
 
 let settings = {};
 let playlistData = {};
-let mediaItems = [];
+
+let visualItems = [];
+let audioItems = [];
 
 
-// ------------------------------------------------
 // TOKEN
-// ------------------------------------------------
 
 function saveToken() {
 
@@ -314,8 +318,7 @@ function saveToken() {
     token
   );
 
-  setStatus("Token saved on this computer.");
-
+  setStatus("Token saved.");
 }
 
 
@@ -330,7 +333,6 @@ function loadSavedToken() {
     document.getElementById("token").value =
       token;
   }
-
 }
 
 
@@ -339,34 +341,25 @@ function getToken() {
   return localStorage.getItem(
     "tvDisplayGithubToken"
   );
-
 }
 
 
-// ------------------------------------------------
-// INITIAL SETTINGS
-// ------------------------------------------------
+// LOAD EVERYTHING
 
 async function loadEverything() {
 
   try {
 
-    const settingsResponse =
+    settings =
       await fetch(
         "settings.json?ts=" + Date.now()
-      );
+      ).then(r => r.json());
 
-    settings =
-      await settingsResponse.json();
-
-
-    const playlistsResponse =
-      await fetch(
-        "playlists.json?ts=" + Date.now()
-      );
 
     playlistData =
-      await playlistsResponse.json();
+      await fetch(
+        "playlists.json?ts=" + Date.now()
+      ).then(r => r.json());
 
 
     document.getElementById(
@@ -386,6 +379,22 @@ async function loadEverything() {
     );
 
 
+    const playlist =
+      playlistData.default || {};
+
+
+    document.getElementById(
+      "musicEnabled"
+    ).checked =
+      playlist.backgroundMusic?.enabled || false;
+
+
+    document.getElementById(
+      "videoMusicBehavior"
+    ).value =
+      playlist.backgroundMusic?.videoBehavior || "pause";
+
+
     await loadMedia();
 
 
@@ -399,42 +408,34 @@ async function loadEverything() {
   catch (error) {
 
     setStatus(
-      "ERROR loading TV settings."
+      "ERROR loading settings."
     );
 
   }
-
 }
 
 
-// ------------------------------------------------
 // MODE
-// ------------------------------------------------
 
 function chooseMode(mode) {
 
   settings.mode = mode;
 
-  document
-    .getElementById("modeA")
+  document.getElementById("modeA")
     .classList.toggle(
       "active",
       mode === "A"
     );
 
-  document
-    .getElementById("modeB")
+  document.getElementById("modeB")
     .classList.toggle(
       "active",
       mode === "B"
     );
-
 }
 
 
-// ------------------------------------------------
-// MEDIA
-// ------------------------------------------------
+// LOAD MEDIA
 
 async function loadMedia() {
 
@@ -443,9 +444,9 @@ async function loadMedia() {
   if (!token) {
 
     document.getElementById(
-      "mediaList"
+      "visualList"
     ).innerText =
-      "Save your GitHub token first.";
+      "Save GitHub token first.";
 
     return;
   }
@@ -471,145 +472,443 @@ async function loadMedia() {
       });
 
 
-    if (!response.ok) {
-
+    if (!response.ok)
       throw new Error(
         "Could not read media folder."
       );
-
-    }
 
 
     const files =
       await response.json();
 
 
-    const supportedFiles =
-      files.filter(file =>
-        file.type === "file" &&
-        /\.(png|jpg|jpeg|webp|gif|mp4|webm)$/i
-          .test(file.name)
-      );
+    const playlist =
+      playlistData.default || {};
 
 
-    const existingPlaylist =
-      playlistData.default?.items || [];
+    // Backward compatibility with old playlist structure
+
+    const savedVisual =
+      playlist.visualItems ||
+      playlist.items ||
+      [];
+
+    const savedAudio =
+      playlist.audioItems ||
+      [];
 
 
-    mediaItems =
-      supportedFiles.map(file => {
+    visualItems =
+      files
+        .filter(file =>
+          file.type === "file" &&
+          /\.(png|jpg|jpeg|webp|gif|mp4|webm)$/i
+            .test(file.name)
+        )
+        .map(file => {
 
-        const existing =
-          existingPlaylist.find(
-            item =>
-              item.file === file.name
-          );
+          const saved =
+            savedVisual.find(
+              x => x.file === file.name
+            );
 
-        const isVideo =
-          /\.(mp4|webm)$/i.test(
-            file.name
-          );
+          const video =
+            /\.(mp4|webm)$/i
+              .test(file.name);
 
-        return {
+          return {
 
-          file: file.name,
+            file: file.name,
 
-          type:
-            isVideo
-              ? "video"
-              : "image",
+            url: file.download_url,
 
-          selected:
-            !!existing,
+            type:
+              video
+                ? "video"
+                : "image",
 
-          duration:
-            existing?.duration || 8
+            selected:
+              !!saved,
 
-        };
+            duration:
+              saved?.duration || 8,
 
-      });
+            videoMode:
+              saved?.videoMode || "full"
 
+          };
 
-    // Put currently selected items in their saved order
-
-    mediaItems.sort((a, b) => {
-
-      const ai =
-        existingPlaylist.findIndex(
-          x => x.file === a.file
-        );
-
-      const bi =
-        existingPlaylist.findIndex(
-          x => x.file === b.file
-        );
+        });
 
 
-      if (ai === -1 && bi === -1)
-        return 0;
+    audioItems =
+      files
+        .filter(file =>
+          file.type === "file" &&
+          /\.(mp3|m4a|ogg|wav)$/i
+            .test(file.name)
+        )
+        .map(file => {
 
-      if (ai === -1)
-        return 1;
+          const saved =
+            savedAudio.find(
+              x => x.file === file.name
+            );
 
-      if (bi === -1)
-        return -1;
+          return {
 
-      return ai - bi;
+            file: file.name,
 
-    });
+            url: file.download_url,
+
+            selected:
+              !!saved
+
+          };
+
+        });
 
 
-    renderMedia();
+    sortBySavedOrder(
+      visualItems,
+      savedVisual
+    );
+
+
+    sortBySavedOrder(
+      audioItems,
+      savedAudio
+    );
+
+
+    renderVisuals();
+    renderAudio();
 
   }
 
   catch (error) {
 
-    document.getElementById(
-      "mediaList"
-    ).innerText =
-      "ERROR: " + error.message;
+    setStatus(
+      "ERROR: " + error.message
+    );
 
   }
-
 }
 
 
-// ------------------------------------------------
-// DISPLAY MEDIA LIST
-// ------------------------------------------------
+function sortBySavedOrder(
+  items,
+  saved
+) {
 
-function renderMedia() {
+  items.sort((a, b) => {
+
+    const ai =
+      saved.findIndex(
+        x => x.file === a.file
+      );
+
+    const bi =
+      saved.findIndex(
+        x => x.file === b.file
+      );
+
+
+    if (ai === -1 && bi === -1)
+      return 0;
+
+    if (ai === -1)
+      return 1;
+
+    if (bi === -1)
+      return -1;
+
+    return ai - bi;
+
+  });
+}
+
+
+// VISUAL MEDIA UI
+
+function renderVisuals() {
 
   const container =
     document.getElementById(
-      "mediaList"
+      "visualList"
     );
 
 
-  if (mediaItems.length === 0) {
+  if (!visualItems.length) {
 
     container.innerHTML =
-      "No images or videos found in /media.";
+      "No images or videos found.";
 
     return;
-
   }
 
 
   container.innerHTML = "";
 
 
-  mediaItems.forEach(
+  visualItems.forEach(
     (item, index) => {
 
       const row =
-        document.createElement(
-          "div"
-        );
+        document.createElement("div");
 
       row.className =
         "media-row";
+
+
+      // checkbox
+
+      const checkbox =
+        document.createElement("input");
+
+      checkbox.type =
+        "checkbox";
+
+      checkbox.checked =
+        item.selected;
+
+      checkbox.onchange =
+        () =>
+          item.selected =
+            checkbox.checked;
+
+
+      // preview
+
+      let preview;
+
+      if (item.type === "image") {
+
+        preview =
+          document.createElement("img");
+
+        preview.src =
+          item.url;
+
+      } else {
+
+        preview =
+          document.createElement("video");
+
+        preview.src =
+          item.url;
+
+        preview.muted =
+          true;
+
+        preview.controls =
+          true;
+
+        preview.preload =
+          "metadata";
+
+      }
+
+      preview.className =
+        "preview";
+
+
+      // filename
+
+      const info =
+        document.createElement("div");
+
+      info.innerHTML =
+        `<div class="media-name">
+          ${escapeHTML(item.file)}
+        </div>
+
+        <div class="media-type">
+          ${item.type.toUpperCase()}
+        </div>`;
+
+
+      // timing
+
+      const timing =
+        document.createElement("div");
+
+
+      if (item.type === "image") {
+
+        timing.innerHTML =
+          `<label class="small">
+             Display
+           </label>
+
+           <input
+             class="duration-box"
+             type="number"
+             min="1"
+             value="${item.duration}"
+           > sec`;
+
+
+        timing.querySelector(
+          "input"
+        ).onchange =
+          e =>
+            item.duration =
+              Number(
+                e.target.value
+              ) || 8;
+
+      }
+
+      else {
+
+        const select =
+          document.createElement(
+            "select"
+          );
+
+        select.innerHTML =
+          `<option value="full">
+             Full Video
+           </option>
+
+           <option value="custom">
+             Custom Time
+           </option>`;
+
+        select.value =
+          item.videoMode;
+
+
+        const custom =
+          document.createElement(
+            "input"
+          );
+
+        custom.type =
+          "number";
+
+        custom.min =
+          "1";
+
+        custom.className =
+          "duration-box";
+
+        custom.value =
+          item.duration || 10;
+
+
+        const secondsText =
+          document.createTextNode(
+            " sec"
+          );
+
+
+        function updateVideoUI() {
+
+          custom.style.display =
+            select.value === "custom"
+              ? "inline-block"
+              : "none";
+
+          secondsText.parentNode &&
+          (secondsText.parentNode.style = "");
+        }
+
+
+        select.onchange =
+          () => {
+
+            item.videoMode =
+              select.value;
+
+            updateVideoUI();
+
+          };
+
+
+        custom.onchange =
+          () => {
+
+            item.duration =
+              Number(
+                custom.value
+              ) || 10;
+
+          };
+
+
+        timing.appendChild(select);
+
+        timing.appendChild(
+          document.createElement("br")
+        );
+
+        timing.appendChild(custom);
+
+        timing.appendChild(
+          secondsText
+        );
+
+
+        updateVideoUI();
+
+      }
+
+
+      // order
+
+      const controls =
+        createOrderButtons(
+          visualItems,
+          index,
+          renderVisuals
+        );
+
+
+      row.appendChild(checkbox);
+      row.appendChild(preview);
+      row.appendChild(info);
+      row.appendChild(timing);
+      row.appendChild(controls);
+
+      container.appendChild(row);
+
+    });
+
+}
+
+
+// AUDIO UI
+
+function renderAudio() {
+
+  const container =
+    document.getElementById(
+      "audioList"
+    );
+
+
+  if (!audioItems.length) {
+
+    container.innerHTML =
+      "<span class='small'>No audio files found.</span>";
+
+    return;
+  }
+
+
+  container.innerHTML = "";
+
+
+  audioItems.forEach(
+    (item, index) => {
+
+      const row =
+        document.createElement("div");
+
+      row.className =
+        "audio-row";
 
 
       const checkbox =
@@ -624,144 +923,109 @@ function renderMedia() {
         item.selected;
 
       checkbox.onchange =
-        () => {
-
+        () =>
           item.selected =
             checkbox.checked;
 
-        };
-
 
       const info =
-        document.createElement(
-          "div"
-        );
+        document.createElement("div");
 
       info.innerHTML =
-        `<div class="media-name">
+        `<div>
           ${escapeHTML(item.file)}
         </div>
 
-        <div class="media-type">
-          ${item.type.toUpperCase()}
-        </div>`;
-
-
-      const timing =
-        document.createElement(
-          "div"
-        );
-
-
-      if (item.type === "image") {
-
-        timing.innerHTML =
-          `<input
-             class="duration"
-             type="number"
-             min="1"
-             value="${item.duration}"
-           > sec`;
-
-
-        timing.querySelector(
-          "input"
-        ).onchange =
-          e => {
-
-            item.duration =
-              Number(
-                e.target.value
-              ) || 8;
-
-          };
-
-      }
-
-      else {
-
-        timing.innerHTML =
-          `<span class="small">
-            Full video
-          </span>`;
-
-      }
+        <audio
+          controls
+          preload="metadata"
+          src="${item.url}"
+          style="width:100%; margin-top:7px;">
+        </audio>`;
 
 
       const controls =
-        document.createElement(
-          "div"
-        );
-
-      controls.className =
-        "order-buttons";
-
-
-      const up =
-        document.createElement(
-          "button"
-        );
-
-      up.innerText = "↑";
-
-      up.onclick =
-        () => moveItem(
+        createOrderButtons(
+          audioItems,
           index,
-          -1
+          renderAudio
         );
 
 
-      const down =
-        document.createElement(
-          "button"
-        );
+      row.appendChild(checkbox);
+      row.appendChild(info);
+      row.appendChild(controls);
 
-      down.innerText = "↓";
-
-      down.onclick =
-        () => moveItem(
-          index,
-          1
-        );
-
-
-      controls.appendChild(up);
-      controls.appendChild(down);
-
-
-      row.appendChild(
-        checkbox
-      );
-
-      row.appendChild(
-        info
-      );
-
-      row.appendChild(
-        timing
-      );
-
-      row.appendChild(
-        controls
-      );
-
-
-      container.appendChild(
-        row
-      );
+      container.appendChild(row);
 
     });
 
 }
 
 
-// ------------------------------------------------
-// REORDER
-// ------------------------------------------------
+// ORDER BUTTONS
+
+function createOrderButtons(
+  array,
+  index,
+  renderFunction
+) {
+
+  const controls =
+    document.createElement(
+      "div"
+    );
+
+  controls.className =
+    "order-buttons";
+
+
+  const up =
+    document.createElement(
+      "button"
+    );
+
+  up.innerText = "↑";
+
+  up.onclick =
+    () =>
+      moveItem(
+        array,
+        index,
+        -1,
+        renderFunction
+      );
+
+
+  const down =
+    document.createElement(
+      "button"
+    );
+
+  down.innerText = "↓";
+
+  down.onclick =
+    () =>
+      moveItem(
+        array,
+        index,
+        1,
+        renderFunction
+      );
+
+
+  controls.appendChild(up);
+  controls.appendChild(down);
+
+  return controls;
+}
+
 
 function moveItem(
+  array,
   index,
-  direction
+  direction,
+  renderFunction
 ) {
 
   const newIndex =
@@ -770,35 +1034,26 @@ function moveItem(
 
   if (
     newIndex < 0 ||
-    newIndex >=
-      mediaItems.length
-  ) {
+    newIndex >= array.length
+  )
     return;
-  }
 
 
-  const temp =
-    mediaItems[index];
-
-  mediaItems[index] =
-    mediaItems[newIndex];
-
-  mediaItems[newIndex] =
-    temp;
+  [array[index], array[newIndex]] =
+    [array[newIndex], array[index]];
 
 
-  renderMedia();
-
+  renderFunction();
 }
 
 
-// ------------------------------------------------
 // GO LIVE
-// ------------------------------------------------
 
 async function goLive() {
 
-  const token = getToken();
+  const token =
+    getToken();
+
 
   if (!token) {
 
@@ -807,7 +1062,6 @@ async function goLive() {
     );
 
     return;
-
   }
 
 
@@ -818,34 +1072,16 @@ async function goLive() {
 
   try {
 
-    // -------------------------
-    // BUILD MODE A PLAYLIST
-    // -------------------------
-
-    const selected =
-      mediaItems
+    const selectedVisuals =
+      visualItems
         .filter(
-          item =>
-            item.selected
+          x => x.selected
         )
-        .map(
-          item => {
+        .map(item => {
 
-            if (
-              item.type ===
-              "video"
-            ) {
-
-              return {
-                file:
-                  item.file,
-
-                type:
-                  "video"
-              };
-
-            }
-
+          if (
+            item.type === "image"
+          ) {
 
             return {
 
@@ -860,7 +1096,42 @@ async function goLive() {
 
             };
 
-          });
+          }
+
+
+          return {
+
+            file:
+              item.file,
+
+            type:
+              "video",
+
+            videoMode:
+              item.videoMode,
+
+            duration:
+              item.duration
+
+          };
+
+        });
+
+
+    const selectedAudio =
+      audioItems
+        .filter(
+          x => x.selected
+        )
+        .map(item => ({
+
+          file:
+            item.file,
+
+          type:
+            "audio"
+
+        }));
 
 
     playlistData.default = {
@@ -868,26 +1139,43 @@ async function goLive() {
       name:
         "Default Playlist",
 
-      items:
-        selected
+      visualItems:
+        selectedVisuals,
+
+      audioItems:
+        selectedAudio,
+
+      backgroundMusic: {
+
+        enabled:
+          document
+            .getElementById(
+              "musicEnabled"
+            )
+            .checked,
+
+        videoBehavior:
+          document
+            .getElementById(
+              "videoMusicBehavior"
+            )
+            .value
+
+      }
 
     };
 
 
-    // -------------------------
-    // SAVE PLAYLIST
-    // -------------------------
-
     await updateGithubJSON(
+
       PLAYLISTS_FILE,
+
       playlistData,
-      "Update TV media playlist"
+
+      "Update TV playlists"
+
     );
 
-
-    // -------------------------
-    // SAVE SETTINGS
-    // -------------------------
 
     settings.googleSlidesUrl =
       document
@@ -913,9 +1201,13 @@ async function goLive() {
 
 
     await updateGithubJSON(
+
       SETTINGS_FILE,
+
       settings,
-      "Update TV display settings"
+
+      "Update TV settings"
+
     );
 
 
@@ -937,9 +1229,7 @@ async function goLive() {
 }
 
 
-// ------------------------------------------------
-// WRITE JSON TO GITHUB
-// ------------------------------------------------
+// GITHUB WRITE
 
 async function updateGithubJSON(
   filename,
@@ -974,14 +1264,11 @@ async function updateGithubJSON(
     );
 
 
-  if (!currentResponse.ok) {
-
+  if (!currentResponse.ok)
     throw new Error(
       "Could not read " +
       filename
     );
-
-  }
 
 
   const currentFile =
@@ -1011,7 +1298,8 @@ async function updateGithubJSON(
       apiURL,
       {
 
-        method: "PUT",
+        method:
+          "PUT",
 
         headers: {
 
@@ -1063,9 +1351,7 @@ async function updateGithubJSON(
 }
 
 
-// ------------------------------------------------
-// OTHER
-// ------------------------------------------------
+// MISC
 
 function setStatus(text) {
 
