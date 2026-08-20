@@ -40,8 +40,8 @@ body {
 
 
 /* GOOGLE SLIDES
-   Extra height pushes Google's bottom
-   navigation/control bar below the screen.
+   Extra height hides Google's bottom control bar.
+   Change 55px if you ever want to fine-tune it.
 */
 
 #slidesFrame {
@@ -50,7 +50,7 @@ body {
   left: 0;
 
   width: 100vw;
-  height: calc(100vh + 45px);
+  height: calc(100vh + 55px);
 
   border: 0;
 }
@@ -65,7 +65,9 @@ body {
 }
 
 
-/* AUDIO START SCREEN */
+/* =================================================
+   MODE A AUDIO START
+   ================================================= */
 
 #audioStart {
   position: fixed;
@@ -101,6 +103,72 @@ body {
   color: #ccc;
 }
 
+
+/* =================================================
+   MODE B GOOGLE SLIDES START
+   ================================================= */
+
+#slidesStart {
+  position: fixed;
+  inset: 0;
+
+  display: none;
+
+  align-items: center;
+  justify-content: center;
+
+  background: rgba(0,0,0,.92);
+
+  z-index: 10000;
+}
+
+#slidesStartContent {
+  width: min(700px, 85vw);
+  text-align: center;
+  color: white;
+  font-family: Arial, sans-serif;
+}
+
+#slidesStartContent h1 {
+  font-size: 38px;
+  margin-bottom: 12px;
+}
+
+#slidesStartContent p {
+  color: #ccc;
+  font-size: 18px;
+  margin-bottom: 30px;
+}
+
+.slidesStartButtons {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.slidesStartButtons button {
+  padding: 25px 35px;
+  font-size: 24px;
+  font-weight: bold;
+  border: 0;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+#slidesNormalButton {
+  background: white;
+  color: black;
+}
+
+#slidesAudioButton {
+  background: #8b1e2d;
+  color: white;
+}
+
+
+/* =================================================
+   TRANSITIONS
+   ================================================= */
 
 /* FADE */
 
@@ -302,6 +370,8 @@ body {
 <audio id="backgroundAudio"></audio>
 
 
+<!-- MODE A AUDIO START -->
+
 <div id="audioStart">
 
   <div id="audioStartContent">
@@ -313,6 +383,35 @@ body {
     <p>
       Press once to allow music and/or video sound.
     </p>
+
+  </div>
+
+</div>
+
+
+<!-- MODE B GOOGLE SLIDES START -->
+
+<div id="slidesStart">
+
+  <div id="slidesStartContent">
+
+    <h1>GOOGLE SLIDES DISPLAY</h1>
+
+    <p>
+      Choose how you want to start this presentation.
+    </p>
+
+    <div class="slidesStartButtons">
+
+      <button id="slidesNormalButton">
+        START DISPLAY
+      </button>
+
+      <button id="slidesAudioButton">
+        START DISPLAY WITH AUDIO
+      </button>
+
+    </div>
 
   </div>
 
@@ -361,6 +460,12 @@ let settingsSignature = "";
 let playlistSignature = "";
 let visualSignature = "";
 let audioSignature = "";
+
+
+// Google Slides session state
+
+let slidesStarted = false;
+let slidesAudioRequested = false;
 
 
 // =================================================
@@ -571,6 +676,9 @@ async function checkForUpdates(
 
   catch (error) {
 
+    // SAFETY:
+    // Current working display keeps running.
+
     console.log(
       "Update check failed. Current display will continue."
     );
@@ -581,7 +689,7 @@ async function checkForUpdates(
 
 
 // =================================================
-// DETERMINE WHETHER AUDIO IS ACTUALLY NEEDED
+// DETERMINE MODE A AUDIO REQUIREMENT
 // =================================================
 
 function determineAudioRequirement() {
@@ -767,7 +875,7 @@ function applyFreshData(
     newAudioSignature;
 
 
-  // UPDATE FULL SYNC TIMER IF CHANGED
+  // UPDATE FULL SYNC TIMER IF CONTROL PAGE CHANGED IT
 
   if (
 
@@ -800,14 +908,32 @@ function applyFreshData(
     stopModeA();
 
 
+    // First load or switching into Mode B:
+    // ask how user wants to start.
+
     if (
-
       initialLoad ||
+      modeChanged
+    ) {
 
-      modeChanged ||
+      slidesStarted =
+        false;
 
+
+      showSlidesStart();
+
+
+      return;
+
+    }
+
+
+    // If already running and ONLY the Slides URL changed,
+    // reload the iframe without requiring another button press.
+
+    if (
+      slidesStarted &&
       slidesUrlChanged
-
     ) {
 
       loadGoogleSlides();
@@ -827,6 +953,12 @@ function applyFreshData(
   if (
     settings.mode === "A"
   ) {
+
+    hideSlidesStart();
+
+
+    slidesStarted =
+      false;
 
 
     if (
@@ -929,7 +1061,94 @@ function applyFreshData(
 
 
 // =================================================
-// MODE B — GOOGLE SLIDES
+// MODE B START CONTROLS
+// =================================================
+
+document
+  .getElementById(
+    "slidesNormalButton"
+  )
+  .addEventListener(
+    "click",
+    startSlidesNormal
+  );
+
+
+document
+  .getElementById(
+    "slidesAudioButton"
+  )
+  .addEventListener(
+    "click",
+    startSlidesWithAudio
+  );
+
+
+function showSlidesStart() {
+
+  document.getElementById(
+    "slidesStart"
+  ).style.display =
+    "flex";
+
+}
+
+
+function hideSlidesStart() {
+
+  document.getElementById(
+    "slidesStart"
+  ).style.display =
+    "none";
+
+}
+
+
+function startSlidesNormal() {
+
+  slidesStarted =
+    true;
+
+
+  slidesAudioRequested =
+    false;
+
+
+  hideSlidesStart();
+
+
+  loadGoogleSlides();
+
+}
+
+
+function startSlidesWithAudio() {
+
+  // This button press supplies the user interaction
+  // before the Google Slides iframe is created.
+
+  slidesStarted =
+    true;
+
+
+  slidesAudioRequested =
+    true;
+
+
+  audioUnlocked =
+    true;
+
+
+  hideSlidesStart();
+
+
+  loadGoogleSlides();
+
+}
+
+
+// =================================================
+// MODE B — LOAD GOOGLE SLIDES
 // =================================================
 
 function loadGoogleSlides() {
@@ -947,7 +1166,7 @@ function loadGoogleSlides() {
     <iframe
       id="slidesFrame"
       src="${settings.googleSlidesUrl}"
-      allow="autoplay"
+      allow="autoplay; encrypted-media"
       allowfullscreen>
     </iframe>
   `;
@@ -956,7 +1175,7 @@ function loadGoogleSlides() {
 
 
 // =================================================
-// PLAY VISUAL
+// MODE A — PLAY VISUAL
 // =================================================
 
 function playVisual() {
@@ -1161,7 +1380,7 @@ function playVideo(item) {
   }
 
 
-  // VIDEO AUDIO + PAUSE MUSIC
+  // VIDEO AUDIO + PAUSE BACKGROUND MUSIC
 
   else if (
     videoMusicBehavior ===
@@ -1177,7 +1396,7 @@ function playVideo(item) {
   }
 
 
-  // VIDEO AUDIO + MUSIC TOGETHER
+  // VIDEO AUDIO + BACKGROUND MUSIC TOGETHER
 
   else if (
     videoMusicBehavior ===
@@ -1272,6 +1491,10 @@ function playVideo(item) {
 
       () => {
 
+        // SAFETY FALLBACK:
+        // Do not freeze the display if browser
+        // unexpectedly rejects audible playback.
+
         video.muted =
           true;
 
@@ -1317,7 +1540,7 @@ function nextVisual() {
 
 
 // =================================================
-// AUDIO START
+// MODE A AUDIO START
 // =================================================
 
 document
