@@ -24,7 +24,12 @@
         "muted": true
       }
     ],
-    "audioItems": [],
+    "audioItems": [
+      {
+        "file": "Ohio Players - Fire  TopPop.mp3",
+        "type": "audio"
+      }
+    ],
     "backgroundMusic": {
       "enabled": false,
       "videoBehavior": "muteVideo"
