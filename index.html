@@ -39,10 +39,7 @@ body {
 }
 
 
-/* GOOGLE SLIDES
-   Extra height hides Google's bottom control bar.
-   Change 55px if needed.
-*/
+/* GOOGLE SLIDES */
 
 #slidesFrame {
   position: absolute;
@@ -50,6 +47,8 @@ body {
   left: 0;
 
   width: 100vw;
+
+  /* Change 55px if needed */
   height: calc(100vh + 55px);
 
   border: 0;
@@ -66,16 +65,20 @@ body {
 
 
 /* =================================================
-   MODE A AUDIO START
+   AUDIO START
    ================================================= */
 
 #audioStart {
   position: fixed;
   inset: 0;
+
   display: none;
+
   align-items: center;
   justify-content: center;
-  background: rgba(0,0,0,.88);
+
+  background: rgba(0,0,0,.90);
+
   z-index: 9999;
 }
 
@@ -101,68 +104,8 @@ body {
 
 
 /* =================================================
-   MODE B START SCREEN
-   ================================================= */
-
-#slidesStart {
-  position: fixed;
-  inset: 0;
-  display: none;
-  align-items: center;
-  justify-content: center;
-  background: rgba(0,0,0,.92);
-  z-index: 10000;
-}
-
-#slidesStartContent {
-  width: min(700px, 85vw);
-  text-align: center;
-  color: white;
-  font-family: Arial, sans-serif;
-}
-
-#slidesStartContent h1 {
-  font-size: 38px;
-  margin-bottom: 12px;
-}
-
-#slidesStartContent p {
-  color: #ccc;
-  font-size: 18px;
-  margin-bottom: 30px;
-}
-
-.slidesStartButtons {
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
-}
-
-.slidesStartButtons button {
-  padding: 25px 35px;
-  font-size: 24px;
-  font-weight: bold;
-  border: 0;
-  border-radius: 10px;
-  cursor: pointer;
-}
-
-#slidesNormalButton {
-  background: white;
-  color: black;
-}
-
-#slidesAudioButton {
-  background: #8b1e2d;
-  color: white;
-}
-
-
-/* =================================================
    TRANSITIONS
    ================================================= */
-
-/* FADE */
 
 .enter-fade {
   animation: fadeIn .8s ease;
@@ -183,8 +126,6 @@ body {
 }
 
 
-/* SLIDE LEFT */
-
 .enter-slideLeft {
   animation: slideLeftIn .8s ease;
 }
@@ -194,6 +135,7 @@ body {
 }
 
 @keyframes slideLeftIn {
+
   from {
     transform: translateX(100%);
     opacity: 0;
@@ -203,9 +145,11 @@ body {
     transform: translateX(0);
     opacity: 1;
   }
+
 }
 
 @keyframes slideLeftOut {
+
   from {
     transform: translateX(0);
     opacity: 1;
@@ -215,10 +159,9 @@ body {
     transform: translateX(-100%);
     opacity: 0;
   }
+
 }
 
-
-/* SLIDE RIGHT */
 
 .enter-slideRight {
   animation: slideRightIn .8s ease;
@@ -229,6 +172,7 @@ body {
 }
 
 @keyframes slideRightIn {
+
   from {
     transform: translateX(-100%);
     opacity: 0;
@@ -238,9 +182,11 @@ body {
     transform: translateX(0);
     opacity: 1;
   }
+
 }
 
 @keyframes slideRightOut {
+
   from {
     transform: translateX(0);
     opacity: 1;
@@ -250,10 +196,9 @@ body {
     transform: translateX(100%);
     opacity: 0;
   }
+
 }
 
-
-/* ZOOM */
 
 .enter-zoomIn {
   animation: zoomIn .8s ease;
@@ -269,6 +214,7 @@ body {
 }
 
 @keyframes zoomIn {
+
   from {
     transform: scale(.85);
     opacity: 0;
@@ -278,9 +224,11 @@ body {
     transform: scale(1);
     opacity: 1;
   }
+
 }
 
 @keyframes zoomOut {
+
   from {
     transform: scale(1.15);
     opacity: 0;
@@ -290,10 +238,9 @@ body {
     transform: scale(1);
     opacity: 1;
   }
+
 }
 
-
-/* BLUR */
 
 .enter-blur {
   animation: blurIn .8s ease;
@@ -304,6 +251,7 @@ body {
 }
 
 @keyframes blurIn {
+
   from {
     filter: blur(18px);
     opacity: 0;
@@ -313,9 +261,11 @@ body {
     filter: blur(0);
     opacity: 1;
   }
+
 }
 
 @keyframes blurOut {
+
   from {
     filter: blur(0);
     opacity: 1;
@@ -325,6 +275,7 @@ body {
     filter: blur(18px);
     opacity: 0;
   }
+
 }
 
 </style>
@@ -346,8 +297,6 @@ body {
 <audio id="backgroundAudio"></audio>
 
 
-<!-- MODE A AUDIO START -->
-
 <div id="audioStart">
 
   <div id="audioStartContent">
@@ -357,37 +306,8 @@ body {
     </button>
 
     <p>
-      Press once to allow music and/or video sound.
+      Press once to allow background music and/or video sound.
     </p>
-
-  </div>
-
-</div>
-
-
-<!-- MODE B START -->
-
-<div id="slidesStart">
-
-  <div id="slidesStartContent">
-
-    <h1>GOOGLE SLIDES DISPLAY</h1>
-
-    <p>
-      Choose how you want to start this presentation.
-    </p>
-
-    <div class="slidesStartButtons">
-
-      <button id="slidesNormalButton">
-        START DISPLAY
-      </button>
-
-      <button id="slidesAudioButton">
-        START DISPLAY WITH AUDIO
-      </button>
-
-    </div>
 
   </div>
 
@@ -396,14 +316,11 @@ body {
 
 <script>
 
-const MEDIA_FOLDER = "media";
+const MEDIA_FOLDER =
+  "media";
 
-
-// =================================================
-// UPDATE INTERVAL
-// =================================================
-
-const QUICK_CHECK_SECONDS = 30;
+const QUICK_CHECK_SECONDS =
+  30;
 
 
 // =================================================
@@ -419,15 +336,16 @@ let audioItems = [];
 let currentVisual = 0;
 let currentAudio = 0;
 
-let backgroundMusicEnabled = false;
-let videoMusicBehavior = "pause";
+let modeAMusicEnabled = false;
+let modeBMusicEnabled = false;
+
+let videoMusicBehavior =
+  "pause";
 
 let visualTimer = null;
 
-let audioUnlocked = false;
-let audioRequired = false;
-
-let waitingToStartModeA = false;
+let audioUnlocked =
+  false;
 
 let quickCheckTimer = null;
 let fullSyncTimer = null;
@@ -439,22 +357,7 @@ let audioSignature = "";
 
 
 // =================================================
-// MODE B SESSION MEMORY
-// =================================================
-
-// IMPORTANT:
-// These values survive Mode A/B switches and soft updates.
-// They reset only when the actual webpage/browser session reloads.
-
-let modeBChoiceMade = false;
-
-let modeBUseAudio = false;
-
-let slidesStarted = false;
-
-
-// =================================================
-// INITIAL START
+// START
 // =================================================
 
 async function startTV() {
@@ -488,10 +391,12 @@ async function startTV() {
 
 
 // =================================================
-// FETCH JSON
+// FETCH
 // =================================================
 
-async function fetchJSON(filename) {
+async function fetchJSON(
+  filename
+) {
 
   const response =
     await fetch(
@@ -501,7 +406,8 @@ async function fetchJSON(filename) {
       Date.now(),
 
       {
-        cache: "no-store"
+        cache:
+          "no-store"
       }
 
     );
@@ -517,32 +423,25 @@ async function fetchJSON(filename) {
   }
 
 
-  return await response.json();
+  return await
+    response.json();
 
 }
 
 
 async function fetchFreshData() {
 
-  const freshSettings =
-    await fetchJSON(
-      "settings.json"
-    );
-
-
-  const freshPlaylists =
-    await fetchJSON(
-      "playlists.json"
-    );
-
-
   return {
 
     settings:
-      freshSettings,
+      await fetchJSON(
+        "settings.json"
+      ),
 
     playlists:
-      freshPlaylists
+      await fetchJSON(
+        "playlists.json"
+      )
 
   };
 
@@ -559,32 +458,24 @@ function startUpdateTimers() {
     quickCheckTimer
   );
 
-
   clearInterval(
     fullSyncTimer
   );
 
 
-  // FAST 30-SECOND CHECK
-
   quickCheckTimer =
     setInterval(
 
-      () => {
-
+      () =>
         checkForUpdates(
           false
-        );
-
-      },
+        ),
 
       QUICK_CHECK_SECONDS *
       1000
 
     );
 
-
-  // PERIODIC FULL SAFETY SYNC
 
   const minutes =
     settings.refreshMinutes ||
@@ -594,13 +485,10 @@ function startUpdateTimers() {
   fullSyncTimer =
     setInterval(
 
-      () => {
-
+      () =>
         checkForUpdates(
           true
-        );
-
-      },
+        ),
 
       minutes *
       60 *
@@ -612,7 +500,7 @@ function startUpdateTimers() {
 
 
 // =================================================
-// CHECK FOR CHANGES
+// SOFT CHECK
 // =================================================
 
 async function checkForUpdates(
@@ -625,32 +513,32 @@ async function checkForUpdates(
       await fetchFreshData();
 
 
-    const newSettingsSignature =
+    const settingsSig =
       JSON.stringify(
         fresh.settings
       );
 
 
-    const newPlaylistSignature =
+    const playlistSig =
       JSON.stringify(
         fresh.playlists
       );
 
 
-    const changed =
+    if (
 
-      newSettingsSignature !==
+      settingsSig !==
         settingsSignature
 
       ||
 
-      newPlaylistSignature !==
-        playlistSignature;
+      playlistSig !==
+        playlistSignature
 
+      ||
 
-    if (
-      changed ||
       fullSync
+
     ) {
 
       applyFreshData(
@@ -669,12 +557,11 @@ async function checkForUpdates(
 
   catch (error) {
 
-    // SAFETY MECHANISM:
-    // Do nothing.
-    // Keep currently working display playing.
+    // SAFETY:
+    // Keep current working display running.
 
     console.log(
-      "Update check failed. Current display will continue."
+      "Update check failed. Current display continues."
     );
 
   }
@@ -683,14 +570,48 @@ async function checkForUpdates(
 
 
 // =================================================
+// MUSIC HELPER
+// =================================================
+
+function musicWantedForCurrentMode() {
+
+  if (
+    settings.mode === "A"
+  ) {
+
+    return (
+      modeAMusicEnabled &&
+      audioItems.length > 0
+    );
+
+  }
+
+
+  if (
+    settings.mode === "B"
+  ) {
+
+    return (
+      modeBMusicEnabled &&
+      audioItems.length > 0
+    );
+
+  }
+
+
+  return false;
+
+}
+
+
+// =================================================
 // MODE A AUDIO REQUIREMENT
 // =================================================
 
-function determineAudioRequirement() {
+function modeAAudioNeeded() {
 
   if (
-    backgroundMusicEnabled &&
-    audioItems.length > 0
+    musicWantedForCurrentMode()
   ) {
 
     return true;
@@ -708,23 +629,19 @@ function determineAudioRequirement() {
   }
 
 
-  const audibleVideoExists =
-    visualItems.some(
+  return visualItems.some(
 
-      item =>
-        item.type === "video" &&
-        item.muted !== true
+    item =>
+      item.type === "video" &&
+      item.muted !== true
 
-    );
-
-
-  return audibleVideoExists;
+  );
 
 }
 
 
 // =================================================
-// APPLY UPDATED DATA
+// APPLY NEW DATA
 // =================================================
 
 function applyFreshData(
@@ -735,16 +652,20 @@ function applyFreshData(
 
 ) {
 
-  const previousMode =
+  const oldMode =
     settings.mode;
 
 
-  const previousRefresh =
+  const oldRefresh =
     settings.refreshMinutes;
 
 
-  const previousSlidesUrl =
+  const oldSlidesURL =
     settings.googleSlidesUrl;
+
+
+  const oldModeBMusic =
+    modeBMusicEnabled;
 
 
   const newPlaylist =
@@ -777,47 +698,30 @@ function applyFreshData(
 
 
   const newAudioSignature =
-    JSON.stringify({
-
-      items:
-        newAudioItems,
-
-      enabled:
-        newPlaylist.backgroundMusic?.enabled ||
-        false,
-
-      videoBehavior:
-        newPlaylist.backgroundMusic?.videoBehavior ||
-        "pause"
-
-    });
+    JSON.stringify(
+      newAudioItems
+    );
 
 
   const modeChanged =
-
-    previousMode !==
+    oldMode !==
     freshSettings.mode;
 
 
-  const slidesUrlChanged =
-
-    previousSlidesUrl !==
+  const slidesChanged =
+    oldSlidesURL !==
     freshSettings.googleSlidesUrl;
 
 
   const visualChanged =
-
     visualSignature !==
     newVisualSignature;
 
 
   const audioChanged =
-
     audioSignature !==
     newAudioSignature;
 
-
-  // SAVE NEW STATE
 
   settings =
     freshSettings;
@@ -835,18 +739,19 @@ function applyFreshData(
     newAudioItems;
 
 
-  backgroundMusicEnabled =
+  modeAMusicEnabled =
     playlist.backgroundMusic?.enabled ||
+    false;
+
+
+  modeBMusicEnabled =
+    settings.modeBMusicEnabled ||
     false;
 
 
   videoMusicBehavior =
     playlist.backgroundMusic?.videoBehavior ||
     "pause";
-
-
-  audioRequired =
-    determineAudioRequirement();
 
 
   settingsSignature =
@@ -869,11 +774,9 @@ function applyFreshData(
     newAudioSignature;
 
 
-  // UPDATE SAFETY-SYNC TIMER
-
   if (
 
-    previousRefresh !==
+    oldRefresh !==
       settings.refreshMinutes
 
     &&
@@ -888,91 +791,87 @@ function applyFreshData(
 
 
   // =================================================
-  // MODE B — GOOGLE SLIDES
+  // MODE B
   // =================================================
 
   if (
     settings.mode === "B"
   ) {
 
-    waitingToStartModeA =
-      false;
+    clearTimeout(
+      visualTimer
+    );
 
 
-    stopModeA();
+    hideAudioButton();
 
 
-    // ---------------------------------------------
-    // FIRST EVER MODE B START DURING THIS PAGE SESSION
-    // ---------------------------------------------
-
-    if (
-      !modeBChoiceMade
-    ) {
-
-      slidesStarted =
-        false;
-
-
-      showSlidesStart();
-
-
-      return;
-
-    }
-
-
-    // ---------------------------------------------
-    // USER HAS ALREADY MADE THE MODE B CHOICE
-    // DURING THIS BROWSER SESSION.
-    //
-    // DO NOT ASK AGAIN.
-    // ---------------------------------------------
-
-    hideSlidesStart();
-
-
-    // If audio was previously requested,
-    // keep the session marked as audio-unlocked.
+    // Load/reload Slides only when needed.
 
     if (
-      modeBUseAudio
-    ) {
 
-      audioUnlocked =
-        true;
+      initialLoad ||
 
-    }
-
-
-    // Switching back into Mode B
-
-    if (
       modeChanged ||
-      initialLoad
+
+      slidesChanged
+
     ) {
 
       loadGoogleSlides();
 
-      return;
-
     }
 
 
-    // Slides URL changed remotely
+    const modeBMusicChanged =
+      oldModeBMusic !==
+      modeBMusicEnabled;
+
+
+    // Music requested.
 
     if (
-      slidesUrlChanged
+      musicWantedForCurrentMode()
     ) {
 
-      loadGoogleSlides();
+      if (
+        !audioUnlocked
+      ) {
 
-      return;
+        stopBackgroundAudio();
+
+        showAudioButton();
+
+      }
+
+      else if (
+
+        initialLoad ||
+
+        modeChanged ||
+
+        audioChanged ||
+
+        modeBMusicChanged
+
+      ) {
+
+        restartAudioPlaylist();
+
+      }
 
     }
 
+    // Mode B is silent.
 
-    // Otherwise leave existing iframe alone.
+    else {
+
+      stopBackgroundAudio();
+
+      hideAudioButton();
+
+    }
+
 
     return;
 
@@ -986,13 +885,6 @@ function applyFreshData(
   if (
     settings.mode === "A"
   ) {
-
-    hideSlidesStart();
-
-
-    // IMPORTANT:
-    // Do NOT erase modeBChoiceMade or modeBUseAudio.
-    // That is how Mode B remembers its choice.
 
 
     if (
@@ -1008,46 +900,31 @@ function applyFreshData(
     }
 
 
-    // ---------------------------------------------
-    // AUDIO REQUIRED BUT NOT YET UNLOCKED
-    // ---------------------------------------------
+    const needsAudio =
+      modeAAudioNeeded();
+
 
     if (
-      audioRequired &&
+      needsAudio &&
       !audioUnlocked
     ) {
-
-      waitingToStartModeA =
-        true;
-
 
       clearTimeout(
         visualTimer
       );
 
-
       showAudioButton();
-
 
       return;
 
     }
 
 
-    waitingToStartModeA =
-      false;
-
-
     hideAudioButton();
 
 
-    // ---------------------------------------------
-    // BACKGROUND MUSIC
-    // ---------------------------------------------
-
     if (
-      backgroundMusicEnabled &&
-      audioItems.length > 0
+      musicWantedForCurrentMode()
     ) {
 
       if (
@@ -1075,21 +952,18 @@ function applyFreshData(
     }
 
 
-    // ---------------------------------------------
-    // VISUAL PLAYLIST
-    // ---------------------------------------------
-
     if (
 
       initialLoad ||
+
       modeChanged ||
+
       visualChanged
 
     ) {
 
       currentVisual =
         0;
-
 
       playVisual();
 
@@ -1101,119 +975,10 @@ function applyFreshData(
 
 
 // =================================================
-// MODE B START BUTTONS
-// =================================================
-
-document
-  .getElementById(
-    "slidesNormalButton"
-  )
-  .addEventListener(
-    "click",
-    startSlidesNormal
-  );
-
-
-document
-  .getElementById(
-    "slidesAudioButton"
-  )
-  .addEventListener(
-    "click",
-    startSlidesWithAudio
-  );
-
-
-function showSlidesStart() {
-
-  document.getElementById(
-    "slidesStart"
-  ).style.display =
-    "flex";
-
-}
-
-
-function hideSlidesStart() {
-
-  document.getElementById(
-    "slidesStart"
-  ).style.display =
-    "none";
-
-}
-
-
-// =================================================
-// MODE B — SILENT START
-// =================================================
-
-function startSlidesNormal() {
-
-  modeBChoiceMade =
-    true;
-
-
-  modeBUseAudio =
-    false;
-
-
-  slidesStarted =
-    true;
-
-
-  hideSlidesStart();
-
-
-  loadGoogleSlides();
-
-}
-
-
-// =================================================
-// MODE B — AUDIO START
-// =================================================
-
-function startSlidesWithAudio() {
-
-  // User interaction occurs BEFORE iframe creation.
-
-  modeBChoiceMade =
-    true;
-
-
-  modeBUseAudio =
-    true;
-
-
-  slidesStarted =
-    true;
-
-
-  audioUnlocked =
-    true;
-
-
-  hideSlidesStart();
-
-
-  loadGoogleSlides();
-
-}
-
-
-// =================================================
-// LOAD GOOGLE SLIDES
+// GOOGLE SLIDES
 // =================================================
 
 function loadGoogleSlides() {
-
-  hideAudioButton();
-
-
-  slidesStarted =
-    true;
-
 
   const player =
     document.getElementById(
@@ -1234,7 +999,7 @@ function loadGoogleSlides() {
 
 
 // =================================================
-// MODE A — PLAY VISUAL
+// MODE A VISUAL PLAYER
 // =================================================
 
 function playVisual() {
@@ -1244,9 +1009,7 @@ function playVisual() {
   );
 
 
-  if (
-    !visualItems.length
-  )
+  if (!visualItems.length)
     return;
 
 
@@ -1299,7 +1062,6 @@ function playImage(item) {
 
 
   image.src =
-
     `${MEDIA_FOLDER}/${encodeURIComponent(item.file)}?ts=${Date.now()}`;
 
 
@@ -1319,7 +1081,6 @@ function playImage(item) {
       player.innerHTML =
         "";
 
-
       player.appendChild(
         image
       );
@@ -1332,7 +1093,6 @@ function playImage(item) {
 
 
   const duration =
-
     (
       item.duration ||
       8
@@ -1352,11 +1112,8 @@ function playImage(item) {
 
 
         setTimeout(
-
           nextVisual,
-
           800
-
         );
 
       },
@@ -1392,17 +1149,14 @@ function playVideo(item) {
 
 
   video.src =
-
     `${MEDIA_FOLDER}/${encodeURIComponent(item.file)}?ts=${Date.now()}`;
 
 
   video.autoplay =
     true;
 
-
   video.playsInline =
     true;
-
 
   video.className =
     "visual";
@@ -1413,10 +1167,6 @@ function playVideo(item) {
     item.transition
   );
 
-
-  // ---------------------------------------------
-  // SOUND RULES
-  // ---------------------------------------------
 
   if (
     item.muted === true
@@ -1447,16 +1197,12 @@ function playVideo(item) {
     video.muted =
       false;
 
-
     pauseBackgroundMusic();
 
   }
 
 
-  else if (
-    videoMusicBehavior ===
-    "continue"
-  ) {
+  else {
 
     video.muted =
       false;
@@ -1466,7 +1212,6 @@ function playVideo(item) {
 
   player.innerHTML =
     "";
-
 
   player.appendChild(
     video
@@ -1487,7 +1232,6 @@ function playVideo(item) {
 
         resumeMusicAfterVideo();
 
-
         nextVisual();
 
       },
@@ -1499,8 +1243,6 @@ function playVideo(item) {
   }
 
 
-  // FULL VIDEO
-
   if (
     item.videoMode !==
     "custom"
@@ -1511,19 +1253,7 @@ function playVideo(item) {
 
   }
 
-
-  // CUSTOM LENGTH
-
   else {
-
-    const duration =
-
-      (
-        item.duration ||
-        10
-      ) *
-      1000;
-
 
     visualTimer =
       setTimeout(
@@ -1532,12 +1262,15 @@ function playVideo(item) {
 
           video.pause();
 
-
           finishVideo();
 
         },
 
-        duration
+        (
+          item.duration ||
+          10
+        ) *
+        1000
 
       );
 
@@ -1547,19 +1280,14 @@ function playVideo(item) {
   video
     .play()
     .catch(
-
       () => {
-
-        // SAFETY FALLBACK
 
         video.muted =
           true;
 
-
         video.play();
 
       }
-
     );
 
 }
@@ -1576,14 +1304,11 @@ function nextVisual() {
   );
 
 
-  if (
-    !visualItems.length
-  )
+  if (!visualItems.length)
     return;
 
 
   currentVisual =
-
     (
       currentVisual +
       1
@@ -1597,7 +1322,7 @@ function nextVisual() {
 
 
 // =================================================
-// MODE A AUDIO START
+// AUDIO UNLOCK
 // =================================================
 
 document
@@ -1612,20 +1337,24 @@ document
 
 function showAudioButton() {
 
-  document.getElementById(
-    "audioStart"
-  ).style.display =
-    "flex";
+  document
+    .getElementById(
+      "audioStart"
+    )
+    .style.display =
+      "flex";
 
 }
 
 
 function hideAudioButton() {
 
-  document.getElementById(
-    "audioStart"
-  ).style.display =
-    "none";
+  document
+    .getElementById(
+      "audioStart"
+    )
+    .style.display =
+      "none";
 
 }
 
@@ -1639,13 +1368,10 @@ function unlockAudio() {
   hideAudioButton();
 
 
-  waitingToStartModeA =
-    false;
-
+  // Start whichever mode's music is active.
 
   if (
-    backgroundMusicEnabled &&
-    audioItems.length > 0
+    musicWantedForCurrentMode()
   ) {
 
     restartAudioPlaylist();
@@ -1653,28 +1379,32 @@ function unlockAudio() {
   }
 
 
-  currentVisual =
-    0;
+  // If we're in Mode A,
+  // start/restart the visuals too.
 
+  if (
+    settings.mode === "A"
+  ) {
 
-  playVisual();
+    currentVisual =
+      0;
+
+    playVisual();
+
+  }
 
 }
 
 
 // =================================================
-// BACKGROUND MUSIC
+// MUSIC PLAYLIST
 // =================================================
 
 function restartAudioPlaylist() {
 
   if (
 
-    !backgroundMusicEnabled
-
-    ||
-
-    !audioItems.length
+    !musicWantedForCurrentMode()
 
     ||
 
@@ -1697,11 +1427,7 @@ function playCurrentAudio() {
 
   if (
 
-    !backgroundMusicEnabled
-
-    ||
-
-    !audioItems.length
+    !musicWantedForCurrentMode()
 
     ||
 
@@ -1724,7 +1450,6 @@ function playCurrentAudio() {
 
 
   audio.src =
-
     `${MEDIA_FOLDER}/${encodeURIComponent(track.file)}?ts=${Date.now()}`;
 
 
@@ -1736,7 +1461,6 @@ function playCurrentAudio() {
     () => {
 
       currentAudio =
-
         (
           currentAudio +
           1
@@ -1752,26 +1476,24 @@ function playCurrentAudio() {
   audio
     .play()
     .catch(
-
       () => {
 
         showAudioButton();
 
       }
-
     );
 
 }
 
 
 // =================================================
-// MUSIC AROUND VIDEOS
+// MUSIC AROUND MODE A VIDEOS
 // =================================================
 
 function pauseBackgroundMusic() {
 
   if (
-    !backgroundMusicEnabled
+    !musicWantedForCurrentMode()
   )
     return;
 
@@ -1782,9 +1504,7 @@ function pauseBackgroundMusic() {
     );
 
 
-  if (
-    !audio.paused
-  ) {
+  if (!audio.paused) {
 
     audio.pause();
 
@@ -1801,7 +1521,7 @@ function pauseBackgroundMusic() {
 function resumeMusicAfterVideo() {
 
   if (
-    !backgroundMusicEnabled
+    !musicWantedForCurrentMode()
   )
     return;
 
@@ -1831,11 +1551,8 @@ function resumeMusicAfterVideo() {
       audio
         .play()
         .catch(
-          () => {
-
-            showAudioButton();
-
-          }
+          () =>
+            showAudioButton()
         );
 
     }
@@ -1844,10 +1561,6 @@ function resumeMusicAfterVideo() {
 
 }
 
-
-// =================================================
-// STOP AUDIO / MODE A
-// =================================================
 
 function stopBackgroundAudio() {
 
@@ -1867,21 +1580,6 @@ function stopBackgroundAudio() {
 }
 
 
-function stopModeA() {
-
-  clearTimeout(
-    visualTimer
-  );
-
-
-  stopBackgroundAudio();
-
-
-  hideAudioButton();
-
-}
-
-
 // =================================================
 // TRANSITIONS
 // =================================================
@@ -1893,9 +1591,7 @@ function applyEnterTransition(
 
   if (
 
-    !transition
-
-    ||
+    !transition ||
 
     transition ===
     "none"
@@ -1918,9 +1614,7 @@ function applyExitTransition(
 
   if (
 
-    !transition
-
-    ||
+    !transition ||
 
     transition ===
     "none"
@@ -1942,19 +1636,21 @@ function applyExitTransition(
 
 function showMessage(text) {
 
-  document.getElementById(
-    "player"
-  ).innerHTML =
+  document
+    .getElementById(
+      "player"
+    )
+    .innerHTML =
 
-    `<div id="message">
-      ${text}
-    </div>`;
+      `<div id="message">
+        ${text}
+      </div>`;
 
 }
 
 
 // =================================================
-// START
+// GO
 // =================================================
 
 startTV();
