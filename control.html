@@ -3,9 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Brown Football TV Control</title>
 
 <style>
+
 body {
   margin: 0;
   background: #111;
@@ -37,7 +39,8 @@ label {
   font-weight: bold;
 }
 
-input, select {
+input,
+select {
   box-sizing: border-box;
   padding: 9px;
   font-size: 15px;
@@ -89,7 +92,15 @@ button:disabled {
 
 .media-row {
   display: grid;
-  grid-template-columns: 35px 120px 1fr 150px 150px 115px 90px;
+  grid-template-columns:
+    35px
+    120px
+    1fr
+    150px
+    150px
+    115px
+    90px;
+
   gap: 10px;
   align-items: center;
   background: #333;
@@ -132,7 +143,11 @@ button:disabled {
 
 .audio-row {
   display: grid;
-  grid-template-columns: 35px 1fr 100px;
+  grid-template-columns:
+    35px
+    1fr
+    100px;
+
   gap: 12px;
   align-items: center;
   background: #333;
@@ -149,23 +164,39 @@ button:disabled {
   white-space: pre-line;
   color: #ccc;
 }
+
 </style>
+
 </head>
 
 <body>
 
 <div class="container">
 
-<h1>BROWN FOOTBALL TV</h1>
-<p class="small">Display Control</p>
 
+<h1>BROWN FOOTBALL TV</h1>
+
+<p class="small">
+  Display Control
+</p>
+
+
+<!-- =================================================
+     GITHUB
+     ================================================= -->
 
 <div class="card">
 
   <h2>GitHub Connection</h2>
 
-  <label>GitHub Token</label>
-  <input id="token" type="password">
+  <label>
+    GitHub Token
+  </label>
+
+  <input
+    id="token"
+    type="password"
+  >
 
   <br><br>
 
@@ -180,6 +211,10 @@ button:disabled {
 </div>
 
 
+<!-- =================================================
+     MODE
+     ================================================= -->
+
 <div class="card">
 
   <h2>Display Mode</h2>
@@ -190,14 +225,19 @@ button:disabled {
       id="modeA"
       class="mode-button"
       onclick="chooseMode('A')">
+
       MODE A — MEDIA PLAYLIST
+
     </button>
+
 
     <button
       id="modeB"
       class="mode-button"
       onclick="chooseMode('B')">
+
       MODE B — GOOGLE SLIDES
+
     </button>
 
   </div>
@@ -205,144 +245,279 @@ button:disabled {
 </div>
 
 
+<!-- =================================================
+     MODE A VISUALS
+     ================================================= -->
+
 <div class="card">
 
-  <h2>Mode A — Visual Playlist</h2>
+  <h2>
+    Mode A — Visual Playlist
+  </h2>
 
-  <label>Default Transition</label>
+
+  <label>
+    Default Transition
+  </label>
+
 
   <select
     id="defaultTransition"
-    onchange="applyDefaultTransition()">
+    onchange="applyDefaultTransition()"
+  >
 
-    <option value="fade">Fade</option>
-    <option value="slideLeft">Slide Left</option>
-    <option value="slideRight">Slide Right</option>
-    <option value="zoomIn">Zoom In</option>
-    <option value="zoomOut">Zoom Out</option>
-    <option value="blur">Blur</option>
-    <option value="none">None</option>
+    <option value="fade">
+      Fade
+    </option>
+
+    <option value="slideLeft">
+      Slide Left
+    </option>
+
+    <option value="slideRight">
+      Slide Right
+    </option>
+
+    <option value="zoomIn">
+      Zoom In
+    </option>
+
+    <option value="zoomOut">
+      Zoom Out
+    </option>
+
+    <option value="blur">
+      Blur
+    </option>
+
+    <option value="none">
+      None
+    </option>
 
   </select>
 
+
   <p class="small">
-    Changes all visual items at once. Individual items can still be changed below.
+
+    Changes all visual items at once.
+    Individual items can still be changed below.
+
   </p>
+
 
   <button onclick="loadMedia()">
     REFRESH MEDIA
   </button>
 
+
   <div
     id="visualList"
-    style="margin-top:15px;">
+    style="margin-top:15px;"
+  >
+
     Loading...
+
   </div>
 
 </div>
 
 
+<!-- =================================================
+     AUDIO PLAYLIST
+     ================================================= -->
+
 <div class="card">
 
-  <h2>Audio Playlist</h2>
+  <h2>
+    Audio Playlist
+  </h2>
+
 
   <p class="small">
-    Select the songs you want available. They play one after another and loop continuously.
+
+    Select the songs you want available.
+    They play one after another and loop continuously.
+
+    The same selected songs can be used in Mode A
+    and Mode B.
+
   </p>
 
+
   <label>
+
     <input
       id="musicEnabled"
-      type="checkbox">
+      type="checkbox"
+    >
+
     Enable Background Music in Mode A
+
   </label>
 
-  <label>When a Mode A video with sound plays:</label>
+
+  <label>
+    When a Mode A video with sound plays:
+  </label>
+
 
   <select id="videoMusicBehavior">
 
     <option value="pause">
+
       Pause background music during video
+
     </option>
+
 
     <option value="continue">
+
       Play video audio + background music together
+
     </option>
 
+
     <option value="muteVideo">
+
       Keep music playing and mute videos
+
     </option>
 
   </select>
 
+
   <div
     id="audioList"
-    style="margin-top:20px;">
+    style="margin-top:20px;"
+  >
+
     Loading...
+
   </div>
 
 </div>
 
 
+<!-- =================================================
+     MODE B
+     ================================================= -->
+
 <div class="card">
 
-  <h2>Mode B — Google Slides</h2>
+  <h2>
+    Mode B — Google Slides
+  </h2>
 
-  <label>Published Google Slides URL</label>
+
+  <label>
+    Published Google Slides URL
+  </label>
+
 
   <input
     id="googleSlidesUrl"
-    type="text">
+    type="text"
+  >
+
 
   <br><br>
 
+
   <label>
+
     <input
       id="modeBMusicEnabled"
-      type="checkbox">
+      type="checkbox"
+    >
+
     Play selected background music with Google Slides
+
   </label>
 
+
   <p class="small">
-    Mode B music is played by this TV website, not by Google Slides.
+
+    This uses the songs selected in the Audio Playlist
+    above.
+
+    The music is played by the TV website rather than
+    by Google Slides itself.
+
   </p>
 
 </div>
 
 
+<!-- =================================================
+     UPDATE CHECK
+     ================================================= -->
+
 <div class="card">
 
-  <h2>TV Update Check</h2>
+  <h2>
+    TV Update Check
+  </h2>
+
 
   <p class="small">
-    TV checks for changes every 30 seconds, with this additional periodic safety sync.
+
+    The TV checks for changes every 30 seconds.
+
+    This setting controls the additional periodic
+    full safety sync.
+
   </p>
+
 
   <select id="refreshMinutes">
 
-    <option value="5">5 Minutes</option>
-    <option value="10">10 Minutes</option>
-    <option value="15">15 Minutes</option>
-    <option value="30">30 Minutes</option>
-    <option value="60">60 Minutes</option>
+    <option value="5">
+      5 Minutes
+    </option>
+
+    <option value="10">
+      10 Minutes
+    </option>
+
+    <option value="15">
+      15 Minutes
+    </option>
+
+    <option value="30">
+      30 Minutes
+    </option>
+
+    <option value="60">
+      60 Minutes
+    </option>
 
   </select>
 
 </div>
 
 
+<!-- =================================================
+     SAVE
+     ================================================= -->
+
 <button
   class="save-button"
-  onclick="goLive()">
+  onclick="goLive()"
+>
+
   SAVE / GO LIVE
+
 </button>
 
 
 <div
   class="card"
-  style="margin-top:20px;">
+  style="margin-top:20px;"
+>
 
-  <h2>Status</h2>
+  <h2>
+    Status
+  </h2>
 
   <div id="status">
     Loading...
@@ -350,16 +525,28 @@ button:disabled {
 
 </div>
 
+
 </div>
 
 
 <script>
 
-const OWNER = "samcasey-brownfb";
-const REPO = "tv-display";
-const BRANCH = "main";
 
-const MEDIA_FOLDER = "media";
+// =================================================
+// GITHUB SETTINGS
+// =================================================
+
+const OWNER =
+  "samcasey-brownfb";
+
+const REPO =
+  "tv-display";
+
+const BRANCH =
+  "main";
+
+const MEDIA_FOLDER =
+  "media";
 
 const SETTINGS_FILE =
   "settings.json";
@@ -367,24 +554,31 @@ const SETTINGS_FILE =
 const PLAYLISTS_FILE =
   "playlists.json";
 
+
 let settings = {};
+
 let playlistData = {};
 
 let visualItems = [];
+
 let audioItems = [];
 
 
-// ==================================================
+// =================================================
 // TOKEN
-// ==================================================
+// =================================================
 
 function saveToken() {
 
   const token =
+
     document
-      .getElementById("token")
+      .getElementById(
+        "token"
+      )
       .value
       .trim();
+
 
   if (!token) {
 
@@ -396,14 +590,20 @@ function saveToken() {
 
   }
 
+
   localStorage.setItem(
+
     "tvDisplayGithubToken",
+
     token
+
   );
+
 
   setStatus(
     "Token saved on this computer."
   );
+
 
   loadEverything();
 
@@ -413,14 +613,18 @@ function saveToken() {
 function loadSavedToken() {
 
   const token =
+
     localStorage.getItem(
       "tvDisplayGithubToken"
     );
 
+
   if (token) {
 
     document
-      .getElementById("token")
+      .getElementById(
+        "token"
+      )
       .value =
         token;
 
@@ -438,14 +642,15 @@ function getToken() {
 }
 
 
-// ==================================================
-// GITHUB HELPERS
-// ==================================================
+// =================================================
+// GITHUB HEADERS
+// =================================================
 
 function githubHeaders() {
 
   const token =
     getToken();
+
 
   return {
 
@@ -463,47 +668,72 @@ function githubHeaders() {
 }
 
 
+// =================================================
+// READ JSON DIRECTLY FROM GITHUB
+// =================================================
+
 async function readGithubJSON(
   filename
 ) {
 
   const apiURL =
+
     `https://api.github.com/repos/${OWNER}/${REPO}/contents/${filename}?ref=${BRANCH}&ts=${Date.now()}`;
 
+
   const response =
+
     await fetch(
+
       apiURL,
+
       {
+
         headers:
           githubHeaders(),
 
         cache:
           "no-store"
+
       }
+
     );
+
 
   if (!response.ok) {
 
     throw new Error(
+
       `Could not read ${filename} from GitHub`
+
     );
 
   }
 
+
   const file =
     await response.json();
 
+
   const decoded =
+
     decodeURIComponent(
+
       escape(
+
         atob(
+
           file.content.replace(
             /\n/g,
             ""
           )
+
         )
+
       )
+
     );
+
 
   return JSON.parse(
     decoded
@@ -512,37 +742,47 @@ async function readGithubJSON(
 }
 
 
-// ==================================================
-// LOAD
-// ==================================================
+// =================================================
+// LOAD EVERYTHING
+// =================================================
 
 async function loadEverything() {
 
   const token =
     getToken();
 
+
   if (!token) {
 
     setStatus(
+
       "Save your GitHub token to load the control panel."
+
     );
 
     return;
 
   }
 
+
   try {
 
     setStatus(
+
       "Loading latest settings directly from GitHub..."
+
     );
 
+
     settings =
+
       await readGithubJSON(
         SETTINGS_FILE
       );
 
+
     playlistData =
+
       await readGithubJSON(
         PLAYLISTS_FILE
       );
@@ -553,6 +793,7 @@ async function loadEverything() {
         "googleSlidesUrl"
       )
       .value =
+
         settings.googleSlidesUrl ||
         "";
 
@@ -562,6 +803,7 @@ async function loadEverything() {
         "modeBMusicEnabled"
       )
       .checked =
+
         settings.modeBMusicEnabled ||
         false;
 
@@ -571,17 +813,21 @@ async function loadEverything() {
         "refreshMinutes"
       )
       .value =
+
         settings.refreshMinutes ||
         15;
 
 
     chooseMode(
+
       settings.mode ||
       "B"
+
     );
 
 
     const playlist =
+
       playlistData.default ||
       {};
 
@@ -591,6 +837,7 @@ async function loadEverything() {
         "musicEnabled"
       )
       .checked =
+
         playlist.backgroundMusic?.enabled ||
         false;
 
@@ -600,6 +847,7 @@ async function loadEverything() {
         "videoMusicBehavior"
       )
       .value =
+
         playlist.backgroundMusic?.videoBehavior ||
         "pause";
 
@@ -609,6 +857,7 @@ async function loadEverything() {
         "defaultTransition"
       )
       .value =
+
         playlist.defaultTransition ||
         "fade";
 
@@ -617,17 +866,26 @@ async function loadEverything() {
 
 
     setStatus(
+
       "Loaded latest settings directly from GitHub.\nCurrent live mode: " +
-      (settings.mode || "B")
+
+      (
+        settings.mode ||
+        "B"
+      )
+
     );
 
   }
+
 
   catch (error) {
 
     setStatus(
+
       "LOAD ERROR — " +
       error.message
+
     );
 
   }
@@ -635,68 +893,94 @@ async function loadEverything() {
 }
 
 
-// ==================================================
+// =================================================
 // MODE
-// ==================================================
+// =================================================
 
-function chooseMode(mode) {
+function chooseMode(
+  mode
+) {
 
   settings.mode =
     mode;
 
-  document
-    .getElementById("modeA")
-    .classList.toggle(
-      "active",
-      mode === "A"
-    );
 
   document
-    .getElementById("modeB")
-    .classList.toggle(
+    .getElementById(
+      "modeA"
+    )
+    .classList
+    .toggle(
+
       "active",
+
+      mode === "A"
+
+    );
+
+
+  document
+    .getElementById(
+      "modeB"
+    )
+    .classList
+    .toggle(
+
+      "active",
+
       mode === "B"
+
     );
 
 }
 
 
-// ==================================================
-// LOAD MEDIA
-// ==================================================
+// =================================================
+// LOAD MEDIA FOLDER
+// =================================================
 
 async function loadMedia() {
 
   const token =
     getToken();
 
+
   if (!token)
     return;
 
 
   const apiURL =
+
     `https://api.github.com/repos/${OWNER}/${REPO}/contents/${MEDIA_FOLDER}?ref=${BRANCH}&ts=${Date.now()}`;
 
 
   try {
 
     const response =
+
       await fetch(
+
         apiURL,
+
         {
+
           headers:
             githubHeaders(),
 
           cache:
             "no-store"
+
         }
+
       );
 
 
     if (!response.ok) {
 
       throw new Error(
+
         "Could not read media folder."
+
       );
 
     }
@@ -707,49 +991,76 @@ async function loadMedia() {
 
 
     const playlist =
+
       playlistData.default ||
       {};
 
 
     const savedVisual =
+
       playlist.visualItems ||
       playlist.items ||
       [];
 
 
     const savedAudio =
+
       playlist.audioItems ||
       [];
 
 
     const defaultTransition =
+
       playlist.defaultTransition ||
       "fade";
 
 
+    // =================================================
+    // VISUAL FILES
+    // =================================================
+
     visualItems =
+
       files
+
         .filter(
+
           file =>
-            file.type === "file" &&
+
+            file.type === "file"
+
+            &&
+
             /\.(png|jpg|jpeg|webp|gif|mp4|webm)$/i
-              .test(file.name)
+              .test(
+                file.name
+              )
+
         )
+
         .map(
+
           file => {
 
+
             const saved =
+
               savedVisual.find(
+
                 x =>
                   x.file ===
                   file.name
+
               );
 
+
             const video =
+
               /\.(mp4|webm)$/i
                 .test(
                   file.name
                 );
+
 
             return {
 
@@ -760,6 +1071,7 @@ async function loadMedia() {
                 file.download_url,
 
               type:
+
                 video
                   ? "video"
                   : "image",
@@ -768,44 +1080,70 @@ async function loadMedia() {
                 !!saved,
 
               duration:
+
                 saved?.duration ||
                 8,
 
               videoMode:
+
                 saved?.videoMode ||
                 "full",
 
               transition:
+
                 saved?.transition ||
                 defaultTransition,
 
               muted:
+
                 saved?.muted ||
                 false
 
             };
 
           }
+
         );
 
 
+    // =================================================
+    // AUDIO FILES
+    // =================================================
+
     audioItems =
+
       files
+
         .filter(
+
           file =>
-            file.type === "file" &&
+
+            file.type === "file"
+
+            &&
+
             /\.(mp3|m4a|ogg|wav)$/i
-              .test(file.name)
+              .test(
+                file.name
+              )
+
         )
+
         .map(
+
           file => {
 
+
             const saved =
+
               savedAudio.find(
+
                 x =>
                   x.file ===
                   file.name
+
               );
+
 
             return {
 
@@ -821,31 +1159,42 @@ async function loadMedia() {
             };
 
           }
+
         );
 
 
     sortBySavedOrder(
+
       visualItems,
+
       savedVisual
+
     );
 
 
     sortBySavedOrder(
+
       audioItems,
+
       savedAudio
+
     );
 
 
     renderVisuals();
+
     renderAudio();
 
   }
 
+
   catch (error) {
 
     setStatus(
+
       "MEDIA ERROR — " +
       error.message
+
     );
 
   }
@@ -853,9 +1202,9 @@ async function loadMedia() {
 }
 
 
-// ==================================================
-// SORT
-// ==================================================
+// =================================================
+// SAVED ORDER
+// =================================================
 
 function sortBySavedOrder(
   items,
@@ -863,20 +1212,29 @@ function sortBySavedOrder(
 ) {
 
   items.sort(
+
     (a, b) => {
 
+
       const ai =
+
         saved.findIndex(
+
           x =>
             x.file ===
             a.file
+
         );
 
+
       const bi =
+
         saved.findIndex(
+
           x =>
             x.file ===
             b.file
+
         );
 
 
@@ -887,29 +1245,35 @@ function sortBySavedOrder(
         return 0;
 
 
-      if (ai === -1)
+      if (
+        ai === -1
+      )
         return 1;
 
 
-      if (bi === -1)
+      if (
+        bi === -1
+      )
         return -1;
 
 
       return ai - bi;
 
     }
+
   );
 
 }
 
 
-// ==================================================
+// =================================================
 // DEFAULT TRANSITION
-// ==================================================
+// =================================================
 
 function applyDefaultTransition() {
 
   const value =
+
     document
       .getElementById(
         "defaultTransition"
@@ -918,12 +1282,14 @@ function applyDefaultTransition() {
 
 
   visualItems.forEach(
+
     item => {
 
       item.transition =
         value;
 
     }
+
   );
 
 
@@ -932,21 +1298,25 @@ function applyDefaultTransition() {
 }
 
 
-// ==================================================
+// =================================================
 // VISUAL UI
-// ==================================================
+// =================================================
 
 function renderVisuals() {
 
   const container =
+
     document.getElementById(
       "visualList"
     );
 
 
-  if (!visualItems.length) {
+  if (
+    !visualItems.length
+  ) {
 
     container.innerHTML =
+
       "No images or videos found.";
 
     return;
@@ -959,29 +1329,40 @@ function renderVisuals() {
 
 
   visualItems.forEach(
+
     (item, index) => {
 
+
       const row =
+
         document.createElement(
           "div"
         );
+
 
       row.className =
         "media-row";
 
 
+      // CHECKBOX
+
       const checkbox =
+
         document.createElement(
           "input"
         );
 
+
       checkbox.type =
         "checkbox";
+
 
       checkbox.checked =
         item.selected;
 
+
       checkbox.onchange =
+
         () => {
 
           item.selected =
@@ -990,18 +1371,21 @@ function renderVisuals() {
         };
 
 
+      // PREVIEW
+
       let preview;
 
 
       if (
-        item.type ===
-        "image"
+        item.type === "image"
       ) {
 
         preview =
+
           document.createElement(
             "img"
           );
+
 
         preview.src =
           item.url;
@@ -1011,18 +1395,23 @@ function renderVisuals() {
       else {
 
         preview =
+
           document.createElement(
             "video"
           );
 
+
         preview.src =
           item.url;
+
 
         preview.muted =
           true;
 
+
         preview.controls =
           true;
+
 
         preview.preload =
           "metadata";
@@ -1034,35 +1423,49 @@ function renderVisuals() {
         "preview";
 
 
+      // INFO
+
       const info =
+
         document.createElement(
           "div"
         );
 
+
       info.innerHTML =
+
         `<div class="media-name">
+
           ${escapeHTML(item.file)}
+
         </div>
 
         <div class="media-type">
+
           ${item.type.toUpperCase()}
+
         </div>`;
 
 
+      // TIMING
+
       const timing =
+
         document.createElement(
           "div"
         );
 
 
       if (
-        item.type ===
-        "image"
+        item.type === "image"
       ) {
 
         timing.innerHTML =
+
           `<label class="small">
+
             Display
+
           </label>
 
           <input
@@ -1070,7 +1473,9 @@ function renderVisuals() {
             type="number"
             min="1"
             value="${item.duration}"
-          > sec`;
+          >
+
+          sec`;
 
 
         timing
@@ -1078,12 +1483,17 @@ function renderVisuals() {
             "input"
           )
           .onchange =
+
             e => {
 
               item.duration =
+
                 Number(
                   e.target.value
-                ) ||
+                )
+
+                ||
+
                 8;
 
             };
@@ -1093,18 +1503,24 @@ function renderVisuals() {
       else {
 
         const select =
+
           document.createElement(
             "select"
           );
 
 
         select.innerHTML =
+
           `<option value="full">
+
             Full Video
+
           </option>
 
           <option value="custom">
+
             Custom Time
+
           </option>`;
 
 
@@ -1113,20 +1529,26 @@ function renderVisuals() {
 
 
         const custom =
+
           document.createElement(
             "input"
           );
 
+
         custom.type =
           "number";
+
 
         custom.min =
           "1";
 
+
         custom.className =
           "duration-box";
 
+
         custom.value =
+
           item.duration ||
           10;
 
@@ -1134,19 +1556,24 @@ function renderVisuals() {
         function updateVideoUI() {
 
           custom.style.display =
+
             select.value ===
             "custom"
+
               ? "inline-block"
+
               : "none";
 
         }
 
 
         select.onchange =
+
           () => {
 
             item.videoMode =
               select.value;
+
 
             updateVideoUI();
 
@@ -1154,12 +1581,17 @@ function renderVisuals() {
 
 
         custom.onchange =
+
           () => {
 
             item.duration =
+
               Number(
                 custom.value
-              ) ||
+              )
+
+              ||
+
               10;
 
           };
@@ -1169,11 +1601,15 @@ function renderVisuals() {
           select
         );
 
+
         timing.appendChild(
+
           document.createElement(
             "br"
           )
+
         );
+
 
         timing.appendChild(
           custom
@@ -1185,36 +1621,63 @@ function renderVisuals() {
       }
 
 
+      // TRANSITION
+
       const transitionBox =
+
         document.createElement(
           "div"
         );
 
 
       const transition =
+
         document.createElement(
           "select"
         );
 
 
       transition.innerHTML =
+
         `
-        <option value="fade">Fade</option>
-        <option value="slideLeft">Slide Left</option>
-        <option value="slideRight">Slide Right</option>
-        <option value="zoomIn">Zoom In</option>
-        <option value="zoomOut">Zoom Out</option>
-        <option value="blur">Blur</option>
-        <option value="none">None</option>
+        <option value="fade">
+          Fade
+        </option>
+
+        <option value="slideLeft">
+          Slide Left
+        </option>
+
+        <option value="slideRight">
+          Slide Right
+        </option>
+
+        <option value="zoomIn">
+          Zoom In
+        </option>
+
+        <option value="zoomOut">
+          Zoom Out
+        </option>
+
+        <option value="blur">
+          Blur
+        </option>
+
+        <option value="none">
+          None
+        </option>
         `;
 
 
       transition.value =
+
         item.transition ||
         "fade";
 
 
       transition.onchange =
+
         () => {
 
           item.transition =
@@ -1228,7 +1691,10 @@ function renderVisuals() {
       );
 
 
+      // MUTE
+
       const muteBox =
+
         document.createElement(
           "div"
         );
@@ -1239,22 +1705,26 @@ function renderVisuals() {
 
 
       if (
-        item.type ===
-        "video"
+        item.type === "video"
       ) {
 
         const mute =
+
           document.createElement(
             "input"
           );
 
+
         mute.type =
           "checkbox";
+
 
         mute.checked =
           item.muted;
 
+
         mute.onchange =
+
           () => {
 
             item.muted =
@@ -1264,10 +1734,13 @@ function renderVisuals() {
 
 
         muteBox.appendChild(
+
           document.createTextNode(
             "Mute "
           )
+
         );
+
 
         muteBox.appendChild(
           mute
@@ -1278,16 +1751,26 @@ function renderVisuals() {
       else {
 
         muteBox.innerHTML =
-          `<span class="small">—</span>`;
+
+          `<span class="small">
+            —
+          </span>`;
 
       }
 
 
+      // ORDER
+
       const controls =
+
         createOrderButtons(
+
           visualItems,
+
           index,
+
           renderVisuals
+
         );
 
 
@@ -1295,25 +1778,31 @@ function renderVisuals() {
         checkbox
       );
 
+
       row.appendChild(
         preview
       );
+
 
       row.appendChild(
         info
       );
 
+
       row.appendChild(
         timing
       );
+
 
       row.appendChild(
         transitionBox
       );
 
+
       row.appendChild(
         muteBox
       );
+
 
       row.appendChild(
         controls
@@ -1325,26 +1814,31 @@ function renderVisuals() {
       );
 
     }
+
   );
 
 }
 
 
-// ==================================================
+// =================================================
 // AUDIO UI
-// ==================================================
+// =================================================
 
 function renderAudio() {
 
   const container =
+
     document.getElementById(
       "audioList"
     );
 
 
-  if (!audioItems.length) {
+  if (
+    !audioItems.length
+  ) {
 
     container.innerHTML =
+
       "<span class='small'>No audio files found.</span>";
 
     return;
@@ -1357,9 +1851,12 @@ function renderAudio() {
 
 
   audioItems.forEach(
+
     (item, index) => {
 
+
       const row =
+
         document.createElement(
           "div"
         );
@@ -1370,17 +1867,22 @@ function renderAudio() {
 
 
       const checkbox =
+
         document.createElement(
           "input"
         );
 
+
       checkbox.type =
         "checkbox";
+
 
       checkbox.checked =
         item.selected;
 
+
       checkbox.onchange =
+
         () => {
 
           item.selected =
@@ -1390,14 +1892,18 @@ function renderAudio() {
 
 
       const info =
+
         document.createElement(
           "div"
         );
 
 
       info.innerHTML =
+
         `<div>
+
           ${escapeHTML(item.file)}
+
         </div>
 
         <audio
@@ -1409,10 +1915,15 @@ function renderAudio() {
 
 
       const controls =
+
         createOrderButtons(
+
           audioItems,
+
           index,
+
           renderAudio
+
         );
 
 
@@ -1420,9 +1931,11 @@ function renderAudio() {
         checkbox
       );
 
+
       row.appendChild(
         info
       );
+
 
       row.appendChild(
         controls
@@ -1434,14 +1947,15 @@ function renderAudio() {
       );
 
     }
+
   );
 
 }
 
 
-// ==================================================
-// ORDER
-// ==================================================
+// =================================================
+// ORDER BUTTONS
+// =================================================
 
 function createOrderButtons(
   array,
@@ -1450,51 +1964,71 @@ function createOrderButtons(
 ) {
 
   const controls =
+
     document.createElement(
       "div"
     );
+
 
   controls.className =
     "order-buttons";
 
 
   const up =
+
     document.createElement(
       "button"
     );
 
+
   up.innerText =
     "↑";
 
+
   up.onclick =
+
     () => {
 
       moveItem(
+
         array,
+
         index,
+
         -1,
+
         renderFunction
+
       );
 
     };
 
 
   const down =
+
     document.createElement(
       "button"
     );
 
+
   down.innerText =
     "↓";
 
+
   down.onclick =
+
     () => {
 
       moveItem(
+
         array,
+
         index,
+
         1,
+
         renderFunction
+
       );
 
     };
@@ -1503,6 +2037,7 @@ function createOrderButtons(
   controls.appendChild(
     up
   );
+
 
   controls.appendChild(
     down
@@ -1514,6 +2049,10 @@ function createOrderButtons(
 }
 
 
+// =================================================
+// MOVE ITEM
+// =================================================
+
 function moveItem(
   array,
   index,
@@ -1522,14 +2061,20 @@ function moveItem(
 ) {
 
   const newIndex =
+
     index +
     direction;
 
 
   if (
-    newIndex < 0 ||
+
+    newIndex < 0
+
+    ||
+
     newIndex >=
       array.length
+
   )
     return;
 
@@ -1537,7 +2082,10 @@ function moveItem(
   [
     array[index],
     array[newIndex]
-  ] =
+  ]
+
+  =
+
   [
     array[newIndex],
     array[index]
@@ -1549,9 +2097,9 @@ function moveItem(
 }
 
 
-// ==================================================
-// SAVE
-// ==================================================
+// =================================================
+// SAVE / GO LIVE
+// =================================================
 
 async function goLive() {
 
@@ -1571,6 +2119,7 @@ async function goLive() {
 
 
   const saveButton =
+
     document.querySelector(
       ".save-button"
     );
@@ -1579,24 +2128,36 @@ async function goLive() {
   saveButton.disabled =
     true;
 
+
   saveButton.innerText =
     "SAVING...";
 
 
   try {
 
+
+    // =================================================
+    // SELECTED VISUALS
+    // =================================================
+
     const selectedVisuals =
+
       visualItems
+
         .filter(
+
           x =>
             x.selected
+
         )
+
         .map(
+
           item => {
 
+
             if (
-              item.type ===
-              "image"
+              item.type === "image"
             ) {
 
               return {
@@ -1641,16 +2202,27 @@ async function goLive() {
             };
 
           }
+
         );
 
 
+    // =================================================
+    // SELECTED AUDIO
+    // =================================================
+
     const selectedAudio =
+
       audioItems
+
         .filter(
+
           x =>
             x.selected
+
         )
+
         .map(
+
           item => ({
 
             file:
@@ -1660,8 +2232,13 @@ async function goLive() {
               "audio"
 
           })
+
         );
 
+
+    // =================================================
+    // PLAYLIST JSON
+    // =================================================
 
     playlistData.default = {
 
@@ -1669,6 +2246,7 @@ async function goLive() {
         "Default Playlist",
 
       defaultTransition:
+
         document
           .getElementById(
             "defaultTransition"
@@ -1684,6 +2262,7 @@ async function goLive() {
       backgroundMusic: {
 
         enabled:
+
           document
             .getElementById(
               "musicEnabled"
@@ -1691,6 +2270,7 @@ async function goLive() {
             .checked,
 
         videoBehavior:
+
           document
             .getElementById(
               "videoMusicBehavior"
@@ -1703,18 +2283,29 @@ async function goLive() {
 
 
     setStatus(
+
       "1/2 — Saving playlist..."
+
     );
 
 
     await updateGithubJSONWithRetry(
+
       PLAYLISTS_FILE,
+
       playlistData,
+
       "Update TV playlists"
+
     );
 
 
+    // =================================================
+    // SETTINGS JSON
+    // =================================================
+
     settings.googleSlidesUrl =
+
       document
         .getElementById(
           "googleSlidesUrl"
@@ -1724,6 +2315,7 @@ async function goLive() {
 
 
     settings.modeBMusicEnabled =
+
       document
         .getElementById(
           "modeBMusicEnabled"
@@ -1732,12 +2324,15 @@ async function goLive() {
 
 
     settings.refreshMinutes =
+
       Number(
+
         document
           .getElementById(
             "refreshMinutes"
           )
           .value
+
       );
 
 
@@ -1746,36 +2341,52 @@ async function goLive() {
 
 
     setStatus(
+
       "2/2 — Saving TV settings..."
+
     );
 
 
     await updateGithubJSONWithRetry(
+
       SETTINGS_FILE,
+
       settings,
+
       "Update TV settings"
+
     );
 
 
+    // =================================================
+    // VERIFY
+    // =================================================
+
     setStatus(
+
       "Verifying saved settings..."
+
     );
 
 
     settings =
+
       await readGithubJSON(
         SETTINGS_FILE
       );
 
 
     playlistData =
+
       await readGithubJSON(
         PLAYLISTS_FILE
       );
 
 
     setStatus(
+
       "SAVED & VERIFIED — TV settings are now live."
+
     );
 
 
@@ -1784,30 +2395,38 @@ async function goLive() {
 
 
     setTimeout(
+
       () => {
 
         saveButton.innerText =
           "SAVE / GO LIVE";
 
+
         saveButton.disabled =
           false;
 
       },
+
       2000
+
     );
 
   }
 
+
   catch (error) {
 
     setStatus(
+
       "SAVE FAILED — " +
       error.message
+
     );
 
 
     saveButton.innerText =
       "TRY AGAIN";
+
 
     saveButton.disabled =
       false;
@@ -1817,9 +2436,9 @@ async function goLive() {
 }
 
 
-// ==================================================
-// GITHUB WRITE
-// ==================================================
+// =================================================
+// WRITE JSON TO GITHUB
+// =================================================
 
 async function updateGithubJSON(
   filename,
@@ -1828,59 +2447,88 @@ async function updateGithubJSON(
 ) {
 
   const apiURL =
+
     `https://api.github.com/repos/${OWNER}/${REPO}/contents/${filename}`;
 
 
+  // GET CURRENT SHA
+
   const currentResponse =
+
     await fetch(
 
       apiURL +
       `?ref=${BRANCH}&ts=${Date.now()}`,
 
       {
+
         headers:
           githubHeaders(),
 
         cache:
           "no-store"
+
       }
+
     );
 
 
-  if (!currentResponse.ok) {
+  if (
+    !currentResponse.ok
+  ) {
 
     throw new Error(
+
       `Could not read current ${filename}`
+
     );
 
   }
 
 
   const currentFile =
+
     await currentResponse.json();
 
 
+  // ENCODE NEW JSON
+
   const text =
+
     JSON.stringify(
+
       data,
+
       null,
+
       2
+
     );
 
 
   const encoded =
+
     btoa(
+
       unescape(
+
         encodeURIComponent(
           text
         )
+
       )
+
     );
 
 
+  // SAVE
+
   const saveResponse =
+
     await fetch(
+
       apiURL,
+
       {
 
         method:
@@ -1896,6 +2544,7 @@ async function updateGithubJSON(
         },
 
         body:
+
           JSON.stringify({
 
             message:
@@ -1913,12 +2562,16 @@ async function updateGithubJSON(
           })
 
       }
+
     );
 
 
-  if (!saveResponse.ok) {
+  if (
+    !saveResponse.ok
+  ) {
 
     const error =
+
       await saveResponse.json();
 
 
@@ -1942,9 +2595,9 @@ async function updateGithubJSON(
 }
 
 
-// ==================================================
-// RETRY
-// ==================================================
+// =================================================
+// RETRY SAVE
+// =================================================
 
 async function updateGithubJSONWithRetry(
   filename,
@@ -1955,26 +2608,37 @@ async function updateGithubJSONWithRetry(
   const maxAttempts =
     3;
 
+
   let lastError;
 
 
   for (
+
     let attempt = 1;
+
     attempt <= maxAttempts;
+
     attempt++
+
   ) {
 
     try {
 
       await updateGithubJSON(
+
         filename,
+
         data,
+
         message
+
       );
+
 
       return;
 
     }
+
 
     catch (error) {
 
@@ -1993,19 +2657,27 @@ async function updateGithubJSONWithRetry(
 
 
       setStatus(
+
         `Temporary save issue with ${filename}.
 Retrying automatically...
 Attempt ${attempt + 1} of ${maxAttempts}`
+
       );
 
 
       await new Promise(
+
         resolve =>
+
           setTimeout(
+
             resolve,
+
             1500 *
             attempt
+
           )
+
       );
 
     }
@@ -2018,11 +2690,13 @@ Attempt ${attempt + 1} of ${maxAttempts}`
 }
 
 
-// ==================================================
-// MISC
-// ==================================================
+// =================================================
+// STATUS
+// =================================================
 
-function setStatus(text) {
+function setStatus(
+  text
+) {
 
   document
     .getElementById(
@@ -2034,27 +2708,38 @@ function setStatus(text) {
 }
 
 
-function escapeHTML(text) {
+// =================================================
+// SAFE HTML
+// =================================================
+
+function escapeHTML(
+  text
+) {
 
   const div =
+
     document.createElement(
       "div"
     );
 
+
   div.textContent =
     text;
+
 
   return div.innerHTML;
 
 }
 
 
-// ==================================================
-// START
-// ==================================================
+// =================================================
+// START CONTROL PAGE
+// =================================================
 
 loadSavedToken();
+
 loadEverything();
+
 
 </script>
 
