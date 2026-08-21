@@ -4,29 +4,55 @@
     "defaultTransition": "fade",
     "visualItems": [
       {
-        "file": "FUEL THE FIRE AI NEW.png",
+        "file": "TV DISPLAY - PUBLISHED.jpg",
         "type": "image",
-        "duration": 6,
+        "duration": 5,
         "transition": "fade"
       },
       {
-        "file": "BELLO + UNC - S26 MONEYBALL.jpg",
+        "file": "TV DISPLAY - PUBLISHED (5).jpg",
         "type": "image",
-        "duration": 6,
-        "transition": "fade"
-      },
-      {
-        "file": "ITF VIRTUAL TOUR VID.mov.mp4",
-        "type": "video",
-        "videoMode": "full",
         "duration": 8,
-        "transition": "fade",
-        "muted": true
+        "transition": "fade"
+      },
+      {
+        "file": "TV DISPLAY - PUBLISHED (1).jpg",
+        "type": "image",
+        "duration": 5,
+        "transition": "fade"
+      },
+      {
+        "file": "TV DISPLAY - PUBLISHED (3).jpg",
+        "type": "image",
+        "duration": 5,
+        "transition": "fade"
+      },
+      {
+        "file": "TV DISPLAY - PUBLISHED (2).jpg",
+        "type": "image",
+        "duration": 5,
+        "transition": "fade"
+      },
+      {
+        "file": "TV DISPLAY - PUBLISHED (4).jpg",
+        "type": "image",
+        "duration": 3,
+        "transition": "fade"
+      },
+      {
+        "file": "TV DISPLAY - PUBLISHED (6).jpg",
+        "type": "image",
+        "duration": 6,
+        "transition": "fade"
       }
     ],
     "audioItems": [
       {
         "file": "Ohio Players - Fire  TopPop.mp3",
+        "type": "audio"
+      },
+      {
+        "file": "Bill Withers - Lovely Day (Official Audio).mp3",
         "type": "audio"
       }
     ],
