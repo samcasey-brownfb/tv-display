@@ -1,652 +1,633 @@
 <!DOCTYPE html>
 <html>
 <head>
-
 <meta charset="UTF-8">
-
-<meta
-  name="viewport"
-  content="width=device-width, initial-scale=1.0"
->
-
-<title>Brown Football TV</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Brown Football TV Control</title>
 
 <style>
-
-html,
 body {
   margin: 0;
-  padding: 0;
-  width: 100%;
-  height: 100%;
-  background: black;
-  overflow: hidden;
-}
-
-#player {
-  position: relative;
-  width: 100vw;
-  height: 100vh;
-  background: black;
-  overflow: hidden;
-}
-
-.visual {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  background: black;
-}
-
-
-/* GOOGLE SLIDES
-   Extra height hides Google's bottom controls.
-   Change 55px later if needed.
-*/
-
-#slidesFrame {
-  position: absolute;
-  top: 0;
-  left: 0;
-
-  width: 100vw;
-  height: calc(100vh + 55px);
-
-  border: 0;
-}
-
-
-#message {
-  color: white;
-  font-family: Arial, sans-serif;
-  font-size: 3vw;
-  text-align: center;
-  padding-top: 40vh;
-}
-
-
-/* AUDIO START */
-
-#audioStart {
-  position: fixed;
-  inset: 0;
-
-  display: none;
-
-  align-items: center;
-  justify-content: center;
-
-  background: rgba(0,0,0,.90);
-
-  z-index: 9999;
-}
-
-#audioStartContent {
-  text-align: center;
+  background: #111;
   color: white;
   font-family: Arial, sans-serif;
 }
 
-#audioStart button {
-  padding: 28px 42px;
-  font-size: 26px;
-  font-weight: bold;
-  border: 0;
+.container {
+  max-width: 1100px;
+  margin: auto;
+  padding: 30px;
+}
+
+.card {
+  background: #222;
+  padding: 22px;
+  margin-bottom: 20px;
   border-radius: 10px;
+}
+
+.small {
+  color: #aaa;
+  font-size: 13px;
+}
+
+label {
+  display: block;
+  margin: 10px 0 6px;
+  font-weight: bold;
+}
+
+input, select {
+  box-sizing: border-box;
+  padding: 9px;
+  font-size: 15px;
+  border-radius: 6px;
+  border: none;
+}
+
+input[type="text"],
+input[type="password"],
+select {
+  width: 100%;
+}
+
+button {
+  padding: 10px 15px;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
   cursor: pointer;
 }
 
-#audioStart p {
-  margin-top: 18px;
+button:disabled {
+  opacity: .55;
+  cursor: not-allowed;
+}
+
+.mode-buttons {
+  display: flex;
+  gap: 12px;
+}
+
+.mode-button {
+  flex: 1;
+  background: #444;
+  color: white;
+}
+
+.mode-button.active {
+  background: #8b1e2d;
+}
+
+.save-button {
+  width: 100%;
+  background: #8b1e2d;
+  color: white;
+  font-size: 20px;
+  padding: 16px;
+}
+
+.media-row {
+  display: grid;
+  grid-template-columns: 35px 120px 1fr 150px 150px 115px 90px;
+  gap: 10px;
+  align-items: center;
+  background: #333;
+  padding: 12px;
+  margin-bottom: 10px;
+  border-radius: 8px;
+}
+
+.preview {
+  width: 120px;
+  height: 68px;
+  object-fit: contain;
+  background: black;
+  border-radius: 5px;
+}
+
+.media-name {
+  word-break: break-word;
+}
+
+.media-type {
+  color: #aaa;
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+.order-buttons {
+  display: flex;
+  gap: 5px;
+}
+
+.order-buttons button {
+  background: #555;
+  color: white;
+}
+
+.duration-box {
+  width: 65px;
+}
+
+.audio-row {
+  display: grid;
+  grid-template-columns: 35px 1fr 100px;
+  gap: 12px;
+  align-items: center;
+  background: #333;
+  padding: 12px;
+  margin-bottom: 8px;
+  border-radius: 8px;
+}
+
+.mute-box {
+  text-align: center;
+}
+
+#status {
+  white-space: pre-line;
   color: #ccc;
 }
-
-
-/* FADE */
-
-.enter-fade {
-  animation: fadeIn .8s ease;
-}
-
-.exit-fade {
-  animation: fadeOut .8s ease forwards;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-@keyframes fadeOut {
-  from { opacity: 1; }
-  to { opacity: 0; }
-}
-
-
-/* SLIDE LEFT */
-
-.enter-slideLeft {
-  animation: slideLeftIn .8s ease;
-}
-
-.exit-slideLeft {
-  animation: slideLeftOut .8s ease forwards;
-}
-
-@keyframes slideLeftIn {
-
-  from {
-    transform: translateX(100%);
-    opacity: 0;
-  }
-
-  to {
-    transform: translateX(0);
-    opacity: 1;
-  }
-
-}
-
-@keyframes slideLeftOut {
-
-  from {
-    transform: translateX(0);
-    opacity: 1;
-  }
-
-  to {
-    transform: translateX(-100%);
-    opacity: 0;
-  }
-
-}
-
-
-/* SLIDE RIGHT */
-
-.enter-slideRight {
-  animation: slideRightIn .8s ease;
-}
-
-.exit-slideRight {
-  animation: slideRightOut .8s ease forwards;
-}
-
-@keyframes slideRightIn {
-
-  from {
-    transform: translateX(-100%);
-    opacity: 0;
-  }
-
-  to {
-    transform: translateX(0);
-    opacity: 1;
-  }
-
-}
-
-@keyframes slideRightOut {
-
-  from {
-    transform: translateX(0);
-    opacity: 1;
-  }
-
-  to {
-    transform: translateX(100%);
-    opacity: 0;
-  }
-
-}
-
-
-/* ZOOM */
-
-.enter-zoomIn {
-  animation: zoomIn .8s ease;
-}
-
-.enter-zoomOut {
-  animation: zoomOut .8s ease;
-}
-
-.exit-zoomIn,
-.exit-zoomOut {
-  animation: fadeOut .8s ease forwards;
-}
-
-@keyframes zoomIn {
-
-  from {
-    transform: scale(.85);
-    opacity: 0;
-  }
-
-  to {
-    transform: scale(1);
-    opacity: 1;
-  }
-
-}
-
-@keyframes zoomOut {
-
-  from {
-    transform: scale(1.15);
-    opacity: 0;
-  }
-
-  to {
-    transform: scale(1);
-    opacity: 1;
-  }
-
-}
-
-
-/* BLUR */
-
-.enter-blur {
-  animation: blurIn .8s ease;
-}
-
-.exit-blur {
-  animation: blurOut .8s ease forwards;
-}
-
-@keyframes blurIn {
-
-  from {
-    filter: blur(18px);
-    opacity: 0;
-  }
-
-  to {
-    filter: blur(0);
-    opacity: 1;
-  }
-
-}
-
-@keyframes blurOut {
-
-  from {
-    filter: blur(0);
-    opacity: 1;
-  }
-
-  to {
-    filter: blur(18px);
-    opacity: 0;
-  }
-
-}
-
 </style>
-
 </head>
 
 <body>
 
+<div class="container">
 
-<div id="player">
+<h1>BROWN FOOTBALL TV</h1>
+<p class="small">Display Control</p>
 
-  <div id="message">
-    Loading TV Display...
+
+<div class="card">
+
+  <h2>GitHub Connection</h2>
+
+  <label>GitHub Token</label>
+  <input id="token" type="password">
+
+  <br><br>
+
+  <button onclick="saveToken()">
+    SAVE TOKEN ON THIS COMPUTER
+  </button>
+
+  <p class="small">
+    Stored only in this browser.
+  </p>
+
+</div>
+
+
+<div class="card">
+
+  <h2>Display Mode</h2>
+
+  <div class="mode-buttons">
+
+    <button
+      id="modeA"
+      class="mode-button"
+      onclick="chooseMode('A')">
+      MODE A — MEDIA PLAYLIST
+    </button>
+
+    <button
+      id="modeB"
+      class="mode-button"
+      onclick="chooseMode('B')">
+      MODE B — GOOGLE SLIDES
+    </button>
+
   </div>
 
 </div>
 
 
-<audio id="backgroundAudio"></audio>
+<div class="card">
 
+  <h2>Mode A — Visual Playlist</h2>
 
-<div id="audioStart">
+  <label>Default Transition</label>
 
-  <div id="audioStartContent">
+  <select
+    id="defaultTransition"
+    onchange="applyDefaultTransition()">
 
-    <button id="audioStartButton">
-      START DISPLAY WITH AUDIO
-    </button>
+    <option value="fade">Fade</option>
+    <option value="slideLeft">Slide Left</option>
+    <option value="slideRight">Slide Right</option>
+    <option value="zoomIn">Zoom In</option>
+    <option value="zoomOut">Zoom Out</option>
+    <option value="blur">Blur</option>
+    <option value="none">None</option>
 
-    <p>
-      Press once to allow background music and/or video sound.
-    </p>
+  </select>
 
+  <p class="small">
+    Changes all visual items at once. Individual items can still be changed below.
+  </p>
+
+  <button onclick="loadMedia()">
+    REFRESH MEDIA
+  </button>
+
+  <div
+    id="visualList"
+    style="margin-top:15px;">
+    Loading...
   </div>
+
+</div>
+
+
+<div class="card">
+
+  <h2>Audio Playlist</h2>
+
+  <p class="small">
+    Select the songs you want available. They play one after another and loop continuously.
+  </p>
+
+  <label>
+    <input
+      id="musicEnabled"
+      type="checkbox">
+    Enable Background Music in Mode A
+  </label>
+
+  <label>When a Mode A video with sound plays:</label>
+
+  <select id="videoMusicBehavior">
+
+    <option value="pause">
+      Pause background music during video
+    </option>
+
+    <option value="continue">
+      Play video audio + background music together
+    </option>
+
+    <option value="muteVideo">
+      Keep music playing and mute videos
+    </option>
+
+  </select>
+
+  <div
+    id="audioList"
+    style="margin-top:20px;">
+    Loading...
+  </div>
+
+</div>
+
+
+<div class="card">
+
+  <h2>Mode B — Google Slides</h2>
+
+  <label>Published Google Slides URL</label>
+
+  <input
+    id="googleSlidesUrl"
+    type="text">
+
+  <br><br>
+
+  <label>
+    <input
+      id="modeBMusicEnabled"
+      type="checkbox">
+    Play selected background music with Google Slides
+  </label>
+
+  <p class="small">
+    Mode B music is played by this TV website, not by Google Slides.
+  </p>
+
+</div>
+
+
+<div class="card">
+
+  <h2>TV Update Check</h2>
+
+  <p class="small">
+    TV checks for changes every 30 seconds, with this additional periodic safety sync.
+  </p>
+
+  <select id="refreshMinutes">
+
+    <option value="5">5 Minutes</option>
+    <option value="10">10 Minutes</option>
+    <option value="15">15 Minutes</option>
+    <option value="30">30 Minutes</option>
+    <option value="60">60 Minutes</option>
+
+  </select>
+
+</div>
+
+
+<button
+  class="save-button"
+  onclick="goLive()">
+  SAVE / GO LIVE
+</button>
+
+
+<div
+  class="card"
+  style="margin-top:20px;">
+
+  <h2>Status</h2>
+
+  <div id="status">
+    Loading...
+  </div>
+
+</div>
 
 </div>
 
 
 <script>
 
+const OWNER = "samcasey-brownfb";
+const REPO = "tv-display";
+const BRANCH = "main";
 
-// =================================================
-// GITHUB
-// =================================================
+const MEDIA_FOLDER = "media";
 
-const OWNER =
-  "samcasey-brownfb";
+const SETTINGS_FILE =
+  "settings.json";
 
-const REPO =
-  "tv-display";
-
-const BRANCH =
-  "main";
-
-const MEDIA_FOLDER =
-  "media";
-
-
-const RAW_BASE =
-  `https://raw.githubusercontent.com/${OWNER}/${REPO}/${BRANCH}`;
-
-
-// TV asks for changes every 30 seconds.
-
-const QUICK_CHECK_SECONDS =
-  30;
-
-
-// =================================================
-// STATE
-// =================================================
+const PLAYLISTS_FILE =
+  "playlists.json";
 
 let settings = {};
-let playlist = {};
+let playlistData = {};
 
 let visualItems = [];
 let audioItems = [];
 
-let currentVisual = 0;
-let currentAudio = 0;
 
-let modeAMusicEnabled = false;
-let modeBMusicEnabled = false;
+// ==================================================
+// TOKEN
+// ==================================================
 
-let videoMusicBehavior =
-  "pause";
+function saveToken() {
 
-let visualTimer = null;
+  const token =
+    document
+      .getElementById("token")
+      .value
+      .trim();
 
-let audioUnlocked =
-  false;
+  if (!token) {
 
-let quickCheckTimer = null;
-let fullSyncTimer = null;
+    alert(
+      "Paste your GitHub token first."
+    );
 
-let settingsSignature = "";
-let playlistSignature = "";
-let visualSignature = "";
-let audioSignature = "";
+    return;
+
+  }
+
+  localStorage.setItem(
+    "tvDisplayGithubToken",
+    token
+  );
+
+  setStatus(
+    "Token saved on this computer."
+  );
+
+  loadEverything();
+
+}
 
 
-// =================================================
-// RAW GITHUB URL HELPERS
-// =================================================
+function loadSavedToken() {
 
-function rawFileURL(
-  filename
-) {
+  const token =
+    localStorage.getItem(
+      "tvDisplayGithubToken"
+    );
 
-  return (
-    RAW_BASE +
-    "/" +
-    filename +
-    "?ts=" +
-    Date.now()
+  if (token) {
+
+    document
+      .getElementById("token")
+      .value =
+        token;
+
+  }
+
+}
+
+
+function getToken() {
+
+  return localStorage.getItem(
+    "tvDisplayGithubToken"
   );
 
 }
 
 
-function rawMediaURL(
-  filename
-) {
+// ==================================================
+// GITHUB HELPERS
+// ==================================================
 
-  return (
-    RAW_BASE +
-    "/" +
-    MEDIA_FOLDER +
-    "/" +
-    encodeURIComponent(filename) +
-    "?ts=" +
-    Date.now()
-  );
+function githubHeaders() {
 
-}
-
-
-// =================================================
-// START
-// =================================================
-
-async function startTV() {
-
-  try {
-
-    const fresh =
-      await fetchFreshData();
-
-
-    applyFreshData(
-      fresh.settings,
-      fresh.playlists,
-      true
-    );
-
-
-    startUpdateTimers();
-
-  }
-
-  catch (error) {
-
-    showMessage(
-      "Could not load TV display."
-    );
-
-  }
-
-}
-
-
-// =================================================
-// READ DIRECTLY FROM GITHUB REPO
-// =================================================
-
-async function fetchRepoJSON(
-  filename
-) {
-
-  const response =
-    await fetch(
-
-      rawFileURL(
-        filename
-      ),
-
-      {
-        cache:
-          "no-store"
-      }
-
-    );
-
-
-  if (!response.ok) {
-
-    throw new Error(
-      "Could not load " +
-      filename
-    );
-
-  }
-
-
-  return await
-    response.json();
-
-}
-
-
-async function fetchFreshData() {
-
-  const results =
-    await Promise.all([
-
-      fetchRepoJSON(
-        "settings.json"
-      ),
-
-      fetchRepoJSON(
-        "playlists.json"
-      )
-
-    ]);
-
+  const token =
+    getToken();
 
   return {
 
-    settings:
-      results[0],
+    "Authorization":
+      `Bearer ${token}`,
 
-    playlists:
-      results[1]
+    "Accept":
+      "application/vnd.github+json",
+
+    "X-GitHub-Api-Version":
+      "2022-11-28"
 
   };
 
 }
 
 
-// =================================================
-// UPDATE TIMERS
-// =================================================
+async function readGithubJSON(
+  filename
+) {
 
-function startUpdateTimers() {
+  const apiURL =
+    `https://api.github.com/repos/${OWNER}/${REPO}/contents/${filename}?ref=${BRANCH}&ts=${Date.now()}`;
 
-  clearInterval(
-    quickCheckTimer
-  );
+  const response =
+    await fetch(
+      apiURL,
+      {
+        headers:
+          githubHeaders(),
 
-
-  clearInterval(
-    fullSyncTimer
-  );
-
-
-  // ---------------------------------------------
-  // QUICK WATCHER
-  // ---------------------------------------------
-
-  quickCheckTimer =
-    setInterval(
-
-      () =>
-        checkForUpdates(
-          false
-        ),
-
-      QUICK_CHECK_SECONDS *
-      1000
-
+        cache:
+          "no-store"
+      }
     );
 
+  if (!response.ok) {
 
-  // ---------------------------------------------
-  // PERIODIC SAFETY SYNC
-  // ---------------------------------------------
-
-  const minutes =
-    settings.refreshMinutes ||
-    15;
-
-
-  fullSyncTimer =
-    setInterval(
-
-      () =>
-        checkForUpdates(
-          true
-        ),
-
-      minutes *
-      60 *
-      1000
-
+    throw new Error(
+      `Could not read ${filename} from GitHub`
     );
+
+  }
+
+  const file =
+    await response.json();
+
+  const decoded =
+    decodeURIComponent(
+      escape(
+        atob(
+          file.content.replace(
+            /\n/g,
+            ""
+          )
+        )
+      )
+    );
+
+  return JSON.parse(
+    decoded
+  );
 
 }
 
 
-// =================================================
-// CHECK FOR UPDATES
-// =================================================
+// ==================================================
+// LOAD
+// ==================================================
 
-async function checkForUpdates(
-  fullSync
-) {
+async function loadEverything() {
+
+  const token =
+    getToken();
+
+  if (!token) {
+
+    setStatus(
+      "Save your GitHub token to load the control panel."
+    );
+
+    return;
+
+  }
 
   try {
 
-    const fresh =
-      await fetchFreshData();
+    setStatus(
+      "Loading latest settings directly from GitHub..."
+    );
 
+    settings =
+      await readGithubJSON(
+        SETTINGS_FILE
+      );
 
-    const settingsSig =
-      JSON.stringify(
-        fresh.settings
+    playlistData =
+      await readGithubJSON(
+        PLAYLISTS_FILE
       );
 
 
-    const playlistSig =
-      JSON.stringify(
-        fresh.playlists
-      );
+    document
+      .getElementById(
+        "googleSlidesUrl"
+      )
+      .value =
+        settings.googleSlidesUrl ||
+        "";
 
 
-    const changed =
-
-      settingsSig !==
-        settingsSignature
-
-      ||
-
-      playlistSig !==
-        playlistSignature;
+    document
+      .getElementById(
+        "modeBMusicEnabled"
+      )
+      .checked =
+        settings.modeBMusicEnabled ||
+        false;
 
 
-    if (
-      changed ||
-      fullSync
-    ) {
+    document
+      .getElementById(
+        "refreshMinutes"
+      )
+      .value =
+        settings.refreshMinutes ||
+        15;
 
-      applyFreshData(
 
-        fresh.settings,
+    chooseMode(
+      settings.mode ||
+      "B"
+    );
 
-        fresh.playlists,
 
-        false
+    const playlist =
+      playlistData.default ||
+      {};
 
-      );
 
-    }
+    document
+      .getElementById(
+        "musicEnabled"
+      )
+      .checked =
+        playlist.backgroundMusic?.enabled ||
+        false;
+
+
+    document
+      .getElementById(
+        "videoMusicBehavior"
+      )
+      .value =
+        playlist.backgroundMusic?.videoBehavior ||
+        "pause";
+
+
+    document
+      .getElementById(
+        "defaultTransition"
+      )
+      .value =
+        playlist.defaultTransition ||
+        "fade";
+
+
+    await loadMedia();
+
+
+    setStatus(
+      "Loaded latest settings directly from GitHub.\nCurrent live mode: " +
+      (settings.mode || "B")
+    );
 
   }
 
   catch (error) {
 
-    // =================================================
-    // SAFETY MECHANISM
-    //
-    // If GitHub or Wi-Fi fails,
-    // DO NOT destroy the working display.
-    // =================================================
-
-    console.log(
-      "Update check failed. Current display continues."
+    setStatus(
+      "LOAD ERROR — " +
+      error.message
     );
 
   }
@@ -654,1174 +635,1426 @@ async function checkForUpdates(
 }
 
 
-// =================================================
-// MUSIC HELPER
-// =================================================
+// ==================================================
+// MODE
+// ==================================================
 
-function musicWantedForCurrentMode() {
+function chooseMode(mode) {
 
-  if (
-    settings.mode === "A"
-  ) {
+  settings.mode =
+    mode;
 
-    return (
-
-      modeAMusicEnabled &&
-
-      audioItems.length > 0
-
+  document
+    .getElementById("modeA")
+    .classList.toggle(
+      "active",
+      mode === "A"
     );
 
-  }
-
-
-  if (
-    settings.mode === "B"
-  ) {
-
-    return (
-
-      modeBMusicEnabled &&
-
-      audioItems.length > 0
-
+  document
+    .getElementById("modeB")
+    .classList.toggle(
+      "active",
+      mode === "B"
     );
-
-  }
-
-
-  return false;
 
 }
 
 
-// =================================================
-// MODE A AUDIO REQUIREMENT
-// =================================================
+// ==================================================
+// LOAD MEDIA
+// ==================================================
 
-function modeAAudioNeeded() {
+async function loadMedia() {
 
-  if (
-    musicWantedForCurrentMode()
-  ) {
+  const token =
+    getToken();
 
-    return true;
-
-  }
-
-
-  if (
-    videoMusicBehavior ===
-    "muteVideo"
-  ) {
-
-    return false;
-
-  }
-
-
-  return visualItems.some(
-
-    item =>
-      item.type === "video" &&
-      item.muted !== true
-
-  );
-
-}
-
-
-// =================================================
-// APPLY UPDATED SETTINGS
-// =================================================
-
-function applyFreshData(
-
-  freshSettings,
-  freshPlaylists,
-  initialLoad
-
-) {
-
-  const oldMode =
-    settings.mode;
-
-
-  const oldRefresh =
-    settings.refreshMinutes;
-
-
-  const oldSlidesURL =
-    settings.googleSlidesUrl;
-
-
-  const oldModeBMusic =
-    modeBMusicEnabled;
-
-
-  const newPlaylist =
-
-    freshPlaylists[
-
-      freshSettings.activePlaylist ||
-      "default"
-
-    ] || {};
-
-
-  const newVisualItems =
-
-    newPlaylist.visualItems ||
-    newPlaylist.items ||
-    [];
-
-
-  const newAudioItems =
-
-    newPlaylist.audioItems ||
-    [];
-
-
-  const newVisualSignature =
-    JSON.stringify(
-      newVisualItems
-    );
-
-
-  const newAudioSignature =
-    JSON.stringify(
-      newAudioItems
-    );
-
-
-  const modeChanged =
-    oldMode !==
-    freshSettings.mode;
-
-
-  const slidesChanged =
-    oldSlidesURL !==
-    freshSettings.googleSlidesUrl;
-
-
-  const visualChanged =
-    visualSignature !==
-    newVisualSignature;
-
-
-  const audioChanged =
-    audioSignature !==
-    newAudioSignature;
-
-
-  // ---------------------------------------------
-  // SAVE NEW STATE
-  // ---------------------------------------------
-
-  settings =
-    freshSettings;
-
-
-  playlist =
-    newPlaylist;
-
-
-  visualItems =
-    newVisualItems;
-
-
-  audioItems =
-    newAudioItems;
-
-
-  modeAMusicEnabled =
-    playlist.backgroundMusic?.enabled ||
-    false;
-
-
-  modeBMusicEnabled =
-    settings.modeBMusicEnabled ||
-    false;
-
-
-  videoMusicBehavior =
-    playlist.backgroundMusic?.videoBehavior ||
-    "pause";
-
-
-  settingsSignature =
-    JSON.stringify(
-      freshSettings
-    );
-
-
-  playlistSignature =
-    JSON.stringify(
-      freshPlaylists
-    );
-
-
-  visualSignature =
-    newVisualSignature;
-
-
-  audioSignature =
-    newAudioSignature;
-
-
-  // ---------------------------------------------
-  // UPDATE SAFETY SYNC TIMER
-  // ---------------------------------------------
-
-  if (
-
-    oldRefresh !==
-      settings.refreshMinutes
-
-    &&
-
-    !initialLoad
-
-  ) {
-
-    startUpdateTimers();
-
-  }
-
-
-// =================================================
-// MODE B — GOOGLE SLIDES
-// =================================================
-
-  if (
-    settings.mode === "B"
-  ) {
-
-    clearTimeout(
-      visualTimer
-    );
-
-
-    const modeBMusicChanged =
-      oldModeBMusic !==
-      modeBMusicEnabled;
-
-
-    // ---------------------------------------------
-    // ONLY RELOAD GOOGLE SLIDES IF ACTUALLY NEEDED
-    // ---------------------------------------------
-
-    if (
-
-      initialLoad ||
-
-      modeChanged ||
-
-      slidesChanged
-
-    ) {
-
-      loadGoogleSlides();
-
-    }
-
-
-    // ---------------------------------------------
-    // MODE B MUSIC
-    // ---------------------------------------------
-
-    if (
-      musicWantedForCurrentMode()
-    ) {
-
-      if (
-        !audioUnlocked
-      ) {
-
-        stopBackgroundAudio();
-
-        showAudioButton();
-
-      }
-
-      else if (
-
-        initialLoad ||
-
-        modeChanged ||
-
-        audioChanged ||
-
-        modeBMusicChanged
-
-      ) {
-
-        restartAudioPlaylist();
-
-      }
-
-    }
-
-    else {
-
-      stopBackgroundAudio();
-
-      hideAudioButton();
-
-    }
-
-
+  if (!token)
     return;
 
-  }
+
+  const apiURL =
+    `https://api.github.com/repos/${OWNER}/${REPO}/contents/${MEDIA_FOLDER}?ref=${BRANCH}&ts=${Date.now()}`;
 
 
-// =================================================
-// MODE A — MEDIA PLAYLIST
-// =================================================
+  try {
 
-  if (
-    settings.mode === "A"
-  ) {
+    const response =
+      await fetch(
+        apiURL,
+        {
+          headers:
+            githubHeaders(),
 
-
-    if (
-      !visualItems.length
-    ) {
-
-      showMessage(
-        "Mode A playlist is empty."
+          cache:
+            "no-store"
+        }
       );
 
-      return;
+
+    if (!response.ok) {
+
+      throw new Error(
+        "Could not read media folder."
+      );
 
     }
 
 
-    const needsAudio =
-      modeAAudioNeeded();
+    const files =
+      await response.json();
 
 
-    // ---------------------------------------------
-    // AUDIO NEEDS USER PERMISSION
-    // ---------------------------------------------
-
-    if (
-      needsAudio &&
-      !audioUnlocked
-    ) {
-
-      clearTimeout(
-        visualTimer
-      );
+    const playlist =
+      playlistData.default ||
+      {};
 
 
-      showAudioButton();
+    const savedVisual =
+      playlist.visualItems ||
+      playlist.items ||
+      [];
 
 
-      return;
-
-    }
-
-
-    hideAudioButton();
+    const savedAudio =
+      playlist.audioItems ||
+      [];
 
 
-    // ---------------------------------------------
-    // MODE A MUSIC
-    // ---------------------------------------------
+    const defaultTransition =
+      playlist.defaultTransition ||
+      "fade";
 
-    if (
-      musicWantedForCurrentMode()
-    ) {
 
-      if (
-
-        audioUnlocked &&
-
-        (
-          initialLoad ||
-          modeChanged ||
-          audioChanged
+    visualItems =
+      files
+        .filter(
+          file =>
+            file.type === "file" &&
+            /\.(png|jpg|jpeg|webp|gif|mp4|webm)$/i
+              .test(file.name)
         )
-
-      ) {
-
-        restartAudioPlaylist();
-
-      }
-
-    }
-
-    else {
-
-      stopBackgroundAudio();
-
-    }
-
-
-    // ---------------------------------------------
-    // MODE A VISUALS
-    // ---------------------------------------------
-
-    if (
-
-      initialLoad ||
-
-      modeChanged ||
-
-      visualChanged
-
-    ) {
-
-      currentVisual =
-        0;
-
-
-      playVisual();
-
-    }
-
-  }
-
-}
-
-
-// =================================================
-// GOOGLE SLIDES
-// =================================================
-
-function loadGoogleSlides() {
-
-  const player =
-    document.getElementById(
-      "player"
-    );
-
-
-  player.innerHTML = `
-    <iframe
-      id="slidesFrame"
-      src="${settings.googleSlidesUrl}"
-      allow="autoplay; encrypted-media"
-      allowfullscreen>
-    </iframe>
-  `;
-
-}
-
-
-// =================================================
-// MODE A PLAYER
-// =================================================
-
-function playVisual() {
-
-  clearTimeout(
-    visualTimer
-  );
-
-
-  if (
-    !visualItems.length
-  )
-    return;
-
-
-  const item =
-    visualItems[
-      currentVisual
-    ];
-
-
-  if (
-    item.type === "video"
-  ) {
-
-    playVideo(
-      item
-    );
-
-  }
-
-  else {
-
-    playImage(
-      item
-    );
-
-  }
-
-}
-
-
-// =================================================
-// IMAGE
-// =================================================
-
-function playImage(item) {
-
-  resumeMusicAfterVideo();
-
-
-  const player =
-    document.getElementById(
-      "player"
-    );
-
-
-  const image =
-    document.createElement(
-      "img"
-    );
-
-
-  // DIRECT FROM GITHUB REPO
-
-  image.src =
-    rawMediaURL(
-      item.file
-    );
-
-
-  image.className =
-    "visual";
-
-
-  applyEnterTransition(
-    image,
-    item.transition
-  );
-
-
-  image.onload =
-    () => {
-
-      player.innerHTML =
-        "";
-
-
-      player.appendChild(
-        image
-      );
-
-    };
-
-
-  image.onerror =
-    nextVisual;
-
-
-  const duration =
-
-    (
-      item.duration ||
-      8
-    ) *
-    1000;
-
-
-  visualTimer =
-    setTimeout(
-
-      () => {
-
-        applyExitTransition(
-          image,
-          item.transition
-        );
-
-
-        setTimeout(
-
-          nextVisual,
-
-          800
-
-        );
-
-      },
-
-      duration
-
-    );
-
-}
-
-
-// =================================================
-// VIDEO
-// =================================================
-
-function playVideo(item) {
-
-  clearTimeout(
-    visualTimer
-  );
-
-
-  const player =
-    document.getElementById(
-      "player"
-    );
-
-
-  const video =
-    document.createElement(
-      "video"
-    );
-
-
-  // DIRECT FROM GITHUB REPO
-
-  video.src =
-    rawMediaURL(
-      item.file
-    );
-
-
-  video.autoplay =
-    true;
-
-
-  video.playsInline =
-    true;
-
-
-  video.className =
-    "visual";
-
-
-  applyEnterTransition(
-    video,
-    item.transition
-  );
-
-
-  // ---------------------------------------------
-  // SOUND RULES
-  // ---------------------------------------------
-
-  if (
-    item.muted === true
-  ) {
-
-    video.muted =
-      true;
-
-  }
-
-
-  else if (
-    videoMusicBehavior ===
-    "muteVideo"
-  ) {
-
-    video.muted =
-      true;
-
-  }
-
-
-  else if (
-    videoMusicBehavior ===
-    "pause"
-  ) {
-
-    video.muted =
-      false;
-
-
-    pauseBackgroundMusic();
-
-  }
-
-
-  else {
-
-    video.muted =
-      false;
-
-  }
-
-
-  player.innerHTML =
-    "";
-
-
-  player.appendChild(
-    video
-  );
-
-
-  function finishVideo() {
-
-    applyExitTransition(
-      video,
-      item.transition
-    );
-
-
-    setTimeout(
-
-      () => {
-
-        resumeMusicAfterVideo();
-
-
-        nextVisual();
-
-      },
-
-      800
-
-    );
-
-  }
-
-
-  // FULL VIDEO
-
-  if (
-    item.videoMode !==
-    "custom"
-  ) {
-
-    video.onended =
-      finishVideo;
-
-  }
-
-
-  // CUSTOM VIDEO TIME
-
-  else {
-
-    visualTimer =
-      setTimeout(
-
-        () => {
-
-          video.pause();
-
-
-          finishVideo();
-
-        },
-
-        (
-          item.duration ||
-          10
-        ) *
-        1000
-
-      );
-
-  }
-
-
-  video
-    .play()
-    .catch(
-
-      () => {
-
-        // SAFETY FALLBACK:
-        // Play muted rather than freezing.
-
-        video.muted =
-          true;
-
-
-        video.play();
-
-      }
-
-    );
-
-}
-
-
-// =================================================
-// NEXT VISUAL
-// =================================================
-
-function nextVisual() {
-
-  clearTimeout(
-    visualTimer
-  );
-
-
-  if (
-    !visualItems.length
-  )
-    return;
-
-
-  currentVisual =
-
-    (
-      currentVisual +
-      1
-    ) %
-    visualItems.length;
-
-
-  playVisual();
-
-}
-
-
-// =================================================
-// AUDIO UNLOCK
-// =================================================
-
-document
-  .getElementById(
-    "audioStartButton"
-  )
-  .addEventListener(
-    "click",
-    unlockAudio
-  );
-
-
-function showAudioButton() {
-
-  document
-    .getElementById(
-      "audioStart"
-    )
-    .style.display =
-      "flex";
-
-}
-
-
-function hideAudioButton() {
-
-  document
-    .getElementById(
-      "audioStart"
-    )
-    .style.display =
-      "none";
-
-}
-
-
-function unlockAudio() {
-
-  audioUnlocked =
-    true;
-
-
-  hideAudioButton();
-
-
-  if (
-    musicWantedForCurrentMode()
-  ) {
-
-    restartAudioPlaylist();
-
-  }
-
-
-  if (
-    settings.mode === "A"
-  ) {
-
-    currentVisual =
-      0;
-
-
-    playVisual();
-
-  }
-
-}
-
-
-// =================================================
-// AUDIO PLAYLIST
-// =================================================
-
-function restartAudioPlaylist() {
-
-  if (
-
-    !musicWantedForCurrentMode()
-
-    ||
-
-    !audioUnlocked
-
-  )
-    return;
-
-
-  currentAudio =
-    0;
-
-
-  playCurrentAudio();
-
-}
-
-
-function playCurrentAudio() {
-
-  if (
-
-    !musicWantedForCurrentMode()
-
-    ||
-
-    !audioUnlocked
-
-    ||
-
-    !audioItems.length
-
-  )
-    return;
-
-
-  const audio =
-    document.getElementById(
-      "backgroundAudio"
-    );
-
-
-  const track =
-    audioItems[
-      currentAudio
-    ];
-
-
-  // DIRECT FROM GITHUB REPO
-
-  audio.src =
-    rawMediaURL(
-      track.file
-    );
-
-
-  audio.loop =
-    false;
-
-
-  audio.onended =
-    () => {
-
-      currentAudio =
-
-        (
-          currentAudio +
-          1
-        ) %
-        audioItems.length;
-
-
-      playCurrentAudio();
-
-    };
-
-
-  audio
-    .play()
-    .catch(
-
-      () => {
-
-        showAudioButton();
-
-      }
-
-    );
-
-}
-
-
-// =================================================
-// MUSIC AROUND MODE A VIDEO
-// =================================================
-
-function pauseBackgroundMusic() {
-
-  if (
-    !musicWantedForCurrentMode()
-  )
-    return;
-
-
-  const audio =
-    document.getElementById(
-      "backgroundAudio"
-    );
-
-
-  if (
-    !audio.paused
-  ) {
-
-    audio.pause();
-
-
-    audio.dataset
-      .pausedForVideo =
-      "true";
-
-  }
-
-}
-
-
-function resumeMusicAfterVideo() {
-
-  if (
-    !musicWantedForCurrentMode()
-  )
-    return;
-
-
-  const audio =
-    document.getElementById(
-      "backgroundAudio"
-    );
-
-
-  if (
-
-    audio.dataset
-      .pausedForVideo ===
-      "true"
-
-  ) {
-
-    delete audio.dataset
-      .pausedForVideo;
-
-
-    if (
-      audioUnlocked
-    ) {
-
-      audio
-        .play()
-        .catch(
-          () => {
-
-            showAudioButton();
+        .map(
+          file => {
+
+            const saved =
+              savedVisual.find(
+                x =>
+                  x.file ===
+                  file.name
+              );
+
+            const video =
+              /\.(mp4|webm)$/i
+                .test(
+                  file.name
+                );
+
+            return {
+
+              file:
+                file.name,
+
+              url:
+                file.download_url,
+
+              type:
+                video
+                  ? "video"
+                  : "image",
+
+              selected:
+                !!saved,
+
+              duration:
+                saved?.duration ||
+                8,
+
+              videoMode:
+                saved?.videoMode ||
+                "full",
+
+              transition:
+                saved?.transition ||
+                defaultTransition,
+
+              muted:
+                saved?.muted ||
+                false
+
+            };
 
           }
         );
 
-    }
+
+    audioItems =
+      files
+        .filter(
+          file =>
+            file.type === "file" &&
+            /\.(mp3|m4a|ogg|wav)$/i
+              .test(file.name)
+        )
+        .map(
+          file => {
+
+            const saved =
+              savedAudio.find(
+                x =>
+                  x.file ===
+                  file.name
+              );
+
+            return {
+
+              file:
+                file.name,
+
+              url:
+                file.download_url,
+
+              selected:
+                !!saved
+
+            };
+
+          }
+        );
+
+
+    sortBySavedOrder(
+      visualItems,
+      savedVisual
+    );
+
+
+    sortBySavedOrder(
+      audioItems,
+      savedAudio
+    );
+
+
+    renderVisuals();
+    renderAudio();
+
+  }
+
+  catch (error) {
+
+    setStatus(
+      "MEDIA ERROR — " +
+      error.message
+    );
 
   }
 
 }
 
 
-// =================================================
-// STOP MUSIC
-// =================================================
+// ==================================================
+// SORT
+// ==================================================
 
-function stopBackgroundAudio() {
+function sortBySavedOrder(
+  items,
+  saved
+) {
 
-  const audio =
+  items.sort(
+    (a, b) => {
+
+      const ai =
+        saved.findIndex(
+          x =>
+            x.file ===
+            a.file
+        );
+
+      const bi =
+        saved.findIndex(
+          x =>
+            x.file ===
+            b.file
+        );
+
+
+      if (
+        ai === -1 &&
+        bi === -1
+      )
+        return 0;
+
+
+      if (ai === -1)
+        return 1;
+
+
+      if (bi === -1)
+        return -1;
+
+
+      return ai - bi;
+
+    }
+  );
+
+}
+
+
+// ==================================================
+// DEFAULT TRANSITION
+// ==================================================
+
+function applyDefaultTransition() {
+
+  const value =
+    document
+      .getElementById(
+        "defaultTransition"
+      )
+      .value;
+
+
+  visualItems.forEach(
+    item => {
+
+      item.transition =
+        value;
+
+    }
+  );
+
+
+  renderVisuals();
+
+}
+
+
+// ==================================================
+// VISUAL UI
+// ==================================================
+
+function renderVisuals() {
+
+  const container =
     document.getElementById(
-      "backgroundAudio"
+      "visualList"
     );
 
 
-  audio.pause();
+  if (!visualItems.length) {
+
+    container.innerHTML =
+      "No images or videos found.";
+
+    return;
+
+  }
 
 
-  audio.removeAttribute(
-    "src"
+  container.innerHTML =
+    "";
+
+
+  visualItems.forEach(
+    (item, index) => {
+
+      const row =
+        document.createElement(
+          "div"
+        );
+
+      row.className =
+        "media-row";
+
+
+      const checkbox =
+        document.createElement(
+          "input"
+        );
+
+      checkbox.type =
+        "checkbox";
+
+      checkbox.checked =
+        item.selected;
+
+      checkbox.onchange =
+        () => {
+
+          item.selected =
+            checkbox.checked;
+
+        };
+
+
+      let preview;
+
+
+      if (
+        item.type ===
+        "image"
+      ) {
+
+        preview =
+          document.createElement(
+            "img"
+          );
+
+        preview.src =
+          item.url;
+
+      }
+
+      else {
+
+        preview =
+          document.createElement(
+            "video"
+          );
+
+        preview.src =
+          item.url;
+
+        preview.muted =
+          true;
+
+        preview.controls =
+          true;
+
+        preview.preload =
+          "metadata";
+
+      }
+
+
+      preview.className =
+        "preview";
+
+
+      const info =
+        document.createElement(
+          "div"
+        );
+
+      info.innerHTML =
+        `<div class="media-name">
+          ${escapeHTML(item.file)}
+        </div>
+
+        <div class="media-type">
+          ${item.type.toUpperCase()}
+        </div>`;
+
+
+      const timing =
+        document.createElement(
+          "div"
+        );
+
+
+      if (
+        item.type ===
+        "image"
+      ) {
+
+        timing.innerHTML =
+          `<label class="small">
+            Display
+          </label>
+
+          <input
+            class="duration-box"
+            type="number"
+            min="1"
+            value="${item.duration}"
+          > sec`;
+
+
+        timing
+          .querySelector(
+            "input"
+          )
+          .onchange =
+            e => {
+
+              item.duration =
+                Number(
+                  e.target.value
+                ) ||
+                8;
+
+            };
+
+      }
+
+      else {
+
+        const select =
+          document.createElement(
+            "select"
+          );
+
+
+        select.innerHTML =
+          `<option value="full">
+            Full Video
+          </option>
+
+          <option value="custom">
+            Custom Time
+          </option>`;
+
+
+        select.value =
+          item.videoMode;
+
+
+        const custom =
+          document.createElement(
+            "input"
+          );
+
+        custom.type =
+          "number";
+
+        custom.min =
+          "1";
+
+        custom.className =
+          "duration-box";
+
+        custom.value =
+          item.duration ||
+          10;
+
+
+        function updateVideoUI() {
+
+          custom.style.display =
+            select.value ===
+            "custom"
+              ? "inline-block"
+              : "none";
+
+        }
+
+
+        select.onchange =
+          () => {
+
+            item.videoMode =
+              select.value;
+
+            updateVideoUI();
+
+          };
+
+
+        custom.onchange =
+          () => {
+
+            item.duration =
+              Number(
+                custom.value
+              ) ||
+              10;
+
+          };
+
+
+        timing.appendChild(
+          select
+        );
+
+        timing.appendChild(
+          document.createElement(
+            "br"
+          )
+        );
+
+        timing.appendChild(
+          custom
+        );
+
+
+        updateVideoUI();
+
+      }
+
+
+      const transitionBox =
+        document.createElement(
+          "div"
+        );
+
+
+      const transition =
+        document.createElement(
+          "select"
+        );
+
+
+      transition.innerHTML =
+        `
+        <option value="fade">Fade</option>
+        <option value="slideLeft">Slide Left</option>
+        <option value="slideRight">Slide Right</option>
+        <option value="zoomIn">Zoom In</option>
+        <option value="zoomOut">Zoom Out</option>
+        <option value="blur">Blur</option>
+        <option value="none">None</option>
+        `;
+
+
+      transition.value =
+        item.transition ||
+        "fade";
+
+
+      transition.onchange =
+        () => {
+
+          item.transition =
+            transition.value;
+
+        };
+
+
+      transitionBox.appendChild(
+        transition
+      );
+
+
+      const muteBox =
+        document.createElement(
+          "div"
+        );
+
+
+      muteBox.className =
+        "mute-box";
+
+
+      if (
+        item.type ===
+        "video"
+      ) {
+
+        const mute =
+          document.createElement(
+            "input"
+          );
+
+        mute.type =
+          "checkbox";
+
+        mute.checked =
+          item.muted;
+
+        mute.onchange =
+          () => {
+
+            item.muted =
+              mute.checked;
+
+          };
+
+
+        muteBox.appendChild(
+          document.createTextNode(
+            "Mute "
+          )
+        );
+
+        muteBox.appendChild(
+          mute
+        );
+
+      }
+
+      else {
+
+        muteBox.innerHTML =
+          `<span class="small">—</span>`;
+
+      }
+
+
+      const controls =
+        createOrderButtons(
+          visualItems,
+          index,
+          renderVisuals
+        );
+
+
+      row.appendChild(
+        checkbox
+      );
+
+      row.appendChild(
+        preview
+      );
+
+      row.appendChild(
+        info
+      );
+
+      row.appendChild(
+        timing
+      );
+
+      row.appendChild(
+        transitionBox
+      );
+
+      row.appendChild(
+        muteBox
+      );
+
+      row.appendChild(
+        controls
+      );
+
+
+      container.appendChild(
+        row
+      );
+
+    }
   );
 
 }
 
 
-// =================================================
-// TRANSITIONS
-// =================================================
+// ==================================================
+// AUDIO UI
+// ==================================================
 
-function applyEnterTransition(
-  element,
-  transition
+function renderAudio() {
+
+  const container =
+    document.getElementById(
+      "audioList"
+    );
+
+
+  if (!audioItems.length) {
+
+    container.innerHTML =
+      "<span class='small'>No audio files found.</span>";
+
+    return;
+
+  }
+
+
+  container.innerHTML =
+    "";
+
+
+  audioItems.forEach(
+    (item, index) => {
+
+      const row =
+        document.createElement(
+          "div"
+        );
+
+
+      row.className =
+        "audio-row";
+
+
+      const checkbox =
+        document.createElement(
+          "input"
+        );
+
+      checkbox.type =
+        "checkbox";
+
+      checkbox.checked =
+        item.selected;
+
+      checkbox.onchange =
+        () => {
+
+          item.selected =
+            checkbox.checked;
+
+        };
+
+
+      const info =
+        document.createElement(
+          "div"
+        );
+
+
+      info.innerHTML =
+        `<div>
+          ${escapeHTML(item.file)}
+        </div>
+
+        <audio
+          controls
+          preload="metadata"
+          src="${item.url}"
+          style="width:100%; margin-top:7px;">
+        </audio>`;
+
+
+      const controls =
+        createOrderButtons(
+          audioItems,
+          index,
+          renderAudio
+        );
+
+
+      row.appendChild(
+        checkbox
+      );
+
+      row.appendChild(
+        info
+      );
+
+      row.appendChild(
+        controls
+      );
+
+
+      container.appendChild(
+        row
+      );
+
+    }
+  );
+
+}
+
+
+// ==================================================
+// ORDER
+// ==================================================
+
+function createOrderButtons(
+  array,
+  index,
+  renderFunction
 ) {
 
+  const controls =
+    document.createElement(
+      "div"
+    );
+
+  controls.className =
+    "order-buttons";
+
+
+  const up =
+    document.createElement(
+      "button"
+    );
+
+  up.innerText =
+    "↑";
+
+  up.onclick =
+    () => {
+
+      moveItem(
+        array,
+        index,
+        -1,
+        renderFunction
+      );
+
+    };
+
+
+  const down =
+    document.createElement(
+      "button"
+    );
+
+  down.innerText =
+    "↓";
+
+  down.onclick =
+    () => {
+
+      moveItem(
+        array,
+        index,
+        1,
+        renderFunction
+      );
+
+    };
+
+
+  controls.appendChild(
+    up
+  );
+
+  controls.appendChild(
+    down
+  );
+
+
+  return controls;
+
+}
+
+
+function moveItem(
+  array,
+  index,
+  direction,
+  renderFunction
+) {
+
+  const newIndex =
+    index +
+    direction;
+
+
   if (
-
-    !transition ||
-
-    transition ===
-    "none"
-
+    newIndex < 0 ||
+    newIndex >=
+      array.length
   )
     return;
 
 
-  element.classList.add(
-    `enter-${transition}`
-  );
+  [
+    array[index],
+    array[newIndex]
+  ] =
+  [
+    array[newIndex],
+    array[index]
+  ];
+
+
+  renderFunction();
 
 }
 
 
-function applyExitTransition(
-  element,
-  transition
-) {
+// ==================================================
+// SAVE
+// ==================================================
 
-  if (
+async function goLive() {
 
-    !transition ||
+  const token =
+    getToken();
 
-    transition ===
-    "none"
 
-  )
+  if (!token) {
+
+    alert(
+      "Save your GitHub token first."
+    );
+
     return;
 
+  }
 
-  element.classList.add(
-    `exit-${transition}`
-  );
+
+  const saveButton =
+    document.querySelector(
+      ".save-button"
+    );
+
+
+  saveButton.disabled =
+    true;
+
+  saveButton.innerText =
+    "SAVING...";
+
+
+  try {
+
+    const selectedVisuals =
+      visualItems
+        .filter(
+          x =>
+            x.selected
+        )
+        .map(
+          item => {
+
+            if (
+              item.type ===
+              "image"
+            ) {
+
+              return {
+
+                file:
+                  item.file,
+
+                type:
+                  "image",
+
+                duration:
+                  item.duration,
+
+                transition:
+                  item.transition
+
+              };
+
+            }
+
+
+            return {
+
+              file:
+                item.file,
+
+              type:
+                "video",
+
+              videoMode:
+                item.videoMode,
+
+              duration:
+                item.duration,
+
+              transition:
+                item.transition,
+
+              muted:
+                item.muted
+
+            };
+
+          }
+        );
+
+
+    const selectedAudio =
+      audioItems
+        .filter(
+          x =>
+            x.selected
+        )
+        .map(
+          item => ({
+
+            file:
+              item.file,
+
+            type:
+              "audio"
+
+          })
+        );
+
+
+    playlistData.default = {
+
+      name:
+        "Default Playlist",
+
+      defaultTransition:
+        document
+          .getElementById(
+            "defaultTransition"
+          )
+          .value,
+
+      visualItems:
+        selectedVisuals,
+
+      audioItems:
+        selectedAudio,
+
+      backgroundMusic: {
+
+        enabled:
+          document
+            .getElementById(
+              "musicEnabled"
+            )
+            .checked,
+
+        videoBehavior:
+          document
+            .getElementById(
+              "videoMusicBehavior"
+            )
+            .value
+
+      }
+
+    };
+
+
+    setStatus(
+      "1/2 — Saving playlist..."
+    );
+
+
+    await updateGithubJSONWithRetry(
+      PLAYLISTS_FILE,
+      playlistData,
+      "Update TV playlists"
+    );
+
+
+    settings.googleSlidesUrl =
+      document
+        .getElementById(
+          "googleSlidesUrl"
+        )
+        .value
+        .trim();
+
+
+    settings.modeBMusicEnabled =
+      document
+        .getElementById(
+          "modeBMusicEnabled"
+        )
+        .checked;
+
+
+    settings.refreshMinutes =
+      Number(
+        document
+          .getElementById(
+            "refreshMinutes"
+          )
+          .value
+      );
+
+
+    settings.activePlaylist =
+      "default";
+
+
+    setStatus(
+      "2/2 — Saving TV settings..."
+    );
+
+
+    await updateGithubJSONWithRetry(
+      SETTINGS_FILE,
+      settings,
+      "Update TV settings"
+    );
+
+
+    setStatus(
+      "Verifying saved settings..."
+    );
+
+
+    settings =
+      await readGithubJSON(
+        SETTINGS_FILE
+      );
+
+
+    playlistData =
+      await readGithubJSON(
+        PLAYLISTS_FILE
+      );
+
+
+    setStatus(
+      "SAVED & VERIFIED — TV settings are now live."
+    );
+
+
+    saveButton.innerText =
+      "SAVED ✓";
+
+
+    setTimeout(
+      () => {
+
+        saveButton.innerText =
+          "SAVE / GO LIVE";
+
+        saveButton.disabled =
+          false;
+
+      },
+      2000
+    );
+
+  }
+
+  catch (error) {
+
+    setStatus(
+      "SAVE FAILED — " +
+      error.message
+    );
+
+
+    saveButton.innerText =
+      "TRY AGAIN";
+
+    saveButton.disabled =
+      false;
+
+  }
 
 }
 
 
-// =================================================
-// MESSAGE
-// =================================================
+// ==================================================
+// GITHUB WRITE
+// ==================================================
 
-function showMessage(text) {
+async function updateGithubJSON(
+  filename,
+  data,
+  message
+) {
+
+  const apiURL =
+    `https://api.github.com/repos/${OWNER}/${REPO}/contents/${filename}`;
+
+
+  const currentResponse =
+    await fetch(
+
+      apiURL +
+      `?ref=${BRANCH}&ts=${Date.now()}`,
+
+      {
+        headers:
+          githubHeaders(),
+
+        cache:
+          "no-store"
+      }
+    );
+
+
+  if (!currentResponse.ok) {
+
+    throw new Error(
+      `Could not read current ${filename}`
+    );
+
+  }
+
+
+  const currentFile =
+    await currentResponse.json();
+
+
+  const text =
+    JSON.stringify(
+      data,
+      null,
+      2
+    );
+
+
+  const encoded =
+    btoa(
+      unescape(
+        encodeURIComponent(
+          text
+        )
+      )
+    );
+
+
+  const saveResponse =
+    await fetch(
+      apiURL,
+      {
+
+        method:
+          "PUT",
+
+        headers: {
+
+          ...githubHeaders(),
+
+          "Content-Type":
+            "application/json"
+
+        },
+
+        body:
+          JSON.stringify({
+
+            message:
+              message,
+
+            content:
+              encoded,
+
+            sha:
+              currentFile.sha,
+
+            branch:
+              BRANCH
+
+          })
+
+      }
+    );
+
+
+  if (!saveResponse.ok) {
+
+    const error =
+      await saveResponse.json();
+
+
+    throw new Error(
+
+      `${filename}: ` +
+
+      (
+        error.message ||
+        "GitHub save failed"
+      )
+
+    );
+
+  }
+
+
+  return await
+    saveResponse.json();
+
+}
+
+
+// ==================================================
+// RETRY
+// ==================================================
+
+async function updateGithubJSONWithRetry(
+  filename,
+  data,
+  message
+) {
+
+  const maxAttempts =
+    3;
+
+  let lastError;
+
+
+  for (
+    let attempt = 1;
+    attempt <= maxAttempts;
+    attempt++
+  ) {
+
+    try {
+
+      await updateGithubJSON(
+        filename,
+        data,
+        message
+      );
+
+      return;
+
+    }
+
+    catch (error) {
+
+      lastError =
+        error;
+
+
+      if (
+        attempt ===
+        maxAttempts
+      ) {
+
+        break;
+
+      }
+
+
+      setStatus(
+        `Temporary save issue with ${filename}.
+Retrying automatically...
+Attempt ${attempt + 1} of ${maxAttempts}`
+      );
+
+
+      await new Promise(
+        resolve =>
+          setTimeout(
+            resolve,
+            1500 *
+            attempt
+          )
+      );
+
+    }
+
+  }
+
+
+  throw lastError;
+
+}
+
+
+// ==================================================
+// MISC
+// ==================================================
+
+function setStatus(text) {
 
   document
     .getElementById(
-      "player"
+      "status"
     )
-    .innerHTML =
-
-      `<div id="message">
-        ${text}
-      </div>`;
+    .innerText =
+      text;
 
 }
 
 
-// =================================================
-// GO
-// =================================================
+function escapeHTML(text) {
 
-startTV();
+  const div =
+    document.createElement(
+      "div"
+    );
+
+  div.textContent =
+    text;
+
+  return div.innerHTML;
+
+}
+
+
+// ==================================================
+// START
+// ==================================================
+
+loadSavedToken();
+loadEverything();
 
 </script>
 
