@@ -12,31 +12,37 @@
       {
         "file": "8.22 calendar.jpg",
         "type": "image",
-        "duration": 8,
-        "transition": "fade"
-      },
-      {
-        "file": "TV DISPLAY - PUBLISHED (3).jpg",
-        "type": "image",
         "duration": 5,
         "transition": "fade"
       },
       {
         "file": "TV DISPLAY - PUBLISHED (2).jpg",
         "type": "image",
-        "duration": 5,
+        "duration": 6,
         "transition": "fade"
       },
       {
         "file": "TRUBRU TEAMS.jpg",
         "type": "image",
+        "duration": 7,
+        "transition": "fade"
+      },
+      {
+        "file": "26 Practice Field Geo-P1 PRE PRACT TEAMS.jpg",
+        "type": "image",
         "duration": 10,
         "transition": "fade"
       },
       {
-        "file": "run test.png",
+        "file": "TV DISPLAY - PUBLISHED (1).jpg",
         "type": "image",
-        "duration": 8,
+        "duration": 12,
+        "transition": "fade"
+      },
+      {
+        "file": "TV DISPLAY - PUBLISHED.jpg",
+        "type": "image",
+        "duration": 12,
         "transition": "fade"
       }
     ],
@@ -55,7 +61,7 @@
       }
     ],
     "backgroundMusic": {
-      "enabled": true,
+      "enabled": false,
       "videoBehavior": "muteVideo"
     }
   }
