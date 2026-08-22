@@ -28,9 +28,15 @@
         "transition": "fade"
       },
       {
-        "file": "TRUBRU DRAFT BOARD.jpg",
+        "file": "TRUBRU TEAMS.jpg",
         "type": "image",
-        "duration": 11,
+        "duration": 10,
+        "transition": "fade"
+      },
+      {
+        "file": "run test.png",
+        "type": "image",
+        "duration": 8,
         "transition": "fade"
       }
     ],
