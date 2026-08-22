@@ -10,15 +10,9 @@
         "transition": "fade"
       },
       {
-        "file": "TV DISPLAY - PUBLISHED (5).jpg",
+        "file": "8.22 calendar.jpg",
         "type": "image",
         "duration": 8,
-        "transition": "fade"
-      },
-      {
-        "file": "TV DISPLAY - PUBLISHED (1).jpg",
-        "type": "image",
-        "duration": 5,
         "transition": "fade"
       },
       {
@@ -34,25 +28,23 @@
         "transition": "fade"
       },
       {
-        "file": "TV DISPLAY - PUBLISHED (4).jpg",
+        "file": "TRUBRU DRAFT BOARD.jpg",
         "type": "image",
-        "duration": 3,
-        "transition": "fade"
-      },
-      {
-        "file": "TV DISPLAY - PUBLISHED (6).jpg",
-        "type": "image",
-        "duration": 6,
+        "duration": 11,
         "transition": "fade"
       }
     ],
     "audioItems": [
       {
-        "file": "Ohio Players - Fire  TopPop.mp3",
+        "file": "ACDC - Dirty Deeds Done Dirt Cheap (Official Audio).mp3",
         "type": "audio"
       },
       {
-        "file": "Bill Withers - Lovely Day (Official Audio).mp3",
+        "file": "Jack White - High Ball Stepper (Lazaretto Album Track).mp3",
+        "type": "audio"
+      },
+      {
+        "file": "Metallica - Nothing else matter lyrics.mp3",
         "type": "audio"
       }
     ],
