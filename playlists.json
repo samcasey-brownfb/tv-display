@@ -4,45 +4,45 @@
     "defaultTransition": "fade",
     "visualItems": [
       {
-        "file": "TV DISPLAY - PUBLISHED (7).jpg",
-        "type": "image",
-        "duration": 5,
-        "transition": "fade"
-      },
-      {
-        "file": "8.22 calendar.jpg",
-        "type": "image",
-        "duration": 5,
-        "transition": "fade"
-      },
-      {
-        "file": "TV DISPLAY - PUBLISHED (2).jpg",
+        "file": "TRUBRU TEAMS.jpg",
         "type": "image",
         "duration": 6,
         "transition": "fade"
       },
       {
-        "file": "TRUBRU TEAMS.jpg",
+        "file": "26 camp - danny thompson hammer.gif",
+        "type": "image",
+        "duration": 8,
+        "transition": "fade"
+      },
+      {
+        "file": "8.23 SCHEDULE.jpg",
+        "type": "image",
+        "duration": 5,
+        "transition": "fade"
+      },
+      {
+        "file": "IRON MEN OF BROWN FOR T SHIRT.png",
+        "type": "image",
+        "duration": 5,
+        "transition": "fade"
+      },
+      {
+        "file": "ai. ftf run test.png",
+        "type": "image",
+        "duration": 6,
+        "transition": "fade"
+      },
+      {
+        "file": "ai. ftf tougher for longer.png",
         "type": "image",
         "duration": 7,
         "transition": "fade"
       },
       {
-        "file": "26 Practice Field Geo-P1 PRE PRACT TEAMS.jpg",
+        "file": "trubru scoreboard 8.23.jpg",
         "type": "image",
         "duration": 10,
-        "transition": "fade"
-      },
-      {
-        "file": "TV DISPLAY - PUBLISHED (1).jpg",
-        "type": "image",
-        "duration": 12,
-        "transition": "fade"
-      },
-      {
-        "file": "TV DISPLAY - PUBLISHED.jpg",
-        "type": "image",
-        "duration": 12,
         "transition": "fade"
       }
     ],
