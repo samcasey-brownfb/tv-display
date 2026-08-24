@@ -618,24 +618,26 @@ async function checkForUpdates(
         playlistSignature;
 
 
-    if (
-      changed ||
-      fullSync
-    ) {
+    // Only touch the live player when something actually changed.
+// The periodic fullSync still verifies that GitHub is reachable
+// and that the JSON can be read, but it does NOT restart/reapply
+// a perfectly good display or audio session.
 
-      applyFreshData(
+if (
+  changed
+) {
 
-        fresh.settings,
+  applyFreshData(
 
-        fresh.playlists,
+    fresh.settings,
 
-        false
+    fresh.playlists,
 
-      );
+    false
 
-    }
+  );
 
-  }
+}
 
   catch (error) {
 
@@ -1665,19 +1667,60 @@ function playCurrentAudio() {
     };
 
 
-  audio
-    .play()
-    .catch(
+ audio
+  .play()
+  .catch(
 
-      () => {
+    () => {
+
+      // If the user has NEVER unlocked audio,
+      // show the start button normally.
+
+      if (
+        !audioUnlocked
+      ) {
 
         showAudioButton();
 
+        return;
+
       }
 
-    );
 
-}
+      // If audio WAS already unlocked earlier in this
+      // browser session, do not throw the full-screen
+      // audio prompt back onto the TV because of a
+      // temporary playback hiccup.
+
+      console.log(
+        "Audio playback retrying without resetting the display."
+      );
+
+
+      setTimeout(
+        () => {
+
+          audio
+            .play()
+            .catch(
+              () => {
+
+                console.log(
+                  "Audio retry failed. Display continues without interruption."
+                );
+
+              }
+            );
+
+        },
+
+        1500
+
+      );
+
+    }
+
+  );
 
 
 // =================================================
