@@ -3,6 +3,6 @@
   "refreshMinutes": 15,
   "googleSlidesUrl": "https://docs.google.com/presentation/d/e/2PACX-1vQ97ysSFmMDfOZ33bLNT0p6fUXn30JezdBV73GXpEausFG77W6Mb4melePef5_T2Jcg-uKY8hwed5HM/embed?start=true&loop=true&delayms=7000",
   "activePlaylist": "default",
-  "modeBMusicEnabled": true,
-  "modeBAudioSource": "media"
+  "modeBMusicEnabled": false,
+  "modeBAudioSource": "none"
 }
