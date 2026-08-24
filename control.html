@@ -404,45 +404,49 @@ button:disabled {
 
 <div class="card">
 
-  <h2>
-    Mode B — Google Slides
-  </h2>
+  <h2>Mode B — Google Slides</h2>
 
-
-  <label>
-    Published Google Slides URL
-  </label>
-
+  <label>Published Google Slides URL</label>
 
   <input
     id="googleSlidesUrl"
     type="text"
   >
 
-
   <br><br>
 
+  <label>Audio Source</label>
 
-  <label>
+  <select id="modeBAudioSource">
 
-    <input
-      id="modeBMusicEnabled"
-      type="checkbox"
-    >
+    <option value="none">
+      No Audio
+    </option>
 
-    Play selected background music with Google Slides
+    <option value="media">
+      Background Music from Media Folder
+    </option>
 
-  </label>
+    <option value="slides">
+      Google Slides Embedded Audio
+    </option>
 
+  </select>
 
   <p class="small">
+    <strong>No Audio:</strong>
+    Google Slides plays silently.
+    <br><br>
 
-    This uses the songs selected in the Audio Playlist
-    above.
+    <strong>Background Music from Media Folder:</strong>
+    Uses the MP3/audio files selected in the Audio Playlist above.
+    Songs play one after another and loop continuously.
+    This is the recommended audio option.
+    <br><br>
 
-    The music is played by the TV website rather than
-    by Google Slides itself.
-
+    <strong>Google Slides Embedded Audio:</strong>
+    Allows Google Slides to attempt to play audio contained inside the presentation.
+    Browser restrictions may prevent this from working reliably.
   </p>
 
 </div>
@@ -798,14 +802,19 @@ async function loadEverything() {
         "";
 
 
-    document
-      .getElementById(
-        "modeBMusicEnabled"
-      )
-      .checked =
+  document
+  .getElementById(
+    "modeBAudioSource"
+  )
+  .value =
 
-        settings.modeBMusicEnabled ||
-        false;
+    settings.modeBAudioSource ||
+
+    (
+      settings.modeBMusicEnabled
+        ? "media"
+        : "none"
+    );
 
 
     document
@@ -2314,13 +2323,21 @@ async function goLive() {
         .trim();
 
 
-    settings.modeBMusicEnabled =
+settings.modeBAudioSource =
 
-      document
-        .getElementById(
-          "modeBMusicEnabled"
-        )
-        .checked;
+  document
+    .getElementById(
+      "modeBAudioSource"
+    )
+    .value;
+
+
+// Keep old setting for backwards compatibility
+
+settings.modeBMusicEnabled =
+
+  settings.modeBAudioSource ===
+  "media";
 
 
     settings.refreshMinutes =
