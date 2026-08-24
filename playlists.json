@@ -16,12 +16,6 @@
         "transition": "fade"
       },
       {
-        "file": "8.23 SCHEDULE.jpg",
-        "type": "image",
-        "duration": 7,
-        "transition": "fade"
-      },
-      {
         "file": "IRON MEN OF BROWN FOR T SHIRT.png",
         "type": "image",
         "duration": 7,
@@ -37,12 +31,6 @@
         "file": "ai. ftf tougher for longer.png",
         "type": "image",
         "duration": 7,
-        "transition": "fade"
-      },
-      {
-        "file": "trubru scoreboard 8.23.jpg",
-        "type": "image",
-        "duration": 10,
         "transition": "fade"
       }
     ],
