@@ -363,7 +363,8 @@ let currentVisual = 0;
 let currentAudio = 0;
 
 let modeAMusicEnabled = false;
-let modeBMusicEnabled = false;
+let modeBAudioSource =
+  "none";
 
 let videoMusicBehavior =
   "pause";
@@ -681,7 +682,7 @@ function musicWantedForCurrentMode() {
 
     return (
 
-      modeBMusicEnabled &&
+      modeBAudioSource === "media" &&
 
       audioItems.length > 0
 
@@ -755,8 +756,8 @@ function applyFreshData(
     settings.googleSlidesUrl;
 
 
-  const oldModeBMusic =
-    modeBMusicEnabled;
+const oldModeBAudioSource =
+  modeBAudioSource;
 
 
   const newPlaylist =
@@ -839,9 +840,15 @@ function applyFreshData(
     false;
 
 
-  modeBMusicEnabled =
-    settings.modeBMusicEnabled ||
-    false;
+modeBAudioSource =
+
+  settings.modeBAudioSource ||
+
+  (
+    settings.modeBMusicEnabled
+      ? "media"
+      : "none"
+  );
 
 
   videoMusicBehavior =
@@ -902,28 +909,31 @@ function applyFreshData(
     );
 
 
-    const modeBMusicChanged =
-      oldModeBMusic !==
-      modeBMusicEnabled;
+   const modeBAudioChanged =
+
+  oldModeBAudioSource !==
+  modeBAudioSource;
 
 
     // ---------------------------------------------
     // ONLY RELOAD GOOGLE SLIDES IF ACTUALLY NEEDED
     // ---------------------------------------------
 
-    if (
+   if (
 
-      initialLoad ||
+  initialLoad ||
 
-      modeChanged ||
+  modeChanged ||
 
-      slidesChanged
+  slidesChanged ||
 
-    ) {
+  modeBAudioChanged
 
-      loadGoogleSlides();
+) {
 
-    }
+  loadGoogleSlides();
+
+}
 
 
     // ---------------------------------------------
@@ -944,21 +954,21 @@ function applyFreshData(
 
       }
 
-      else if (
+    else if (
 
-        initialLoad ||
+  initialLoad ||
 
-        modeChanged ||
+  modeChanged ||
 
-        audioChanged ||
+  audioChanged ||
 
-        modeBMusicChanged
+  modeBAudioChanged
 
-      ) {
+) {
 
-        restartAudioPlaylist();
+  restartAudioPlaylist();
 
-      }
+}
 
     }
 
@@ -1099,11 +1109,36 @@ function loadGoogleSlides() {
     );
 
 
+  let slidesURL =
+    settings.googleSlidesUrl;
+
+
+  if (!slidesURL) {
+
+    showMessage(
+      "No Google Slides URL configured."
+    );
+
+    return;
+
+  }
+
+
+  const allowAudio =
+
+    modeBAudioSource ===
+    "slides";
+
+
   player.innerHTML = `
     <iframe
       id="slidesFrame"
-      src="${settings.googleSlidesUrl}"
-      allow="autoplay; encrypted-media"
+      src="${slidesURL}"
+      allow="${
+        allowAudio
+          ? "autoplay; encrypted-media"
+          : "encrypted-media"
+      }"
       allowfullscreen>
     </iframe>
   `;
