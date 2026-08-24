@@ -363,6 +363,7 @@ let currentVisual = 0;
 let currentAudio = 0;
 
 let modeAMusicEnabled = false;
+
 let modeBAudioSource =
   "none";
 
@@ -443,6 +444,11 @@ async function startTV() {
   }
 
   catch (error) {
+
+    console.log(
+      "Initial TV load failed:",
+      error
+    );
 
     showMessage(
       "Could not load TV display."
@@ -618,39 +624,38 @@ async function checkForUpdates(
         playlistSignature;
 
 
-    // Only touch the live player when something actually changed.
-// The periodic fullSync still verifies that GitHub is reachable
-// and that the JSON can be read, but it does NOT restart/reapply
-// a perfectly good display or audio session.
+    // IMPORTANT:
+    // The full safety sync still checks that GitHub
+    // can be reached and the JSON can be read.
+    //
+    // But if nothing actually changed, DO NOT touch
+    // the live display or audio session.
 
-if (
-  changed
-) {
+    if (
+      changed
+    ) {
 
-  applyFreshData(
+      applyFreshData(
 
-    fresh.settings,
+        fresh.settings,
 
-    fresh.playlists,
+        fresh.playlists,
 
-    false
+        false
 
-  );
+      );
 
-}
+    }
 
-}
-
-catch (error) {
-  
+  }
 
   catch (error) {
 
     // =================================================
     // SAFETY MECHANISM
     //
-    // If GitHub or Wi-Fi fails,
-    // DO NOT destroy the working display.
+    // If GitHub or Wi-Fi fails:
+    // KEEP THE CURRENT DISPLAY RUNNING.
     // =================================================
 
     console.log(
@@ -689,7 +694,10 @@ function musicWantedForCurrentMode() {
 
     return (
 
-      modeBAudioSource === "media" &&
+      modeBAudioSource ===
+        "media"
+
+      &&
 
       audioItems.length > 0
 
@@ -731,8 +739,14 @@ function modeAAudioNeeded() {
   return visualItems.some(
 
     item =>
-      item.type === "video" &&
-      item.muted !== true
+
+      item.type ===
+        "video"
+
+      &&
+
+      item.muted !==
+        true
 
   );
 
@@ -763,8 +777,8 @@ function applyFreshData(
     settings.googleSlidesUrl;
 
 
-const oldModeBAudioSource =
-  modeBAudioSource;
+  const oldModeBAudioSource =
+    modeBAudioSource;
 
 
   const newPlaylist =
@@ -803,21 +817,25 @@ const oldModeBAudioSource =
 
 
   const modeChanged =
+
     oldMode !==
     freshSettings.mode;
 
 
   const slidesChanged =
+
     oldSlidesURL !==
     freshSettings.googleSlidesUrl;
 
 
   const visualChanged =
+
     visualSignature !==
     newVisualSignature;
 
 
   const audioChanged =
+
     audioSignature !==
     newAudioSignature;
 
@@ -843,22 +861,24 @@ const oldModeBAudioSource =
 
 
   modeAMusicEnabled =
+
     playlist.backgroundMusic?.enabled ||
     false;
 
 
-modeBAudioSource =
+  modeBAudioSource =
 
-  settings.modeBAudioSource ||
+    settings.modeBAudioSource ||
 
-  (
-    settings.modeBMusicEnabled
-      ? "media"
-      : "none"
-  );
+    (
+      settings.modeBMusicEnabled
+        ? "media"
+        : "none"
+    );
 
 
   videoMusicBehavior =
+
     playlist.backgroundMusic?.videoBehavior ||
     "pause";
 
@@ -903,9 +923,9 @@ modeBAudioSource =
   }
 
 
-// =================================================
-// MODE B — GOOGLE SLIDES
-// =================================================
+  // =================================================
+  // MODE B — GOOGLE SLIDES
+  // =================================================
 
   if (
     settings.mode === "B"
@@ -916,35 +936,35 @@ modeBAudioSource =
     );
 
 
-   const modeBAudioChanged =
+    const modeBAudioChanged =
 
-  oldModeBAudioSource !==
-  modeBAudioSource;
-
-
-    // ---------------------------------------------
-    // ONLY RELOAD GOOGLE SLIDES IF ACTUALLY NEEDED
-    // ---------------------------------------------
-
-   if (
-
-  initialLoad ||
-
-  modeChanged ||
-
-  slidesChanged ||
-
-  modeBAudioChanged
-
-) {
-
-  loadGoogleSlides();
-
-}
+      oldModeBAudioSource !==
+      modeBAudioSource;
 
 
     // ---------------------------------------------
-    // MODE B MUSIC
+    // ONLY RELOAD GOOGLE SLIDES IF NEEDED
+    // ---------------------------------------------
+
+    if (
+
+      initialLoad ||
+
+      modeChanged ||
+
+      slidesChanged ||
+
+      modeBAudioChanged
+
+    ) {
+
+      loadGoogleSlides();
+
+    }
+
+
+    // ---------------------------------------------
+    // MODE B — MEDIA FOLDER MUSIC
     // ---------------------------------------------
 
     if (
@@ -961,21 +981,29 @@ modeBAudioSource =
 
       }
 
-    else if (
+      else if (
 
-  initialLoad ||
+        initialLoad ||
 
-  modeChanged ||
+        modeChanged ||
 
-  audioChanged ||
+        audioChanged ||
 
-  modeBAudioChanged
+        modeBAudioChanged
 
-) {
+      ) {
 
-  restartAudioPlaylist();
+        /*
+          IMPORTANT:
+          Only restart when something that affects
+          the audio playlist actually changed.
 
-}
+          Routine safety checks no longer get here.
+        */
+
+        restartAudioPlaylist();
+
+      }
 
     }
 
@@ -993,9 +1021,9 @@ modeBAudioSource =
   }
 
 
-// =================================================
-// MODE A — MEDIA PLAYLIST
-// =================================================
+  // =================================================
+  // MODE A — MEDIA PLAYLIST
+  // =================================================
 
   if (
     settings.mode === "A"
@@ -1116,7 +1144,7 @@ function loadGoogleSlides() {
     );
 
 
-  let slidesURL =
+  const slidesURL =
     settings.googleSlidesUrl;
 
 
@@ -1177,7 +1205,8 @@ function playVisual() {
 
 
   if (
-    item.type === "video"
+    item.type ===
+    "video"
   ) {
 
     playVideo(
@@ -1201,7 +1230,9 @@ function playVisual() {
 // IMAGE
 // =================================================
 
-function playImage(item) {
+function playImage(
+  item
+) {
 
   resumeMusicAfterVideo();
 
@@ -1217,8 +1248,6 @@ function playImage(item) {
       "img"
     );
 
-
-  // DIRECT FROM GITHUB REPO
 
   image.src =
     rawMediaURL(
@@ -1295,7 +1324,9 @@ function playImage(item) {
 // VIDEO
 // =================================================
 
-function playVideo(item) {
+function playVideo(
+  item
+) {
 
   clearTimeout(
     visualTimer
@@ -1313,8 +1344,6 @@ function playVideo(item) {
       "video"
     );
 
-
-  // DIRECT FROM GITHUB REPO
 
   video.src =
     rawMediaURL(
@@ -1345,7 +1374,8 @@ function playVideo(item) {
   // ---------------------------------------------
 
   if (
-    item.muted === true
+    item.muted ===
+    true
   ) {
 
     video.muted =
@@ -1469,13 +1499,25 @@ function playVideo(item) {
       () => {
 
         // SAFETY FALLBACK:
-        // Play muted rather than freezing.
+        // Keep the presentation moving.
 
         video.muted =
           true;
 
 
-        video.play();
+        video
+          .play()
+          .catch(
+            () => {
+
+              console.log(
+                "Video playback failed."
+              );
+
+              nextVisual();
+
+            }
+          );
 
       }
 
@@ -1572,7 +1614,8 @@ function unlockAudio() {
 
 
   if (
-    settings.mode === "A"
+    settings.mode ===
+    "A"
   ) {
 
     currentVisual =
@@ -1599,6 +1642,10 @@ function restartAudioPlaylist() {
     ||
 
     !audioUnlocked
+
+    ||
+
+    !audioItems.length
 
   )
     return;
@@ -1643,8 +1690,6 @@ function playCurrentAudio() {
     ];
 
 
-  // DIRECT FROM GITHUB REPO
-
   audio.src =
     rawMediaURL(
       track.file
@@ -1672,60 +1717,62 @@ function playCurrentAudio() {
     };
 
 
- audio
-  .play()
-  .catch(
+  audio
+    .play()
+    .catch(
 
-    () => {
+      () => {
 
-      // If the user has NEVER unlocked audio,
-      // show the start button normally.
+        // If audio has never been unlocked,
+        // show the normal start screen.
 
-      if (
-        !audioUnlocked
-      ) {
+        if (
+          !audioUnlocked
+        ) {
 
-        showAudioButton();
+          showAudioButton();
 
-        return;
+          return;
+
+        }
+
+
+        // Audio was already unlocked.
+        // Do NOT throw the full-screen prompt back up
+        // because of a temporary playback hiccup.
+
+        console.log(
+          "Audio playback retrying without resetting the display."
+        );
+
+
+        setTimeout(
+
+          () => {
+
+            audio
+              .play()
+              .catch(
+
+                () => {
+
+                  console.log(
+                    "Audio retry failed. Display continues without interruption."
+                  );
+
+                }
+
+              );
+
+          },
+
+          1500
+
+        );
 
       }
 
-
-      // If audio WAS already unlocked earlier in this
-      // browser session, do not throw the full-screen
-      // audio prompt back onto the TV because of a
-      // temporary playback hiccup.
-
-      console.log(
-        "Audio playback retrying without resetting the display."
-      );
-
-
-      setTimeout(
-        () => {
-
-          audio
-            .play()
-            .catch(
-              () => {
-
-                console.log(
-                  "Audio retry failed. Display continues without interruption."
-                );
-
-              }
-            );
-
-        },
-
-        1500
-
-      );
-
-    }
-
-  );
+    );
 
 }
 
@@ -1797,11 +1844,18 @@ function resumeMusicAfterVideo() {
       audio
         .play()
         .catch(
+
           () => {
 
-            showAudioButton();
+            // Do not erase the existing audio unlock
+            // just because a resume attempt hiccups.
+
+            console.log(
+              "Could not immediately resume background audio."
+            );
 
           }
+
         );
 
     }
@@ -1826,9 +1880,16 @@ function stopBackgroundAudio() {
   audio.pause();
 
 
+  audio.onended =
+    null;
+
+
   audio.removeAttribute(
     "src"
   );
+
+
+  audio.load();
 
 }
 
@@ -1887,7 +1948,9 @@ function applyExitTransition(
 // MESSAGE
 // =================================================
 
-function showMessage(text) {
+function showMessage(
+  text
+) {
 
   document
     .getElementById(
